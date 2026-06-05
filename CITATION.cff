@@ -6,8 +6,8 @@ authors:
   - given-names: Niklas
     family-names: Karlsson
     orcid: ""
-repository-code: "https://github.com/tikankika/Assessment_suite"
-url: "https://github.com/tikankika/Assessment_suite"
+repository-code: "https://github.com/tikankika/assessment-suite"
+url: "https://github.com/tikankika/assessment-suite"
 license: PolyForm-Noncommercial-1.0.0
 version: "0.8.0"
 date-released: "2026-06-05"

@@ -34,7 +34,7 @@ Full details in [Getting Started — Appendix A](docs/GETTING_STARTED.md#appendi
 ### How do I install Assessment Suite?
 
 ```bash
-git clone https://github.com/tikankika/Assessment_suite.git
+git clone https://github.com/tikankika/assessment-suite.git
 cd Assessment_suite
 
 # Python package
@@ -230,11 +230,11 @@ For additional troubleshooting, see [Getting Started — Appendix B](docs/GETTIN
 
 ### How do I report a bug?
 
-Open an issue on [GitHub Issues](https://github.com/tikankika/Assessment_suite/issues) using the bug report template. Include your OS, Python/Node versions, and steps to reproduce.
+Open an issue on [GitHub Issues](https://github.com/tikankika/assessment-suite/issues) using the bug report template. Include your OS, Python/Node versions, and steps to reproduce.
 
 ### Where can I ask questions or discuss ideas?
 
-Use [GitHub Discussions](https://github.com/tikankika/Assessment_suite/discussions) for questions, ideas, and experience sharing. See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+Use [GitHub Discussions](https://github.com/tikankika/assessment-suite/discussions) for questions, ideas, and experience sharing. See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ### Can I use this for my own courses?
 

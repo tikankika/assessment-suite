@@ -366,7 +366,7 @@ def extract_answer_by_markers(
     # Strategy: First try endswith() to skip TOC entries that append "Textområde" etc.
     # If no match, fall back to startswith() which handles multi-line questions
     # where question text wraps across lines after PDF→MD conversion.
-    # See: https://github.com/tikankika/Assessment_suite/issues/13
+    # See: https://github.com/tikankika/assessment-suite/issues/13
     header_line_idx = None
 
     # Pass 1: endswith (skips TOC entries like "1 Restriktionsenzym (a-d) Textområde")
