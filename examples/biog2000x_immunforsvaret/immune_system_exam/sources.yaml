@@ -1,0 +1,47 @@
+project:
+  name: immune_system_exam
+  created: '2026-05-25T20:58:50.083274Z'
+sources:
+  exam_questions:
+    original_path: >-
+      <workspace>
+    type: md
+    copied_to: 01_original/exam_questions.md
+  rubric:
+    original_path: <workspace>
+    type: md
+    copied_to: 01_original/rubric.md
+  syllabus:
+    original_source: >-
+      <workspace>
+    type: md
+    copied_to: 01_original/Amnesplan_Biologi_GY25.md
+  student_answers:
+    original_path: >-
+      <workspace>
+    type: directory
+    file_count: 4
+    copied_to: 01_original/student_answers
+  methodology:
+    original_path: <workspace>
+    type: folder
+    copied_to: methodology/
+    file_count: 22
+    is_default: true
+    template_used: standard
+  exam_config:
+    type: yaml
+    copied_to: exam_config.yaml
+    note: Question detection results - Phase 2B
+  exam_questions_annotated:
+    type: markdown
+    copied_to: 02_markdown/exam_questions_annotated.md
+    note: Annotated exam questions - Phase 2B
+  assessment_summary:
+    type: markdown
+    copied_to: Assessment_Status_Summary.md
+    note: Assessment status summary - Phase 6
+  teacher_insights:
+    type: markdown
+    copied_to: Teacher_Insights.md
+    note: Teacher insights and metareflections during Phase 6

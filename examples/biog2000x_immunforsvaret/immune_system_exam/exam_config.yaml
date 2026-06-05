@@ -1,0 +1,581 @@
+exam:
+  id: biog2000x_exam_20260525
+  course_code: BIOG2000X
+  exam_name: Immunförsvaret
+  date: '2026-05-25'
+questions:
+  - id: Q001
+    number: 1
+    rubric_id: A1
+    raw_header: '# Q001A Fagocytos'
+    question_title: Fagocytos
+    points: 1
+    question_type: text_area
+    rubric_verified: true
+    section_title: Fagocytos
+    rubric_data:
+      section_title: Fagocytos
+      rubric_points: 1
+      aspects:
+        - id: A1a
+          name: 'Definition: cell omsluter och bryter ner patogener/cellrester'
+          points: 1
+      aspect_sum: 1
+  - id: Q002
+    number: 2
+    rubric_id: A2
+    raw_header: '# Q002A Mastceller och histamin'
+    question_title: Mastceller och histamin
+    points: 2
+    question_type: text_area
+    rubric_verified: true
+    section_title: Mastceller + histamin
+    rubric_data:
+      section_title: Mastceller + histamin
+      rubric_points: 2
+      aspects:
+        - id: A2a
+          name: Namnger histamin
+          points: 1
+        - id: A2b
+          name: Histaminets funktion (vidgar blodkärl/lockar vita blodkroppar)
+          points: 1
+      aspect_sum: 2
+  - id: Q003
+    number: 3
+    rubric_id: A3
+    raw_header: '# Q003A Plasmacell vs minnescell'
+    question_title: Plasmacell vs minnescell
+    points: 2
+    question_type: text_area
+    rubric_verified: true
+    section_title: Plasmacell vs minnescell
+    rubric_data:
+      section_title: Plasmacell vs minnescell
+      rubric_points: 2
+      aspects:
+        - id: A3a
+          name: Plasmacell producerar antikroppar (kortlivad)
+          points: 1
+        - id: A3b
+          name: Minnescell lever kvar, ger snabbare svar
+          points: 1
+      aspect_sum: 2
+  - id: Q004
+    number: 4
+    rubric_id: A4
+    raw_header: '# Q004A Inflammationstecken'
+    question_title: Inflammationstecken
+    points: 2
+    question_type: text_area
+    rubric_verified: true
+    section_title: Inflammationstecken
+    rubric_data:
+      section_title: Inflammationstecken
+      rubric_points: 2
+      aspects:
+        - id: A4a
+          name: 'Nämner fyra tecken: rodnad, svullnad, värme, smärta'
+          points: 1
+        - id: A4b
+          name: Förklarar orsak (ökad blodgenomströmning/vätskeutträde, histamin)
+          points: 1
+      aspect_sum: 2
+  - id: Q005
+    number: 5
+    rubric_id: A5
+    raw_header: '# Q005A Klonal expansion'
+    question_title: Klonal expansion
+    points: 1
+    question_type: text_area
+    rubric_verified: true
+    section_title: Klonal expansion
+    rubric_data:
+      section_title: Klonal expansion
+      rubric_points: 1
+      aspects:
+        - id: A5a
+          name: 'Definition: aktiverad B/T-cell delar sig och bildar många kopior'
+          points: 1
+      aspect_sum: 1
+  - id: Q006
+    number: 6
+    rubric_id: A6
+    raw_header: '# Q006A Mognad B och T'
+    question_title: Mognad B- och T-lymfocyter
+    points: 2
+    question_type: text_area
+    rubric_verified: true
+    section_title: Mognad B- och T-lymfocyter
+    rubric_data:
+      section_title: Mognad B- och T-lymfocyter
+      rubric_points: 2
+      aspects:
+        - id: A6a
+          name: B-lymfocyter mognar i benmärgen
+          points: 1
+        - id: A6b
+          name: T-lymfocyter mognar i thymus
+          points: 1
+      aspect_sum: 2
+  - id: Q007
+    number: 7
+    rubric_id: A7
+    raw_header: '# Q007A Antigen'
+    question_title: Antigen
+    points: 1
+    question_type: text_area
+    rubric_verified: true
+    section_title: Antigen
+    rubric_data:
+      section_title: Antigen
+      rubric_points: 1
+      aspects:
+        - id: A7a
+          name: 'Definition: molekyl på patogenens yta som immunförsvaret känner igen'
+          points: 1
+      aspect_sum: 1
+  - id: Q008
+    number: 8
+    rubric_id: A8
+    raw_header: '# Q008A Antikropparnas funktioner'
+    question_title: Antikropparnas funktioner
+    points: 2
+    question_type: text_area
+    rubric_verified: true
+    section_title: Antikropparnas funktioner
+    rubric_data:
+      section_title: Antikropparnas funktioner
+      rubric_points: 2
+      aspects:
+        - id: A8a
+          name: 'Tre funktioner: neutralisering, opsonisering, agglutinering (2=tre, 1=två, 0,5=en)'
+          points: 2
+      aspect_sum: 2
+  - id: Q009
+    number: 9
+    rubric_id: A9
+    raw_header: '# Q009A Komplementsystemet'
+    question_title: Komplementsystemet
+    points: 2
+    question_type: text_area
+    rubric_verified: true
+    section_title: Komplementsystemet
+    rubric_data:
+      section_title: Komplementsystemet
+      rubric_points: 2
+      aspects:
+        - id: A9a
+          name: 'Vad det är: ca 30 proteiner i blodet, medfött'
+          points: 1
+        - id: A9b
+          name: 'Vad det gör: attackkomplex borrar hål/samverkar med antikroppar'
+          points: 1
+      aspect_sum: 2
+  - id: Q010
+    number: 10
+    rubric_id: B1
+    raw_header: '# Q010A Antigen vs antikropp'
+    question_title: Antigen vs antikropp
+    points: 3
+    question_type: text_area
+    rubric_verified: true
+    section_title: Antigen vs Antikropp
+    rubric_data:
+      section_title: Antigen vs Antikropp
+      rubric_points: 3
+      aspects:
+        - id: B1a
+          name: 'Antigen: molekyl på patogenens yta'
+          points: 1
+        - id: B1b
+          name: 'Antikropp: Y-format protein från B-celler/plasmaceller'
+          points: 1
+        - id: B1c
+          name: 'Kopplingen: bind specifikt till ETT antigen (nyckel-lås)'
+          points: 1
+      aspect_sum: 3
+  - id: Q011
+    number: 11
+    rubric_id: B2
+    raw_header: '# Q011A Feber'
+    question_title: Feber
+    points: 3
+    question_type: text_area
+    rubric_verified: true
+    section_title: Feber
+    rubric_data:
+      section_title: Feber
+      rubric_points: 3
+      aspects:
+        - id: B2a
+          name: 'Mekanism: cytokiner → hypotalamus → höjd temperatur'
+          points: 1
+        - id: B2b
+          name: 'Varför bra: bakterier trivs sämre/immunförsvar snabbare'
+          points: 1
+        - id: B2c
+          name: 'När farligt: >41°C proteiner denatureras'
+          points: 1
+      aspect_sum: 3
+  - id: Q012
+    number: 12
+    rubric_id: B3
+    raw_header: '# Q012A Vaccination'
+    question_title: Vaccination
+    points: 3
+    question_type: text_area
+    rubric_verified: true
+    section_title: Vaccination
+    rubric_data:
+      section_title: Vaccination
+      rubric_points: 3
+      aspects:
+        - id: B3a
+          name: Vaccinet innehåller ofarliga delar av patogenen
+          points: 1
+        - id: B3b
+          name: 'Immunsvar aktiveras: B-celler → plasmaceller → antikroppar utan sjukdom'
+          points: 1
+        - id: B3c
+          name: Minnesceller → snabbt svar vid nästa infektion
+          points: 1
+      aspect_sum: 3
+  - id: Q013
+    number: 13
+    rubric_id: B4
+    raw_header: '# Q013A Primärt vs sekundärt immunsvar'
+    question_title: Primärt vs sekundärt immunsvar
+    points: 3
+    question_type: text_area
+    rubric_verified: true
+    section_title: Primärt vs sekundärt immunsvar
+    rubric_data:
+      section_title: Primärt vs sekundärt immunsvar
+      rubric_points: 3
+      aspects:
+        - id: B4a
+          name: 'Primärt svar: 7–14 dagar, man hinner bli sjuk'
+          points: 1
+        - id: B4b
+          name: 'Sekundärt svar: minnesceller reagerar inom timmar, snabbare/starkare'
+          points: 1
+        - id: B4c
+          name: 'Varför inte sjuk: patogenen etablerar sig aldrig → immunitet'
+          points: 1
+      aspect_sum: 3
+  - id: Q014
+    number: 14
+    rubric_id: B5
+    raw_header: '# Q014A Begreppssortering'
+    question_title: Begreppssortering medfött adaptivt båda
+    points: 4
+    question_type: text_area
+    rubric_verified: true
+    section_title: Begreppssortering
+    rubric_data:
+      section_title: Begreppssortering
+      rubric_points: 4
+      aspects:
+        - id: B5a
+          name: 'Medfött: neutrofil, histamin, NK-cell'
+          points: 1
+        - id: B5b
+          name: 'Adaptivt: antikropp, T-mördarcell, plasmacell'
+          points: 1
+        - id: B5c
+          name: 'Båda: makrofag, dendritcell, cytokin'
+          points: 1
+        - id: B5d
+          name: 'Motivering: fagocytos (medfött) + antigenpresentation (brygga)'
+          points: 1
+      aspect_sum: 4
+  - id: Q015
+    number: 15
+    rubric_id: B6
+    raw_header: '# Q015A Tre kommunikationssystem'
+    question_title: Tre kommunikationssystem
+    points: 4
+    question_type: text_area
+    rubric_verified: true
+    section_title: Tre kommunikationssystem
+    rubric_data:
+      section_title: Tre kommunikationssystem
+      rubric_points: 4
+      aspects:
+        - id: B6a
+          name: 'Signal: neurotransmittorer, hormoner, cytokiner/histamin'
+          points: 1
+        - id: B6b
+          name: Hastighet + räckvidd för de tre
+          points: 1
+        - id: B6c
+          name: Samverkansexempel med hela kedjan (t.ex. feber)
+          points: 2
+      aspect_sum: 4
+  - id: Q016
+    number: 16
+    rubric_id: C1
+    raw_header: '# Q016A Nytt virus och antikroppar'
+    question_title: Nytt virus och antikroppar
+    points: 10
+    question_type: essay
+    rubric_verified: true
+    section_title: Nytt virus — antikroppar
+    rubric_data:
+      section_title: Nytt virus — antikroppar
+      rubric_points: 10
+      aspects:
+        - id: C1a
+          name: Identifiering — antigen + antigenpresentation
+          points: 2
+        - id: C1b
+          name: B-cellsaktivering → plasmaceller (T-hjälparcell, klonal expansion)
+          points: 2
+        - id: C1c
+          name: Antikropparnas funktioner (minst 2 av 3)
+          points: 2
+        - id: C1d
+          name: Minnesceller → immunitet
+          points: 2
+        - id: C1e
+          name: Sammanhängande resonemang
+          points: 2
+      aspect_sum: 10
+  - id: Q017
+    number: 17
+    rubric_id: C2
+    raw_header: '# Q017A Sår och hela immunsvaret'
+    question_title: Sår och hela immunsvaret
+    points: 12
+    question_type: essay
+    rubric_verified: true
+    section_title: Sår — hela immunsvaret
+    rubric_data:
+      section_title: Sår — hela immunsvaret
+      rubric_points: 12
+      aspects:
+        - id: C2a
+          name: Skada + barriärbrott
+          points: 1
+        - id: C2b
+          name: Histamin + inflammationstecken
+          points: 2
+        - id: C2c
+          name: Neutrofiler (först, fagocyterar, kortlivade)
+          points: 1
+        - id: C2d
+          name: Makrofager + cytokiner + antigenpresentation
+          points: 2
+        - id: C2e
+          name: Dendritceller → bryggan (lymfknuta)
+          points: 2
+        - id: C2f
+          name: T-hjälparceller → B-celler → plasma/minnesceller
+          points: 2
+        - id: C2g
+          name: Sammanhängande kedja medfött→adaptivt
+          points: 2
+      aspect_sum: 12
+  - id: Q018
+    number: 18
+    rubric_id: C3
+    raw_header: '# Q018A MHC klass I vs II'
+    question_title: MHC klass I vs klass II
+    points: 8
+    question_type: essay
+    rubric_verified: true
+    section_title: MHC klass I vs II
+    rubric_data:
+      section_title: MHC klass I vs II
+      rubric_points: 8
+      aspects:
+        - id: C3a
+          name: MHC klass I — alla kroppens celler
+          points: 1
+        - id: C3b
+          name: MHC klass I → T-mördarcell (CD8) → apoptos
+          points: 2
+        - id: C3c
+          name: MHC klass II — fagocyterande celler
+          points: 1
+        - id: C3d
+          name: MHC klass II → T-hjälparcell (CD4) → aktiverar B-celler
+          points: 2
+        - id: C3e
+          name: Varför båda behövs (inuti vs utanför celler)
+          points: 2
+      aspect_sum: 8
+answer_boundaries:
+  global:
+    language: swedish
+    default_answer_start: Enter your answer here...
+    default_answer_end: 'Words:'
+  questions:
+    Q001:
+      question_header: 1 Fagocytos
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q002:
+      question_header: 2 Mastceller och histamin
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q003:
+      question_header: 3 Plasmacell vs minnescell
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q004:
+      question_header: 4 Inflammationstecken
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q005:
+      question_header: 5 Klonal expansion
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q006:
+      question_header: 6 Mognad B- och T-lymfocyter
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q007:
+      question_header: 7 Antigen
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q008:
+      question_header: 8 Antikropparnas funktioner
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q009:
+      question_header: 9 Komplementsystemet
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q010:
+      question_header: 10 Antigen vs antikropp
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q011:
+      question_header: 11 Feber
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q012:
+      question_header: 12 Vaccination
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q013:
+      question_header: 13 Primärt vs sekundärt immunsvar
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q014:
+      question_header: 14 Begreppssortering medfött adaptivt båda
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q015:
+      question_header: 15 Tre kommunikationssystem
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q016:
+      question_header: 16 Nytt virus och antikroppar
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q017:
+      question_header: 17 Sår och hela immunsvaret
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+    Q018:
+      question_header: 18 MHC klass I vs klass II
+      answer_start_type: after_text
+      answer_start_marker: Enter your answer here...
+      answer_end_type: marker
+      answer_end_marker: 'Words:'
+      consistent_across_students: true
+      verified_students: 4
+students:
+  count: 4
+  id_format: alphanumeric_mixed
+  id_pattern: ^[A-Za-z0-9_-]+$
+  id_examples:
+    - 10001_100000000_example
+    - 10002_100000000_example
+  ids:
+    - 10001_100000000_example
+    - 10002_100000000_example
+    - 10003_100000000_example
+    - 10004_100000000_example
+  source: student_files
+rubric_validation:
+  validated_at: '2026-05-25T21:15:50.230Z'
+  total_questions: 18
+  verified: 18
+  conflicts_auto_resolved: 0
+  teacher_action_required: 0
+assessment_format:
+  type: v2
+  confirmed_by: Teacher (lärargranskad)
+  confirmed_at: '2026-05-26T20:07:01.274Z'

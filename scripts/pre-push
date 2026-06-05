@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Git pre-push hook — last defence before data goes public
+# Scans ALL tracked files (not just staged)
+# Install: ln -sf ../../scripts/pre-push .git/hooks/pre-push
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+SCAN_SCRIPT="$REPO_ROOT/scripts/security-scan.sh"
+
+if [ ! -x "$SCAN_SCRIPT" ]; then
+  echo "WARNING: security-scan.sh not found — skipping pre-push scan"
+  exit 0
+fi
+
+echo "Pre-push security scan (all tracked files)..."
+exec "$SCAN_SCRIPT" --all

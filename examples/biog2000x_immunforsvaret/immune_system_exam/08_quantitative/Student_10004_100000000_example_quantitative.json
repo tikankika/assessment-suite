@@ -1,0 +1,123 @@
+{
+  "student_id": "10004_100000000_example",
+  "total_points": 44.5,
+  "max_points": 65.0,
+  "percentage": 68.5,
+  "questions": [
+    {
+      "question_id": "Q001",
+      "points": 0.0,
+      "max_points": 1.0,
+      "status": "partial"
+    },
+    {
+      "question_id": "Q002",
+      "points": 2.0,
+      "max_points": 2.0,
+      "status": "complete"
+    },
+    {
+      "question_id": "Q003",
+      "points": 1.0,
+      "max_points": 2.0,
+      "status": "complete"
+    },
+    {
+      "question_id": "Q004",
+      "points": 0.0,
+      "max_points": 2.0,
+      "status": "partial"
+    },
+    {
+      "question_id": "Q005",
+      "points": 0.0,
+      "max_points": 1.0,
+      "status": "partial"
+    },
+    {
+      "question_id": "Q006",
+      "points": 1.0,
+      "max_points": 2.0,
+      "status": "complete"
+    },
+    {
+      "question_id": "Q007",
+      "points": 1.0,
+      "max_points": 1.0,
+      "status": "complete"
+    },
+    {
+      "question_id": "Q008",
+      "points": 2.0,
+      "max_points": 2.0,
+      "status": "complete"
+    },
+    {
+      "question_id": "Q009",
+      "points": 0.0,
+      "max_points": 2.0,
+      "status": "partial"
+    },
+    {
+      "question_id": "Q010",
+      "points": 3.0,
+      "max_points": 3.0,
+      "status": "complete"
+    },
+    {
+      "question_id": "Q011",
+      "points": 3.0,
+      "max_points": 3.0,
+      "status": "complete"
+    },
+    {
+      "question_id": "Q012",
+      "points": 3.0,
+      "max_points": 3.0,
+      "status": "complete"
+    },
+    {
+      "question_id": "Q013",
+      "points": 0.0,
+      "max_points": 3.0,
+      "status": "partial"
+    },
+    {
+      "question_id": "Q014",
+      "points": 3.5,
+      "max_points": 4.0,
+      "status": "complete"
+    },
+    {
+      "question_id": "Q015",
+      "points": 0.0,
+      "max_points": 4.0,
+      "status": "partial"
+    },
+    {
+      "question_id": "Q016",
+      "points": 10.0,
+      "max_points": 10.0,
+      "status": "complete"
+    },
+    {
+      "question_id": "Q017",
+      "points": 12.0,
+      "max_points": 12.0,
+      "status": "complete"
+    },
+    {
+      "question_id": "Q018",
+      "points": 3.0,
+      "max_points": 8.0,
+      "status": "complete"
+    }
+  ],
+  "questions_answered": 18,
+  "questions_total": 18,
+  "metadata": {
+    "generated_at": "2026-05-26T22:08:00.643383",
+    "source": "table",
+    "strategy": "hybrid"
+  }
+}

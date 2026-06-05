@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: "Assessment Suite"
+message: "If you use this software in your research, please cite it as below."
+type: software
+authors:
+  - given-names: Niklas
+    family-names: Karlsson
+    orcid: ""
+repository-code: "https://github.com/tikankika/Assessment_suite"
+url: "https://github.com/tikankika/Assessment_suite"
+license: PolyForm-Noncommercial-1.0.0
+version: "0.8.0"
+date-released: "2026-06-05"
+keywords:
+  - educational-assessment
+  - mcp-server
+  - ai-assisted-assessment
+  - formative-feedback
+  - rubric-based-assessment
+abstract: >-
+  An AI-augmented exam assessment pipeline that assists teachers with
+  structured, rubric-based assessment of student examinations. Built as
+  MCP servers for use with AI assistants, supporting the complete workflow
+  from PDF conversion through qualitative assessment to formative feedback.

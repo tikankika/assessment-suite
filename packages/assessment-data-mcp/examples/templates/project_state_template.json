@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "current_phase": 0,
+  "phases": {
+    "1_setup": {
+      "status": "pending"
+    },
+    "2_output": {
+      "status": "pending"
+    },
+    "3_organize": {
+      "status": "pending"
+    },
+    "4_convert": {
+      "status": "pending"
+    },
+    "5_analyze": {
+      "status": "pending"
+    },
+    "6_extract": {
+      "status": "pending"
+    }
+  },
+  "metadata": {
+    "project_name": "",
+    "created": "",
+    "last_updated": ""
+  }
+}

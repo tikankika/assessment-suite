@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Git commit-msg hook — scans commit message for identifying information
+# All patterns built-in, no external .security-patterns file needed.
+# Install: ln -sf ../../scripts/commit-msg .git/hooks/commit-msg
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="$1"
+FOUND=0
+
+# Shared patterns (single source of truth)
+source "$(git rev-parse --show-toplevel)/scripts/security-patterns.sh"
+PATTERNS=("${SECURITY_PATTERNS[@]}")
+ALLOWLIST=("${SECURITY_ALLOWLIST[@]}")
+
+for pattern in "${PATTERNS[@]}"; do
+  matches="$(grep -E "$pattern" "$COMMIT_MSG_FILE" 2>/dev/null || true)"
+
+  # Filter allowlist
+  for allow in "${ALLOWLIST[@]}"; do
+    matches="$(echo "$matches" | grep -v "$allow" 2>/dev/null || true)"
+  done
+
+  if [ -n "$matches" ]; then
+    echo "BLOCKED: Commit message contains identifying information."
+    echo "  Pattern: $pattern"
+    echo "  Match: $(echo "$matches" | head -1)"
+    FOUND=1
+  fi
+done
+
+if [ "$FOUND" -eq 1 ]; then
+  echo ""
+  echo "Edit your commit message to remove identifying information."
+  exit 1
+fi
+
+exit 0

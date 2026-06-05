@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Git pre-commit hook — runs security scan on staged files
+# Install: ln -sf ../../scripts/pre-commit .git/hooks/pre-commit
+
+exec "$(git rev-parse --show-toplevel)/scripts/security-scan.sh"

@@ -1,0 +1,156 @@
+# ============================================
+# Assessment Suite - Combined .gitignore
+# ============================================
+
+# ----------------
+# Node.js / TypeScript (assessment-mcp)
+# ----------------
+node_modules/
+packages/assessment-mcp/dist/
+
+# ----------------
+# Python (pre-assessment-mcp)
+# ----------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+packages/assessment-data-mcp/venv/
+
+# ----------------
+# IDE
+# ----------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ----------------
+# Testing
+# ----------------
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+coverage/
+
+# ----------------
+# OS
+# ----------------
+.DS_Store
+Thumbs.db
+
+# ----------------
+# Environment
+# ----------------
+.env
+.env.local
+.env.*.local
+
+# ----------------
+# Logs
+# ----------------
+logs/
+*.log
+npm-debug.log*
+
+# ----------------
+# Temporary files
+# ----------------
+tmp/
+temp/
+
+# ----------------
+# CRITICAL: Student data (NEVER commit)
+# ----------------
+# All actual exam data, PDFs, student answers
+**/01_original/
+**/02_markdown/
+**/03_analysis/
+**/03_grading/
+**/04_student_answers_per_question/
+**/04_reports/
+**/05_reports/
+*.pdf
+*_elever.md
+*Bedomning_*.md
+*Assessment_Status*.md
+*Teacher_Insights*.md
+# Exception: examples/ ships fabricated workspace data (see examples/README.md).
+# Fabrication is enforced by .claude/rules/data-protection.md.
+!examples/**
+Assessment_output/
+
+# Project state (may contain sensitive paths)
+project_state.json
+
+# Process documentation (chat history, bugs, internal notes)
+docs/Process_documentation_Chat_history_Bugs/
+docs/Chats_data_development/
+
+# ========================================
+# PRIVATE: Meta-Process Documentation
+# ========================================
+docs/issues/
+docs/_documentation_reform/
+docs/_documentation_review/
+docs/_code_inventory/
+docs/_archive_pre_public_release/
+docs/technical/
+draft_docs/
+chat_transcripts/
+.dev_notes/
+*.private.md
+*.local.md
+
+# ========================================
+# PRIVATE: Internal Package Documentation
+# ========================================
+packages/*/docs/implementation/
+packages/*/docs/rfcs/
+packages/*/docs/troubleshooting/
+packages/*/docs/design/
+packages/*/docs/decisions/
+packages/*/docs/mcp-usage/
+packages/*/docs/_archive/
+packages/*/ROADMAP.md
+packages/*/CHANGELOG.md
+packages/*/IDEAS.md
+packages/*/VISION.md
+packages/*/WORKFLOW.md
+packages/*/debug*.py
+.obsidian/
+
+# MCP client config (contains local paths)
+.mcp.json
+
+# Local Claude Code / ACDM tooling — re-created by `acdm init`, kept out of the
+# public repo (exposes working method + local paths, not user-facing content).
+.claude/
+CLAUDE.md
+
+# Internal exploration/diagnosis docs — see internal-docs-boundary.md
+docs/explorations/

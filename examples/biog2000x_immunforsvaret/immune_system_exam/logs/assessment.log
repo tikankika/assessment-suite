@@ -1,0 +1,189 @@
+2026-05-25 23:16:25 [INFO] assessment_data_mcp.utils.logging_config: === Logging started for project: immune_system_exam ===
+2026-05-25 23:16:25 [INFO] assessment_data_mcp.utils.logging_config: Log file: <workspace>
+2026-05-25 23:16:25 [INFO] assessment_data_mcp.utils.logging_config: [Phase 5] phase5_qfiles started: config=exam_config.yaml
+2026-05-26 22:06:18 [INFO] assessment_data_mcp.utils.logging_config: === Logging started for project: immune_system_exam ===
+2026-05-26 22:06:18 [INFO] assessment_data_mcp.utils.logging_config: Log file: <workspace>
+2026-05-26 22:06:18 [INFO] assessment_data_mcp.utils.logging_config: [Phase 7] phase7_generate_reports started: mode=preview, project=immune_system_exam
+2026-05-26 22:07:05 [INFO] mcp.server.lowlevel.server: Processing request of type CallToolRequest
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.utils.logging_config: [Phase 7] phase7_generate_reports started: mode=preview, project=immune_system_exam
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Using assessment format: v2 (confirmed by: Teacher (lärargranskad))
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q001: Selected dated file Q001_alla_elever_2026-05-25_Claude (AI-assisterad, lärargranskad).md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q002: Using original file Q002_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q003: Using original file Q003_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q004: Using original file Q004_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q005: Using original file Q005_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q006: Using original file Q006_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q007: Using original file Q007_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q008: Using original file Q008_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q009: Using original file Q009_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q010: Using original file Q010_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q011: Using original file Q011_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q012: Using original file Q012_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q013: Using original file Q013_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q014: Using original file Q014_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q015: Using original file Q015_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q016: Using original file Q016_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q017: Using original file Q017_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Q018: Using original file Q018_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 18 Q-files to process
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q001_alla_elever_2026-05-25_Claude (AI-assisterad, lärargranskad).md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q002_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q003_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q004_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q005_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q006_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q007_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q008_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q009_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q010_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q011_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q012_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q013_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q014_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q015_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q016_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q017_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q018_alla_elever.md
+2026-05-26 22:07:05 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] mcp.server.lowlevel.server: Processing request of type CallToolRequest
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.utils.logging_config: [Phase 7] phase7_generate_reports started: mode=generate, project=immune_system_exam
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.utils.logging_config: [Phase 7] generate_reports started: dry_run=False, force=False
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Using assessment format: v2 (confirmed by: Teacher (lärargranskad))
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q001: Selected dated file Q001_alla_elever_2026-05-25_Claude (AI-assisterad, lärargranskad).md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q002: Using original file Q002_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q003: Using original file Q003_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q004: Using original file Q004_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q005: Using original file Q005_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q006: Using original file Q006_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q007: Using original file Q007_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q008: Using original file Q008_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q009: Using original file Q009_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q010: Using original file Q010_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q011: Using original file Q011_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q012: Using original file Q012_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q013: Using original file Q013_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q014: Using original file Q014_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q015: Using original file Q015_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q016: Using original file Q016_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q017: Using original file Q017_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Q018: Using original file Q018_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 18 Q-files to process
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q001_alla_elever_2026-05-25_Claude (AI-assisterad, lärargranskad).md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q002_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q003_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q004_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q005_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q006_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q007_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q008_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q009_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q010_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q011_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q012_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q013_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q014_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q015_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q016_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q017_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 v2 format assessments (standard)
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Found 4 assessments in Q018_alla_elever.md
+2026-05-26 22:07:20 [INFO] assessment_data_mcp.phase7.generator: Matched 4/4 students
+2026-05-26 22:08:00 [INFO] mcp.server.lowlevel.server: Processing request of type CallToolRequest
+2026-05-26 22:08:00 [INFO] assessment_data_mcp.utils.logging_config: [Phase 8] phase8_quantitative started: strategy=hybrid, student=all
+2026-05-26 22:08:00 [INFO] assessment_data_mcp.phase8.table_parser: Table parsed: 10001_100000000_example = 65.0/65.0p (100.0%)
+2026-05-26 22:08:00 [INFO] assessment_data_mcp.phase8.hybrid_parser: Table parser succeeded for 10001_100000000_example
+2026-05-26 22:08:00 [INFO] assessment_data_mcp.phase8.table_parser: Table parsed: 10002_100000000_example = 39.5/65.0p (60.8%)
+2026-05-26 22:08:00 [INFO] assessment_data_mcp.phase8.hybrid_parser: Table parser succeeded for 10002_100000000_example
+2026-05-26 22:08:00 [INFO] assessment_data_mcp.phase8.table_parser: Table parsed: 10003_100000000_example = 5.0/65.0p (7.7%)
+2026-05-26 22:08:00 [INFO] assessment_data_mcp.phase8.hybrid_parser: Table parser succeeded for 10003_100000000_example
+2026-05-26 22:08:00 [INFO] assessment_data_mcp.phase8.table_parser: Table parsed: 10004_100000000_example = 44.5/65.0p (68.5%)
+2026-05-26 22:08:00 [INFO] assessment_data_mcp.phase8.hybrid_parser: Table parser succeeded for 10004_100000000_example
+2026-05-26 20:12:17 [INFO] assessment-mcp: === Logging started for project: immune_system_exam ===
+2026-05-26 20:12:17 [INFO] assessment-mcp: Log file: <workspace>
+2026-05-26 20:12:17 [INFO] phase: [Phase 9] phase9_start started: student=10001_100000000_example
+2026-05-26 20:36:30 [INFO] phase: [Phase 9] phase9_start started: student=10002_100000000_example
+2026-05-26 20:40:03 [INFO] phase: [Phase 9] phase9_start started: student=10003_100000000_example
+2026-05-26 20:42:29 [INFO] phase: [Phase 9] phase9_start started: student=10004_100000000_example
+2026-05-27 06:22:00 [INFO] mcp.server.lowlevel.server: Processing request of type CallToolRequest
+2026-05-27 04:22:29 [INFO] phase: [Phase 10] phase10_start started: student=10001_100000000_example
+2026-05-27 04:23:51 [INFO] phase: [Phase 10] phase10_start started: student=10002_100000000_example
+2026-05-27 04:25:35 [INFO] phase: [Phase 10] phase10_start started: student=10003_100000000_example
+2026-05-27 04:29:25 [INFO] phase: [Phase 10] phase10_start started: student=10004_100000000_example
+2026-05-27 04:32:17 [INFO] phase: [Phase 12] phase12_start started: student=10001_100000000_example
+2026-05-27 04:57:11 [INFO] phase: [Phase 12] phase12_start started: student=10002_100000000_example
+2026-05-27 04:59:00 [INFO] phase: [Phase 12] phase12_start started: student=10003_100000000_example
+2026-05-27 05:17:39 [INFO] phase: [Phase 12] phase12_start started: student=10004_100000000_example
+2026-05-27 06:00:48 [INFO] phase: [Phase 13] phase13_start started: student=class
+2026-05-27 06:04:21 [INFO] phase: [Phase 14] phase14_start started: student=10001_100000000_example
+2026-05-27 06:17:16 [INFO] phase: [Phase 14] phase14_start started: student=10002_100000000_example
+2026-05-27 06:24:03 [INFO] phase: [Phase 14] phase14_start started: student=10003_100000000_example
+2026-05-27 06:36:17 [INFO] phase: [Phase 14] phase14_start started: student=10004_100000000_example

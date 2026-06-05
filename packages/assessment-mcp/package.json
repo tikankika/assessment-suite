@@ -1,0 +1,50 @@
+{
+  "name": "mcp-assessment-server",
+  "version": "0.8.0",
+  "description": "MCP Server for AI-Augmented Analytical Assessment - Teacher-controlled workflow for structured student grading",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "node dist/server.js",
+    "dev": "tsc && node dist/server.js",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "assessment",
+    "grading",
+    "analytical-assessment",
+    "education",
+    "teacher-tools"
+  ],
+  "author": "Niklas Karlsson",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@types/js-yaml": "^4.0.9",
+    "csv-parse": "^6.2.1",
+    "csv-stringify": "^6.7.0",
+    "js-yaml": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/csv-parse": "^1.2.5",
+    "@types/csv-stringify": "^3.1.3",
+    "@types/node": "^25.9.1",
+    "@vitest/ui": "^4.1.8",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tikankika/Assessment_suite.git"
+  },
+  "private": true
+}

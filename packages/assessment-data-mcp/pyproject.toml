@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "assessment-data-mcp"
+version = "0.8.0"
+description = "Python MCP server for assessment data processing - file conversion, Q-file generation, and student report aggregation"
+authors = [
+    {name = "Assessment Suite contributors"}
+]
+license = {text = "PolyForm-Noncommercial-1.0.0"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    # MCP SDK
+    "mcp>=0.1.0",
+    
+    # YAML handling
+    "pyyaml>=6.0",
+    
+    # Standard library enhancements
+    "python-dateutil>=2.8.0",
+    
+    # Phase 1: Syllabus download and conversion (Skolverket serves HTML!)
+    "requests>=2.31.0",      # URL downloading
+    "html2text>=2020.1.16",  # HTML → Markdown conversion
+
+    # Phase 4: PDF to Markdown conversion (pure Python - no CLI dependency)
+    "pdfplumber>=0.10.0",    # PDF text extraction
+
+    # Assessment-workflow integration (direct imports)
+    # Note: Assumes assessment-framework is installed separately
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0",
+    "mypy>=1.0",
+    "ruff>=0.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/tikankika/Assessment_suite"
+Repository = "https://github.com/tikankika/Assessment_suite"
+Documentation = "https://github.com/tikankika/Assessment_suite/tree/main/packages/assessment-data-mcp/docs"
+
+[tool.setuptools]
+packages = ["assessment_data_mcp"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.package-data]
+assessment_data_mcp = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

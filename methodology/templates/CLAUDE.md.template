@@ -1,0 +1,85 @@
+# Assessment Suite — {{exam_name}}
+
+## Project
+- Course: {{course_code}}
+- Exam: {{exam_name}}, {{exam_date}}
+- {{student_count}} students
+
+## MCP Servers
+- **assessment-v2** (TypeScript): Phase 4, 6, 9-14. ~43 tools.
+- **assessment-data-v2** (Python): Phase 1-3, 5, 7-8. ~11 tools.
+
+## CRITICAL RULES
+
+1. **ALWAYS use assessment MCP tools.** Never use Write, Edit, Bash, or Read for file operations when an MCP tool exists. If you catch yourself about to use Write to save an assessment — STOP and use `phase6_write_free` instead.
+2. **If an MCP tool fails — STOP and tell the teacher.** Never fall back to Write/Edit/Bash as a workaround. The teacher needs to know the tool failed.
+3. **Do ONLY what the teacher asks.** No extra analysis, no tables, nothing proactive.
+4. **Read methodology docs via MCP tools** — never rely on memory or paraphrasing.
+5. **When unsure — ASK** instead of guessing. A question is always better than a wrong action.
+6. **One session per phase.** Recommend a new session at phase boundaries.
+
+## Phase 6 Workflow (MOST IMPORTANT)
+
+Phase 6 has dedicated MCP tools. NEVER use Write/Edit to create assessment files.
+
+**Two modes — choose based on exam type:**
+
+### Mode A: Traditional exam (Q-files)
+1. `phase6_start` — pass `q_file_path` + `rubric_path`
+2. `phase6_methodology` — Show methodology docs to teacher
+3. `phase6_rubric` — Show rubric section. Wait for "Redo att börja?"
+4. `phase6_read_next` — Get next unassessed student (answer + rubric + progress)
+5. Discuss assessment with teacher
+6. `phase6_write_free` — Save assessment (student_id + bedomning_text)
+7. Repeat 4-6 for each student
+8. `phase6_status` — Check progress
+
+### Mode B: Lab report / per-student files (one PDF per student)
+1. `phase6_start` — pass `student_files_dir` + `rubric_path` + `project_path`
+2. Show the returned student list to the teacher — ask which are actual students
+3. `phase6_methodology` — Show methodology docs
+4. `phase6_read_next` — Returns file path. **Read the student's PDF directly.**
+5. Discuss assessment with teacher
+6. `phase6_write_free` — Creates standalone `BEDÖMNING_{student}.md` file (pass project_path)
+7. Repeat 4-6 for each student
+8. `phase6_status` — Check progress (pass project_path)
+
+**Other Phase 6 tools:**
+- `phase6_write` — Structured assessment (aspects array with points). Alternative to phase6_write_free.
+- `phase6_get` — Read an existing assessment for a student.
+- `assessment_delete` — Remove an assessment (for re-assessment).
+- `teacher_annotation` — Log teacher decisions (rubric_clarification, score_adjustment, generous_interpretation, etc.)
+- `process_memo` — Save decisions and conventions to _process_memos/.
+
+## All Phases — Tool Reference
+
+| Phase | Tool sequence | Notes |
+|-------|--------------|-------|
+| 1 | `initialize_project` | Creates project structure |
+| 2 | `assessment_purpose` | MUST run before Phase 6 |
+| 2A | `convert_documents` | PDF→MD. Use `skip_pdf=true` for lab reports (Claude reads PDFs directly) |
+| 2B-D | `phase2b_questions` → `phase2c_boundaries` → `phase2d_students` | Question detection + student annotation prep |
+| 3 | `phase3_prepare` → `phase3_annotate` → `phase3_file_edit` → `phase3_validate` | One student at a time |
+| 4 | `phase4b_rubric`, `phase4c_save` | Rubric validation |
+| 5 | `extract_student_answers` | Creates Q-files |
+| 6 | See workflow above | **NEVER use Write for assessments** |
+| 7-8 | `generate_reports`, `quantitative_summary` | Verify Phase 7 before Phase 8 |
+| 9-14 | `phase_start(phase=N)` → `phase_complete(session_id, content)` | Same 2 tools for all. Phase 13: no student_id. |
+
+## Cross-phase tools (available anytime)
+- `rubric_read` — Read rubric file or specific question section
+- `rubric_edit` — Edit rubric aspects
+- `inspect_file` — Read any project file
+- `list_files` — List files in project
+- `hermeneutic_read` — Phase 9-14 only: retrieves Phase 6 assessments for hermeneutic analysis
+- `process_memo` — Log decisions/conventions/observations/uncertainties
+
+## Anti-patterns — NEVER do these
+- NEVER use `Write` to create files in `06_analytic_assessment/` — use `phase6_write_free`
+- NEVER use `Read` to read student answers during Phase 6 — use `phase6_read_next`
+- NEVER use `Edit` to modify assessment files — use `assessment_delete` + `phase6_write_free`
+- NEVER say "there is no MCP tool for Phase 6" — there are 10 Phase 6 tools (see above)
+- NEVER skip methodology loading — call `phase6_methodology` for each document before assessing
+
+## Process Memos
+Save decisions and conventions with `process_memo` — stored in `_process_memos/`.

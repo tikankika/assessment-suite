@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Test coverage
+coverage/
+
+# Temporary files
+tmp/
+temp/
+
+# Student data (NEVER commit)
+# Add patterns here if any student data files are placed in this directory
+*.pdf
+*_elever.md
+Assessment_output/
+
+# Process documentation (chat history, bugs, internal notes)
+# NEVER commit - contains potentially sensitive development discussions
+docs/Process_documentation_Chat_history_Bugs/
