@@ -44,7 +44,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tikankika/Assessment_suite.git"
+    "url": "git+https://github.com/tikankika/assessment-suite.git"
   },
   "private": true
 }

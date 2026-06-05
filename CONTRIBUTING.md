@@ -4,8 +4,8 @@ Thank you for considering contributing to Assessment Suite!
 
 ## Ways to Contribute
 
-- 🐛 **Report bugs** - [Open an issue](https://github.com/tikankika/Assessment_suite/issues/new)
-- 💡 **Suggest features** - [Start a discussion](https://github.com/tikankika/Assessment_suite/discussions)
+- 🐛 **Report bugs** - [Open an issue](https://github.com/tikankika/assessment-suite/issues/new)
+- 💡 **Suggest features** - [Start a discussion](https://github.com/tikankika/assessment-suite/discussions)
 - 📖 **Improve documentation** - Submit a PR
 - 💻 **Submit code** - Fix bugs or add features
 
@@ -23,7 +23,7 @@ Thank you for considering contributing to Assessment Suite!
 ### Quick Setup
 
 ```bash
-git clone https://github.com/tikankika/Assessment_suite.git
+git clone https://github.com/tikankika/assessment-suite.git
 cd Assessment_suite
 
 # Python package
@@ -122,7 +122,7 @@ See design process documentation for examples.
 
 - 📚 Check [WORKFLOW-INTEGRATION.md](docs/WORKFLOW-INTEGRATION.md)
 - 🏗️ Review [ADRs](docs/adr/) for design rationale
-- 💬 Ask in [discussions](https://github.com/tikankika/Assessment_suite/discussions)
+- 💬 Ask in [discussions](https://github.com/tikankika/assessment-suite/discussions)
 
 ---
 

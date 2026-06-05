@@ -43,9 +43,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/tikankika/Assessment_suite"
-Repository = "https://github.com/tikankika/Assessment_suite"
-Documentation = "https://github.com/tikankika/Assessment_suite/tree/main/packages/assessment-data-mcp/docs"
+Homepage = "https://github.com/tikankika/assessment-suite"
+Repository = "https://github.com/tikankika/assessment-suite"
+Documentation = "https://github.com/tikankika/assessment-suite/tree/main/packages/assessment-data-mcp/docs"
 
 [tool.setuptools]
 packages = ["assessment_data_mcp"]

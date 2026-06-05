@@ -12,7 +12,7 @@
 If you discover a security vulnerability, please report it responsibly:
 
 1. **Do NOT open a public GitHub issue.**
-2. Use [GitHub's private vulnerability reporting](https://github.com/tikankika/Assessment_suite/security/advisories/new).
+2. Use [GitHub's private vulnerability reporting](https://github.com/tikankika/assessment-suite/security/advisories/new).
 3. Include a description of the vulnerability and steps to reproduce.
 
 You can expect an initial response within 72 hours.
