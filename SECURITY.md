@@ -134,6 +134,13 @@ write. The mechanism:
   numbers, and identifying details from student answer files
   before placing them in the workspace. Pseudonymous IDs
   (`student_042`) are preferable to initials or first names.
+
+  > Within the same teaching ecosystem, the **edusafe-pipeline** tool anonymises
+  > classroom *recordings and transcripts* offline — replacing names with pseudonyms
+  > before they are shared or reused. That is a different data type from exam answers:
+  > Assessment Suite has no automated PII detection of its own (see "Known Open Issues"),
+  > so anonymising answer files here remains a manual step.
+
 - **Use a dedicated workspace.** Do not use `~/Documents` or your
   general work folder. Create a workspace such as
   `~/AssessmentWork` that contains only assessment-related files.
