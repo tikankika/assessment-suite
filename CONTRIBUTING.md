@@ -24,7 +24,7 @@ Thank you for considering contributing to Assessment Suite!
 
 ```bash
 git clone https://github.com/tikankika/assessment-suite.git
-cd Assessment_suite
+cd assessment-suite
 
 # Python package
 cd packages/assessment-data-mcp

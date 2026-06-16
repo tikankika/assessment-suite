@@ -4,8 +4,8 @@
 
 | Version | Supported |
 |---------|-----------|
-| 0.5.x   | Yes       |
-| < 0.5   | No        |
+| 0.8.x   | Yes       |
+| < 0.8   | No        |
 
 ## Reporting a Vulnerability
 
@@ -233,7 +233,6 @@ defects:
 
 The current security posture has been shaped by:
 
-  (Draft).
 - **`pedagogical/00_foundation.md` §3.7–3.9** — Audience
   discipline framework that prevents student-facing output from
   containing inappropriate phrasing or information about other
@@ -241,4 +240,4 @@ The current security posture has been shaped by:
 
 ---
 
-*Last updated: 2026-05-04*
+*Last updated: 2026-06-17*
