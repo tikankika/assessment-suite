@@ -146,7 +146,7 @@ Claude provides analysis and recommendations. For actual grading decisions, espe
 
 ## Example: Adaptive Decision-Making
 
-Here's a real interaction showing how Claude adapts:
+Here's an illustrative interaction showing how Claude adapts:
 
 **Teacher:** "What do you think about student 10003?"
 
