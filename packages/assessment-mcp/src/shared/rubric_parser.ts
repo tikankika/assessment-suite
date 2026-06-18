@@ -61,7 +61,33 @@ export class RubricParser {
 
     const sectionContent = content.slice(startIndex, endIndex);
 
-    // Extract max points - try multiple formats
+    const maxPoints = this.extractMaxPoints(sectionContent);
+
+    // Extract aspects
+    const aspects = this.extractAspects(sectionContent, questionNumber);
+
+    return {
+      questionNumber,
+      questionTitle,
+      maxPoints,
+      aspects,
+      rawText: sectionContent.trim(),
+    };
+  }
+
+  /**
+   * Extract aspects from rubric section
+   *
+   * @param content - Section content
+   * @param questionNumber - Question number for aspect naming
+   * @returns Array of RubricAspect
+   */
+  /**
+   * Extract a question's max points from its section, trying three formats in
+   * order: an explicit `**Points:**` line, a `**TOTAL: Xp**` line, then a
+   * `(Xp)` marker in the header (first 5 lines, to avoid matching aspect points).
+   */
+  private extractMaxPoints(sectionContent: string): number {
     let maxPoints = 0;
 
     // Format 1: **Points:** **Xp** (explicit points line)
@@ -87,25 +113,9 @@ export class RubricParser {
       }
     }
 
-    // Extract aspects
-    const aspects = this.extractAspects(sectionContent, questionNumber);
-
-    return {
-      questionNumber,
-      questionTitle,
-      maxPoints,
-      aspects,
-      rawText: sectionContent.trim(),
-    };
+    return maxPoints;
   }
 
-  /**
-   * Extract aspects from rubric section
-   *
-   * @param content - Section content
-   * @param questionNumber - Question number for aspect naming
-   * @returns Array of RubricAspect
-   */
   private extractAspects(content: string, questionNumber: number): RubricAspect[] {
     const aspects: RubricAspect[] = [];
 
@@ -295,31 +305,7 @@ export class RubricParser {
 
     const sectionContent = content.slice(startIndex, endIndex);
 
-    // Extract max points - try multiple formats
-    let maxPoints = 0;
-
-    // Format 1: **Points:** **Xp** (explicit points line)
-    const explicitPointsMatch = sectionContent.match(/\*\*Points:\*\*.*?(\d+(?:[.,]\d+)?)\s*p/i);
-    if (explicitPointsMatch) {
-      maxPoints = parseFloat(explicitPointsMatch[1].replace(',', '.'));
-    }
-
-    // Format 2: **TOTAL: X.Xp** (total at end of section)
-    if (maxPoints === 0) {
-      const totalMatch = sectionContent.match(/\*\*TOTAL:\s*(\d+(?:[.,]\d+)?)\s*p\*\*/i);
-      if (totalMatch) {
-        maxPoints = parseFloat(totalMatch[1].replace(',', '.'));
-      }
-    }
-
-    // Format 3: (Xp) in header line only (avoid matching aspect points)
-    if (maxPoints === 0) {
-      const headerLines = sectionContent.split('\n').slice(0, 5).join('\n');
-      const headerPointsMatch = headerLines.match(/\((\d+(?:[.,]\d+)?)\s*p(?:oäng)?\)/i);
-      if (headerPointsMatch) {
-        maxPoints = parseFloat(headerPointsMatch[1].replace(',', '.'));
-      }
-    }
+    const maxPoints = this.extractMaxPoints(sectionContent);
 
     // Extract aspects using the rubric ID
     const aspects = this.extractAspectsByRubricId(sectionContent, rubricId);

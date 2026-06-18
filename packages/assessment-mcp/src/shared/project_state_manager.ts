@@ -132,45 +132,16 @@ async function fileExists(filePath: string): Promise<boolean> {
 }
 
 /**
- * Atomic write: write to temp file, then rename
+ * Atomic write: write serialized content to a temp file, then rename into
+ * place. Callers serialize (JSON or YAML) before calling.
  */
-async function atomicWriteJson(
-  filePath: string,
-  data: object
-): Promise<void> {
+async function atomicWrite(filePath: string, content: string): Promise<void> {
   const tempPath = `${filePath}.tmp.${Date.now()}`;
   try {
-    await fs.writeFile(tempPath, JSON.stringify(data, null, 2), 'utf-8');
+    await fs.writeFile(tempPath, content, 'utf-8');
     await fs.rename(tempPath, filePath);
   } catch (error) {
     // Clean up temp file if rename failed
-    try {
-      await fs.unlink(tempPath);
-    } catch {
-      // Ignore cleanup errors
-    }
-    throw error;
-  }
-}
-
-/**
- * Atomic write for YAML files
- */
-async function atomicWriteYaml(
-  filePath: string,
-  data: object
-): Promise<void> {
-  const tempPath = `${filePath}.tmp.${Date.now()}`;
-  const yamlContent = yamlDump(data, {
-    indent: 2,
-    lineWidth: 120,
-    noRefs: true,
-    quotingType: "'",
-  });
-  try {
-    await fs.writeFile(tempPath, yamlContent, 'utf-8');
-    await fs.rename(tempPath, filePath);
-  } catch (error) {
     try {
       await fs.unlink(tempPath);
     } catch {
@@ -211,7 +182,7 @@ export async function saveProjectState(
 ): Promise<void> {
   state.last_updated = getTimestamp();
   const statePath = join(projectPath, 'project_state.json');
-  await atomicWriteJson(statePath, state);
+  await atomicWrite(statePath, JSON.stringify(state, null, 2));
 }
 
 /**
@@ -309,7 +280,12 @@ export async function updateSources(
   const sources = await loadSources(projectPath);
   sources.sources[sourceKey] = sourceEntry;
 
-  await atomicWriteYaml(sourcesPath, sources);
+  await atomicWrite(sourcesPath, yamlDump(sources, {
+    indent: 2,
+    lineWidth: 120,
+    noRefs: true,
+    quotingType: "'",
+  }));
 }
 
 /**
