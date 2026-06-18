@@ -3,11 +3,33 @@
 Critical: download_url() converts Skolverket HTML to markdown (Q2 decision).
 """
 
+import ipaddress
 import shutil
+import socket
 from pathlib import Path
 from urllib.parse import urlparse
 import requests
 import html2text
+
+# Ceiling on downloaded content — defence against disk-fill / memory DoS.
+MAX_DOWNLOAD_BYTES = 25 * 1024 * 1024  # 25 MB
+
+
+def _is_blocked_address(ip_str: str) -> bool:
+    """True if ip_str is a non-public address we must not fetch (SSRF guard).
+
+    Covers loopback, link-local (incl. cloud metadata 169.254.169.254), private
+    (RFC1918), reserved, multicast and unspecified ranges, for IPv4 and IPv6.
+    """
+    ip = ipaddress.ip_address(ip_str.split("%")[0])  # strip IPv6 scope id
+    return (
+        ip.is_private
+        or ip.is_loopback
+        or ip.is_link_local
+        or ip.is_reserved
+        or ip.is_multicast
+        or ip.is_unspecified
+    )
 
 
 def _validate_url(url: str) -> tuple[bool, str]:
@@ -16,7 +38,10 @@ def _validate_url(url: str) -> tuple[bool, str]:
 
     Checks:
     1. URL scheme must be http or https
-    2. URL must have a valid netloc (domain)
+    2. URL must have a valid host
+    3. The host must not resolve to a non-public address (SSRF guard) — the
+       response is written into the workspace and can be surfaced to the AI, so
+       a URL pointing at localhost / link-local / private hosts is refused.
 
     Args:
         url: URL to validate
@@ -31,9 +56,26 @@ def _validate_url(url: str) -> tuple[bool, str]:
         if parsed.scheme not in ("http", "https"):
             return False, f"URL scheme must be http or https, got: {parsed.scheme}"
 
-        # Must have a valid domain
-        if not parsed.netloc:
+        host = parsed.hostname
+        if not host:
             return False, "URL must have a valid domain"
+
+        # SSRF guard: resolve the host and refuse any non-public target.
+        try:
+            infos = socket.getaddrinfo(host, None)
+        except socket.gaierror:
+            return False, f"Cannot resolve host: {host}"
+
+        for info in infos:
+            ip_str = info[4][0]
+            try:
+                if _is_blocked_address(ip_str):
+                    return False, (
+                        f"URL resolves to a non-public address ({ip_str}); "
+                        "blocked for security"
+                    )
+            except ValueError:
+                return False, f"Invalid resolved address for host: {host}"
 
         return True, ""
     except Exception as e:
@@ -141,14 +183,28 @@ def download_url(url: str, output_path: Path) -> bool:
         raise ValueError(f"Security: {url_error}")
 
     try:
-        response = requests.get(url, timeout=30)
+        response = requests.get(url, timeout=30, stream=True)
         response.raise_for_status()
+
+        # Enforce the size ceiling: reject an oversized declared length early,
+        # then cap the streamed read so a lying/absent Content-Length can't blow
+        # past the limit.
+        declared = response.headers.get('content-length')
+        if declared and declared.isdigit() and int(declared) > MAX_DOWNLOAD_BYTES:
+            raise ValueError(f"Download too large: {declared} bytes (limit {MAX_DOWNLOAD_BYTES})")
+
+        raw = bytearray()
+        for chunk in response.iter_content(chunk_size=65536):
+            raw.extend(chunk)
+            if len(raw) > MAX_DOWNLOAD_BYTES:
+                raise ValueError(f"Download exceeds size limit ({MAX_DOWNLOAD_BYTES} bytes)")
+        text = raw.decode(response.encoding or 'utf-8', errors='replace')
 
         content_type = response.headers.get('content-type', '')
 
         # Already markdown
         if url.endswith('.md') or 'text/markdown' in content_type:
-            content = response.text
+            content = text
 
         # HTML → Markdown (Skolverket case)
         elif 'text/html' in content_type or url.startswith('https://www.skolverket.se'):
@@ -156,7 +212,7 @@ def download_url(url: str, output_path: Path) -> bool:
             h.ignore_links = False      # Keep links
             h.ignore_images = False     # Keep images
             h.body_width = 0            # No line wrapping
-            content = h.handle(response.text)
+            content = h.handle(text)
 
         else:
             raise ValueError(f"Unsupported content type: {content_type}")
