@@ -111,9 +111,10 @@ export function validatePath(filePath: string): PathValidationResult {
   const currentPlatform = platform();
   const blockedPaths = BLOCKED_PATHS[currentPlatform] || BLOCKED_PATHS.linux;
 
-  // Check blocked paths
+  // Check blocked paths. Match the directory itself or a child — not a mere
+  // string prefix, so a sibling like `/etcfoo` is not caught by `/etc`.
   for (const blockedPath of blockedPaths) {
-    if (resolvedPath.startsWith(blockedPath)) {
+    if (resolvedPath === blockedPath || resolvedPath.startsWith(blockedPath + sep)) {
       return {
         valid: false,
         error: `Access to ${blockedPath} is blocked for security`,

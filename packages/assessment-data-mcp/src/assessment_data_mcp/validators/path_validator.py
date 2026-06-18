@@ -73,9 +73,11 @@ def validate_path_security(path: str) -> Tuple[bool, str]:
     current_platform = platform.system()
     blocked = BLOCKED_PATHS.get(current_platform, BLOCKED_PATHS["Linux"])
 
-    # Check blocked paths
+    # Check blocked paths. Match the directory itself or a child — not a mere
+    # string prefix, so a sibling like "/etcfoo" is not caught by "/etc".
+    resolved_str = str(resolved)
     for blocked_path in blocked:
-        if str(resolved).startswith(blocked_path):
+        if resolved_str == blocked_path or resolved_str.startswith(blocked_path + os.sep):
             return False, f"Access to {blocked_path} is blocked for security"
 
     # Check for hidden files in home directory

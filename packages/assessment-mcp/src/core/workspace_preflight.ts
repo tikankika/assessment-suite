@@ -11,7 +11,7 @@
  */
 
 import { resolve, sep } from 'path';
-import { existsSync, statSync, accessSync, constants } from 'fs';
+import { existsSync, statSync, accessSync, constants, realpathSync } from 'fs';
 import { homedir } from 'os';
 
 export type WorkspaceValidationResult =
@@ -46,7 +46,16 @@ const WARN_HOME_TOP_LEVEL = [
 ];
 
 export function validateWorkspaceArg(workspace: string): WorkspaceValidationResult {
-  const resolved = resolve(workspace);
+  // Follow symlinks (parity with the Python preflight's Path.resolve), so a
+  // symlinked --workspace pointing at a refused root is still caught.
+  let resolved = resolve(workspace);
+  if (existsSync(resolved)) {
+    try {
+      resolved = realpathSync(resolved);
+    } catch {
+      // Broken symlink / permission — keep the syntactic resolution.
+    }
+  }
 
   if (REFUSED_ABSOLUTE_PATHS.includes(resolved)) {
     return {
