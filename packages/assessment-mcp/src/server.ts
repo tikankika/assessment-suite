@@ -85,6 +85,7 @@ const PATH_ARG_NAMES = [
   'file_path',
   'assessment_path',
   'exam_path',
+  'exam_config_path',
   'student_files_dir',
 ];
 
