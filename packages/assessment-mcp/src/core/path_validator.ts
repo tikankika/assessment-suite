@@ -7,7 +7,7 @@
  * @see packages/assessment-data-mcp/src/assessment_data_mcp/validators/path_validator.py
  */
 
-import { resolve, dirname, basename, join } from 'path';
+import { resolve, dirname, basename, join, sep } from 'path';
 import { existsSync, realpathSync } from 'fs';
 import { homedir, platform } from 'os';
 
@@ -126,7 +126,7 @@ export function validatePath(filePath: string): PathValidationResult {
   if (resolvedPath.startsWith(home)) {
     // Get relative path from home
     const relativePath = resolvedPath.slice(home.length + 1);
-    const firstPart = relativePath.split('/')[0] || '';
+    const firstPart = relativePath.split(sep)[0] || '';
 
     // Block hidden directories except allowed ones
     if (firstPart.startsWith('.') && !ALLOWED_HIDDEN_DIRS.includes(firstPart)) {
@@ -172,7 +172,7 @@ export function validatePathOrThrow(filePath: string): string {
 export function isPathWithinBase(filePath: string, allowedBase: string): boolean {
   const resolvedPath = resolveSafely(filePath);
   const resolvedBase = resolveSafely(allowedBase);
-  return resolvedPath.startsWith(resolvedBase + '/') || resolvedPath === resolvedBase;
+  return resolvedPath.startsWith(resolvedBase + sep) || resolvedPath === resolvedBase;
 }
 
 /**
