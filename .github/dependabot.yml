@@ -5,6 +5,14 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    # vitest 4 pulls @rolldown/binding-wasm32-wasi, whose @emnapi optional
+    # deps trigger an npm bug that breaks `npm ci`. Stay on the vitest 3 line
+    # until the upstream issue is resolved.
+    ignore:
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@vitest/ui"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "pip"
     directory: "/packages/assessment-data-mcp"
