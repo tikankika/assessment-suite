@@ -36,7 +36,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
   "mcpServers": {
     "assessment": {
       "command": "node",
-      "args": ["/ABSOLUTE/PATH/TO/Assessment_suite/packages/assessment-mcp/dist/server.js"]
+      "args": ["/ABSOLUTE/PATH/TO/assessment-suite/packages/assessment-mcp/dist/server.js"]
     }
   }
 }

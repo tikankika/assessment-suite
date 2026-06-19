@@ -38,7 +38,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
     "assessment-data": {
       "command": "python3",
       "args": ["-m", "assessment_data_mcp.server"],
-      "cwd": "/ABSOLUTE/PATH/TO/Assessment_suite/packages/assessment-data-mcp"
+      "cwd": "/ABSOLUTE/PATH/TO/assessment-suite/packages/assessment-data-mcp"
     }
   }
 }
