@@ -35,7 +35,7 @@ Full details in [Getting Started — Appendix A](docs/GETTING_STARTED.md#appendi
 
 ```bash
 git clone https://github.com/tikankika/assessment-suite.git
-cd Assessment_suite
+cd assessment-suite
 
 # Python package
 cd packages/assessment-data-mcp && pip install -e .
