@@ -4,7 +4,7 @@ import { load as yamlLoad } from 'js-yaml';
 import { StatusManager } from '../core/status_manager.js';
 import { StudentReader } from '../core/student_reader.js';
 import { RubricParser } from '../shared/rubric_parser.js';
-import { MethodologyLoader } from '../core/methodology_loader.js';
+import { methodologyLoader } from '../core/methodology_loader.js';
 import { ExamConfigReader, QuestionConfig } from '../shared/exam_config_reader.js';
 import { debugLog } from '../core/debug.js';
 import { AssessmentStartResult, SessionInfo, Student } from '../types/assessment.js';
@@ -98,7 +98,6 @@ export async function assessmentStart(args: {
   const statusManager = new StatusManager();
   const studentReader = new StudentReader();
   const rubricParser = new RubricParser();
-  const methodologyLoader = new MethodologyLoader();
   const examConfigReader = new ExamConfigReader();
 
   const validationWarnings: string[] = [];
@@ -478,7 +477,6 @@ async function assessmentStartPerStudent(args: {
   debugLog('[assessment_start_per_student] student_files_dir:', student_files_dir);
   debugLog('[assessment_start_per_student] rubric_path:', rubric_path);
 
-  const methodologyLoader = new MethodologyLoader();
   const validationWarnings: string[] = [];
   let projectPath = '';
 

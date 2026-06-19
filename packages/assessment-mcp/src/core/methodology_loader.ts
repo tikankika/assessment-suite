@@ -830,3 +830,10 @@ Create a per-student completion report:
     }
   }
 }
+
+/**
+ * Process-wide singleton. The file/path caches are meant to live for the whole
+ * server process (methodology files do not change during a session), so tools
+ * import this shared instance instead of constructing a fresh, empty-cache loader.
+ */
+export const methodologyLoader = new MethodologyLoader();

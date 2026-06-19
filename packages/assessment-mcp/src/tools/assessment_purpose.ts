@@ -17,7 +17,7 @@ import {
   logWorkflowAction,
   safeStateOperation,
 } from '../shared/project_state_manager.js';
-import { MethodologyLoader } from '../core/methodology_loader.js';
+import { methodologyLoader } from '../core/methodology_loader.js';
 
 // ============================================================
 // TYPES
@@ -176,7 +176,6 @@ export async function assessmentPurpose(
   await fs.writeFile(filePath, lines.join('\n'), 'utf-8');
 
   // Load methodology for Claude Desktop
-  const methodologyLoader = new MethodologyLoader();
   const methodology = await methodologyLoader.loadAssessmentPurposeMethodology();
 
   // Log to workflow_log

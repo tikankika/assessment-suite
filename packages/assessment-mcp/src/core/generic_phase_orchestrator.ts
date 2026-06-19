@@ -15,7 +15,7 @@
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { BaseSessionManager, generateSessionId } from './base_session_manager.js';
-import { MethodologyLoader } from './methodology_loader.js';
+import { MethodologyLoader, methodologyLoader as sharedMethodologyLoader } from './methodology_loader.js';
 import { updateStudentReportSection, removeStudentReportSection } from '../utils/student_report_updater.js';
 import { setupProjectLogging, logPhaseStart } from '../utils/logging_config.js';
 import { logWorkflowAction } from '../shared/project_state_manager.js';
@@ -85,7 +85,7 @@ export class GenericPhaseOrchestrator {
   ) {
     this.config = config;
     this.sessionManager = sessionManager || getSessionManager(config.phaseId);
-    this.methodologyLoader = methodologyLoader || new MethodologyLoader();
+    this.methodologyLoader = methodologyLoader || sharedMethodologyLoader;
 
     // Validate methodology loader method at construction time (fail-fast)
     const method = this.methodologyLoader[config.methodologyLoader as keyof MethodologyLoader];

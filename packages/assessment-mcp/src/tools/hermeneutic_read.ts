@@ -13,7 +13,7 @@
 
 import { promises as fs } from 'fs';
 import { join } from 'path';
-import { MethodologyLoader } from '../core/methodology_loader.js';
+import { methodologyLoader } from '../core/methodology_loader.js';
 import { escapeRegex } from '../utils/regex_utils.js';
 import { assertSafeIdentifier } from '../core/path_validator.js';
 
@@ -169,7 +169,7 @@ export async function hermeneuticRead(
   );
 
   // 3. Load hermeneutic guidance via MethodologyLoader
-  const loader = new MethodologyLoader();
+  const loader = methodologyLoader;
   const fullGuidance = await loader.loadHermeneuticGuidance();
 
   // 4. Extract relevant section for phase/step

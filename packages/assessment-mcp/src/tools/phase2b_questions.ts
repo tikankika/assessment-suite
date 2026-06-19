@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import { join, dirname } from 'path';
 import { validatePathOrThrow } from '../core/path_validator.js';
-import { MethodologyLoader } from '../core/methodology_loader.js';
+import { methodologyLoader } from '../core/methodology_loader.js';
 import { generateExamConfig, saveExamConfig } from '../shared/yaml_generator.js';
 import { Question } from '../types/exam.js';
 import { dump } from 'js-yaml';
@@ -198,7 +198,6 @@ async function verifyPhase2Complete(
 async function loadExamAndMethodology(
   input: Phase2bInput
 ): Promise<Phase2bLoadOutput> {
-  const methodologyLoader = new MethodologyLoader();
 
   // 1. Read exam file
   const examContent = await fs.readFile(input.exam_path, 'utf-8');

@@ -3,7 +3,7 @@ import { join, basename } from 'path';
 import { load, dump } from 'js-yaml';
 import { ExamConfig } from '../shared/exam_config_reader.js';
 import { validatePathOrThrow } from '../core/path_validator.js';
-import { MethodologyLoader } from '../core/methodology_loader.js';
+import { methodologyLoader } from '../core/methodology_loader.js';
 import {
   deriveProjectPath,
   markPhaseInProgress,
@@ -216,7 +216,6 @@ async function handleLoadMode(
   }));
 
   // Load methodology
-  const methodologyLoader = new MethodologyLoader();
   const methodology = await methodologyLoader.loadPhase2C();
 
   // Build instructions

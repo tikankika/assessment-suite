@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import { join } from 'path';
 import { load, dump } from 'js-yaml';
 import { ExamConfig, QuestionConfig } from '../shared/exam_config_reader.js';
-import { MethodologyLoader } from '../core/methodology_loader.js';
+import { methodologyLoader } from '../core/methodology_loader.js';
 import type { QuestionWithRubric } from '../types/exam.js';
 import {
   deriveProjectPath,
@@ -104,7 +104,6 @@ async function loadRubricAndQuestions(
   input: Phase4bInput
 ): Promise<Phase4bLoadOutput> {
   const { project_path, mode } = input;
-  const methodologyLoader = new MethodologyLoader();
 
   // 1. Load rubric file (try multiple locations)
   let rubricContent: string | undefined;
