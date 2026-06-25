@@ -583,8 +583,8 @@ All tools return errors in this format:
 
 ## References
 
-- [ADR-002: Tool Naming Standardization](../../../docs/adr/ADR-002-tool-naming-standardization.md)
-- [ADR-003: Progressive Methodology Loading](../../../docs/adr/ADR-003-progressive-methodology-loading.md)
+- [ADR-002: Tool Naming Standardization](../../../docs/decisions/ADR-002-tool-naming-standardization.md)
+- [ADR-003: Progressive Methodology Loading](../../../docs/decisions/ADR-003-progressive-methodology-loading.md)
 
 ---
 

@@ -52,7 +52,7 @@ const PHASE6_DOCS = [
  * @param args.create_copy - ADR-003: Create assessment file copy (default: true)
  * @returns AssessmentStartResult with rubricSection, methodology_documents, project_path
  *
- * @see docs/adr/ADR-003-progressive-methodology-loading.md
+ * @see docs/decisions/ADR-003-progressive-methodology-loading.md
  */
 export async function assessmentStart(args: {
   q_file_path?: string;

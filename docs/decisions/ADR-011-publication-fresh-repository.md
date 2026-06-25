@@ -75,7 +75,7 @@ Publish via a **fresh repository `assessment-suite`**, populated by allowlist-co
 **Honesty note:** The original rationale leaned partly on "the history is dirty." That weakened when a per-ref verification (correcting an earlier `git log --all` error that had counted backup-tag commits) showed main/origin were already clean. The decision therefore stands on the **narrower** grounds of unknown-unknowns, a clean slate, and breaking the slug — not on known dirty history.
 
 **Allowlist (the public/private cut), recorded for the build:**
-- **Include:** the five user-facing `docs/` guides, `docs/adr/`, `packages/` (code, minus `node_modules`/`dist`/`.venv`), `examples/` (fabricated data), `methodology/` (cleaned, must pass the verification scan), `scripts/`, top-level community files, `.github/`.
+- **Include:** the five user-facing `docs/` guides, `docs/decisions/`, `packages/` (code, minus `node_modules`/`dist`/`.venv`), `examples/` (fabricated data), `methodology/` (cleaned, must pass the verification scan), `scripts/`, top-level community files, `.github/`.
 - **Exclude (never public, v1):** `docs/rfcs/`, `docs/legal/`, `docs/decisions/`, `docs/explorations/`, `CLAUDE.md`, and `.claude/` (rules, commands, agents, hooks), `.mcp.json`.
 
 **Verification gate before push (run on the fresh repo):** clean `CHANGELOG` of internal-process narration; run the test suite, `/security-review`, the `doc-reviewer` agent, and a secrets scan; re-run the hygiene scan. Push to GitHub is the single irreversible step and requires explicit human confirmation.
