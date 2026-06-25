@@ -144,7 +144,7 @@ finished claim, and the methodology documents are explicit about where the groun
 still being built. Engagement and critique are welcome.
 
 - [**methodology/**](methodology/) — the assessment framework (start with `pedagogical/00_foundation.md`)
-- [**docs/adr/**](docs/adr/) — architecture decision records, including why the phases are separated
+- [**docs/decisions/**](docs/decisions/) — architecture decision records, including why the phases are separated
 - [**SECURITY.md**](SECURITY.md) — data-protection posture (GDPR / AI Act / third-country transfer)
 
 ### I'm a developer (or deploying this for a teacher)
@@ -154,7 +154,7 @@ recent macOS or Linux machine.
 
 1. **Install:** [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) — clone, build the TypeScript server, install the Python server, configure Claude Desktop
 2. **Try it on sample data:** [examples/](examples/README.md) — a runnable mini-project with fabricated data, no real-student files
-3. **Understand the architecture:** [docs/adr/](docs/adr/) — the hybrid Python/TypeScript split, workspace lockdown, and other key choices
+3. **Understand the architecture:** [docs/decisions/](docs/decisions/) — the hybrid Python/TypeScript split, workspace lockdown, and other key choices
 
 It is built as two MCP servers — a TypeScript server for text analysis and assessment, and
 a Python server for file processing and reports.
@@ -240,7 +240,7 @@ in [SECURITY.md](SECURITY.md).
 - [docs/WORKFLOW-INTEGRATION.md](docs/WORKFLOW-INTEGRATION.md) — the assessment pipeline, phase by phase
 - [docs/TEACHER_GUIDE.md](docs/TEACHER_GUIDE.md) — working with Claude through an assessment session
 - [methodology/](methodology/) — the assessment framework and its theoretical grounding (under active development)
-- [docs/adr/](docs/adr/) — architecture decision records
+- [docs/decisions/](docs/decisions/) — architecture decision records
 - [SECURITY.md](SECURITY.md) · [CONTRIBUTING.md](CONTRIBUTING.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
 ---
@@ -262,7 +262,7 @@ noncommercial purpose, with commercial use reserved.
 
 - Free for teachers, researchers, and educational institutions (any noncommercial purpose)
 - Commercial use requires a separate licence
-- See [ADR-010](docs/adr/ADR-010-licence-polyform-noncommercial.md) for why PolyForm rather than CC BY-NC-SA
+- See [ADR-010](docs/decisions/ADR-010-licence-polyform-noncommercial.md) for why PolyForm rather than CC BY-NC-SA
 
 ---
 

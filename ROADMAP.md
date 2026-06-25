@@ -39,7 +39,7 @@ Assessment Suite is intentionally in its **0.x** line: the version tracks the ma
 **methodology**, not just the code. The code works, is tested and has been used on real exams —
 but in this project the method is the substance, and it is still being completed. The release
 will become **1.0.0** only once all three of the following hold (see
-[ADR-012](docs/adr/ADR-012-versioning-and-1.0-readiness.md) for the full decision):
+[ADR-012](docs/decisions/ADR-012-versioning-and-1.0-readiness.md) for the full decision):
 
 1. **Synthesis and feedback (Phases 9–14) methodology complete** — documented to the same
    standard as the Phase 1–8 methodology, not merely functional.

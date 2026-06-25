@@ -445,7 +445,7 @@ Should I add this to common misconceptions for class discussion?"
 **Explore:**
 - [WORKFLOW-INTEGRATION.md](WORKFLOW-INTEGRATION.md) - Complete pipeline overview
 - [Methodology documents](../methodology/) - Deep dive into assessment principles
-- [ADRs](adr/) - Design decisions and rationale
+- [ADRs](decisions/) - Design decisions and rationale
 
 ### For Regular Use
 

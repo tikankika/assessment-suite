@@ -140,7 +140,7 @@ See design process documentation for examples.
 ## Questions?
 
 - 📚 Check [WORKFLOW-INTEGRATION.md](docs/WORKFLOW-INTEGRATION.md)
-- 🏗️ Review [ADRs](docs/adr/) for design rationale
+- 🏗️ Review [ADRs](docs/decisions/) for design rationale
 - 💬 Ask in [discussions](https://github.com/tikankika/assessment-suite/discussions)
 
 ---

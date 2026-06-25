@@ -31,7 +31,7 @@
 
 **Workflow:**
 - [Complete 8-Phase Workflow](../../docs/WORKFLOW-INTEGRATION.md)
-- [System Architecture](../../docs/adr/ADR-001-hybrid-python-typescript-architecture.md)
+- [System Architecture](../../docs/decisions/ADR-001-hybrid-python-typescript-architecture.md)
 
 **Python Phases:**
 - Phase 1: explore_directory (auto-discover files)

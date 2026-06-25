@@ -21,7 +21,7 @@ import { FOLDERS } from '../shared/folder_constants.js';
  * @param args.document_name - Alternative: specific document by name
  * @returns Document content with progress info
  *
- * @see docs/adr/ADR-003-progressive-methodology-loading.md
+ * @see docs/decisions/ADR-003-progressive-methodology-loading.md
  */
 
 // ADR-003: Methodology document types (same as phase6_start)

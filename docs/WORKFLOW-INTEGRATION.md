@@ -16,7 +16,7 @@ Phase 9-13: Feedback  ←──  Phase 7-8: Reports  ←──  Phase 6-post  �
 
 **Note:** Phase 6-post (format detection) is REQUIRED between Phase 6 and Phase 7.
 
-**Architecture:** Hybrid Python/TypeScript - see [ADR-001](adr/ADR-001-hybrid-python-typescript-architecture.md)
+**Architecture:** Hybrid Python/TypeScript - see [ADR-001](decisions/ADR-001-hybrid-python-typescript-architecture.md)
 
 ---
 
@@ -187,7 +187,7 @@ Both servers run simultaneously in Claude Desktop - switching is automatic.
 
 - **[Getting Started](GETTING_STARTED.md)** - Installation and tutorial
 - **[API Reference](../packages/assessment-mcp/docs/API.md)** - Tool documentation
-- **[ADR-001](adr/ADR-001-hybrid-python-typescript-architecture.md)** - Architecture rationale
+- **[ADR-001](decisions/ADR-001-hybrid-python-typescript-architecture.md)** - Architecture rationale
 
 ---
 

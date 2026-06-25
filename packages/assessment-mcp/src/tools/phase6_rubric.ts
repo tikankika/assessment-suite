@@ -22,7 +22,7 @@ import { FOLDERS } from '../shared/folder_constants.js';
  * @param args.rubric_path - Optional: explicit path to rubric file
  * @returns Rubric section content with next_action
  *
- * @see docs/adr/ADR-003-progressive-methodology-loading.md
+ * @see docs/decisions/ADR-003-progressive-methodology-loading.md
  */
 
 export interface Phase6RubricParams {

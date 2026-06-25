@@ -5,7 +5,7 @@ All notable changes to Assessment Suite are documented here. The format follows
 [Semantic Versioning](https://semver.org/).
 
 The version tracks the maturity of the assessment **methodology**, not just the code
-(see [ADR-012](docs/adr/ADR-012-versioning-and-1.0-readiness.md)); the project stays in
+(see [ADR-012](docs/decisions/ADR-012-versioning-and-1.0-readiness.md)); the project stays in
 its 0.x line until the methodology is complete.
 
 ## [Unreleased]
@@ -47,7 +47,7 @@ Initial public release.
   data-protection posture (GDPR / EU AI Act / Swedish *Skollagen* and OSL); see
   [SECURITY.md](SECURITY.md).
 - Licensed **PolyForm Noncommercial 1.0.0** (see
-  [ADR-010](docs/adr/ADR-010-licence-polyform-noncommercial.md)).
+  [ADR-010](docs/decisions/ADR-010-licence-polyform-noncommercial.md)).
 
 Versions before 0.8.0 were pre-public development and are not catalogued here.
 
