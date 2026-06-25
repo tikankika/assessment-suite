@@ -13,6 +13,14 @@ its 0.x line until the methodology is complete.
 ### Added
 
 - This changelog.
+- **README — a plain-language "What is Assessment Suite?" opening, a "Data & privacy" section, and a Support section.** The data section is explicit that file operations are local but the AI-assisted phases send student answers to Anthropic's API.
+
+### Changed
+
+- **CODE_OF_CONDUCT — adopted the family-standard Contributor Covenant 2.1 text** (replacing the locally adapted wording).
+- **LICENSE — restored to the verbatim PolyForm Noncommercial 1.0.0 text**; the body is now byte-identical to the sibling repositories.
+- **CONTRIBUTING — a prominent "data protection" section** (never commit real PII; use fabricated data; watch quasi-identifiers; scrub history if something real lands), plus sentence-case headings and a standardised licence line.
+- **SECURITY — headings, supported-versions table and response-time aligned with the family standard.**
 
 ### Fixed
 

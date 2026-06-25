@@ -1,21 +1,25 @@
 # Security Policy
 
-## Supported Versions
+## Supported versions
 
 | Version | Supported |
 |---------|-----------|
-| 0.8.x   | Yes       |
-| < 0.8   | No        |
+| 0.8.x   | ✅ |
+| < 0.8   | ❌ |
 
-## Reporting a Vulnerability
+## Reporting a vulnerability
 
-If you discover a security vulnerability, please report it responsibly:
+Please **do not** open a public issue for security problems.
 
-1. **Do NOT open a public GitHub issue.**
-2. Use [GitHub's private vulnerability reporting](https://github.com/tikankika/assessment-suite/security/advisories/new).
-3. Include a description of the vulnerability and steps to reproduce.
+Report vulnerabilities privately through GitHub's [private vulnerability reporting](https://github.com/tikankika/assessment-suite/security/advisories/new) (the **Security** tab → **Report a vulnerability**).
 
-You can expect an initial response within 72 hours.
+Please include:
+
+- a description of the issue and its impact,
+- steps to reproduce (a minimal example if possible),
+- any suggested mitigation.
+
+You can expect an acknowledgement within a week, and responsible disclosure is appreciated — please allow time for a fix before any public disclosure.
 
 ---
 
