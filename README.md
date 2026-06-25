@@ -6,14 +6,23 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Node.js 18+](https://img.shields.io/badge/node.js-18+-green.svg)](https://nodejs.org/)
 
-Assessment Suite helps teachers carry out **analytic assessment** — scoring each aspect of
-each answer, with evidence and forward-looking feedback — with AI assistance, **without
-handing the decision to the AI**. Claude proposes and documents; the teacher confirms or
-overrides every judgement. The assessment logic lives in editable methodology documents,
-not in code: the software is two [Model Context Protocol](https://modelcontextprotocol.io/)
-servers that plug into Claude Desktop and act as plumbing around that methodology. It is
-grounded in — and actively developing — assessment-validity and formative-feedback
-research, for Swedish upper-secondary and higher education.
+## What is Assessment Suite?
+
+Marking open-response exams — essays, long written answers — means judging each
+answer against several criteria, scoring it fairly, and writing feedback a student
+can actually use. For a whole class that is slow, and staying consistent across
+dozens of answers is hard.
+
+Assessment Suite helps you do it one aspect at a time, with AI assistance. Claude
+reads each answer, proposes a score for each aspect with the evidence quoted from
+the student's own words, and drafts a correction and a concrete next step. You
+confirm, adjust, or reject every judgement — **the AI never decides a grade.**
+
+The assessment rules are not hidden in code: they live in plain-text methodology
+documents you can read and edit, so every score traces back to a written rule.
+Under the hood it is two [Model Context Protocol](https://modelcontextprotocol.io/)
+servers that run inside Claude Desktop, built for Swedish upper-secondary and
+higher education.
 
 ---
 
@@ -191,6 +200,27 @@ Per-student / lab-report mode is **experimental and not yet supported** in this 
 use the standard per-question flow.
 
 Versions and roadmap: see [ROADMAP.md](ROADMAP.md).
+
+---
+
+## Data & privacy
+
+Student answers are personal data, so be deliberate about how they flow.
+
+- **Local file operations, but not local-only AI.** File processing runs on your
+  machine, but the AI-assisted phases send the student answers they reason over to
+  Anthropic's API through Claude Desktop. This is not a self-contained, offline
+  tool — understand this before loading real student data.
+- **Workspace lockdown.** The MCP tools can only read and write inside a required
+  `--workspace` directory, with symlink-escape and dangerous-path guards.
+- **You stay the decision-maker.** The teacher confirms every judgement; the tool
+  never sets a grade autonomously.
+- **Anonymise first.** Assessment Suite has no built-in PII detection — strip names
+  and identifiers from answer files before loading them. (For classroom recordings
+  and transcripts, edusafe-pipeline does this offline.)
+
+The full posture — GDPR, the EU AI Act, third-country transfer, and Skollagen — is
+in [SECURITY.md](SECURITY.md).
 
 ---
 
