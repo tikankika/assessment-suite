@@ -2,7 +2,26 @@
 
 Thank you for considering contributing to Assessment Suite!
 
-## Ways to Contribute
+## Critical rules — data protection
+
+Assessment Suite processes real student exam answers. This is a public repository —
+never let real personal data into the repo, in code, tests, comments, documentation,
+examples or commit messages. Git history is permanent.
+
+- **Never commit real personal data:** names (students, colleagues, teachers),
+  school or institution names, identifying places, personal-identity numbers, file
+  paths containing a username (`/Users/...`), secrets (API keys, tokens, `.env`),
+  and real student answers or assessment outputs.
+- **Use fabricated or anonymised data in every example and test.** The bundled
+  project under `examples/` is fully fabricated — use it as the model, and see
+  [EXAMPLES_POLICY.md](EXAMPLES_POLICY.md).
+- **Watch quasi-identifiers:** a class plus a date plus a subject can identify a
+  student even with no name attached.
+- **Already committed something real?** Deleting the file is not enough — it stays
+  in the git history forever. Stop, scrub the history, rotate any exposed secret,
+  and escalate before the next push.
+
+## Ways to contribute
 
 - 🐛 **Report bugs** - [Open an issue](https://github.com/tikankika/assessment-suite/issues/new)
 - 💡 **Suggest features** - [Start a discussion](https://github.com/tikankika/assessment-suite/discussions)
@@ -11,7 +30,7 @@ Thank you for considering contributing to Assessment Suite!
 
 ---
 
-## Development Setup
+## Development setup
 
 ### Prerequisites
 
@@ -20,7 +39,7 @@ Thank you for considering contributing to Assessment Suite!
 - Claude Desktop
 - Git
 
-### Quick Setup
+### Quick setup
 
 ```bash
 git clone https://github.com/tikankika/assessment-suite.git
@@ -41,7 +60,7 @@ npm run build
 
 ---
 
-## Code Style
+## Code style
 
 ### TypeScript
 - Follow existing patterns in `assessment-mcp`
@@ -85,12 +104,12 @@ npm run build  # Must compile without errors
 
 ## Documentation
 
-### For Code Changes
+### For code changes
 - Update relevant docstrings
 - Add/update tests
 - Update CHANGELOG.md
 
-### For New Features
+### For new features
 - Add to README.md
 - Create ADR for architectural decisions
 - Create RFC for major changes
@@ -99,7 +118,7 @@ See design process documentation for examples.
 
 ---
 
-## Pull Request Process
+## Pull request process
 
 1. **Fork** the repository
 2. **Create branch** from `main`:
@@ -132,8 +151,6 @@ Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before participating.
 
 ---
 
-## License
+## Licence
 
-By contributing, you agree your contributions will be licensed under the
-[PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0),
-consistent with the project's licence.
+By contributing, you agree that your contributions will be licensed under PolyForm Noncommercial 1.0.0 (see [LICENSE](LICENSE)).

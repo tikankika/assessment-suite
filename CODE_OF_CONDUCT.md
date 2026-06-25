@@ -1,31 +1,25 @@
 # Code of Conduct
 
-## Our Standards
+This project adopts the [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/) version 2.1 as its code of conduct. The full text is available at the link above.
 
-Assessment Suite is an educational tool built for teachers and researchers. We are committed to providing a welcoming and constructive environment for everyone.
+## Reporting
 
-### Expected behaviour
+If you experience or witness conduct that conflicts with the standards described in the Contributor Covenant, please report it by opening a GitHub Issue:
 
-- Use welcoming and inclusive language
-- Be respectful of differing viewpoints and experiences
-- Accept constructive criticism gracefully
-- Focus on what is best for the community
-- Show empathy towards other community members
+- **Open an issue** with the `conduct` label: <https://github.com/tikankika/assessment-suite/issues/new?labels=conduct>
+- Describe what happened, when, and (if relevant) who was involved
+- The maintainer will respond within a reasonable timeframe
 
-### Unacceptable behaviour
-
-- Personal attacks, insults, or derogatory comments
-- Publishing others' private information without explicit permission
-- Any conduct that would be considered inappropriate in a professional educational setting
+For sensitive matters that should not be public, mention `@tikankika` in a private GitHub channel or contact the maintainer through GitHub's built-in messaging.
 
 ## Scope
 
-This code of conduct applies to all project spaces, including issues, pull requests, discussions, and any public space where someone is representing the project.
+This applies to all project spaces — the GitHub repository, issues, pull requests, discussions, and any other forum where contributors interact in connection with this project.
 
 ## Enforcement
 
-Instances of unacceptable behaviour may be reported by contacting the project maintainer via GitHub. All reports will be reviewed and responded to appropriately.
+Maintainers may take any action they deem appropriate in response to reports, ranging from a private warning to permanent removal from the project. Decisions are at the maintainer's discretion, guided by the Contributor Covenant.
 
-## Attribution
+---
 
-This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/), version 2.1.
+*Adopted from [Contributor Covenant 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/), summarised here. The full text governs in case of any ambiguity in this summary.*
