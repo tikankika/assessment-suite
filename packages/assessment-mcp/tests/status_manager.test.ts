@@ -86,6 +86,20 @@ describe('StatusManager', () => {
     });
   });
 
+  describe('hasStatus with provided content', () => {
+    it('uses provided content instead of reading the file', async () => {
+      // A path that does not exist on disk: a non-false result proves the
+      // provided content was inspected rather than the file being read.
+      const missingPath = `${TEST_DIR}/hasstatus_content_missing.md`;
+      const withStatus =
+        '---\nASSESSMENT-STATUS:\n  File: x.md\n---\n\n## Elev 111 (1 ord)\n';
+      const withoutStatus = '## Elev 111 (1 ord)\n\nAnswer.\n';
+
+      expect(await statusManager.hasStatus(missingPath, withStatus)).toBe(true);
+      expect(await statusManager.hasStatus(missingPath, withoutStatus)).toBe(false);
+    });
+  });
+
   describe('edge cases', () => {
     it('throws if STATUS already exists (prevents duplicate)', async () => {
       const filePath = `${TEST_DIR}/no_duplicate.md`;

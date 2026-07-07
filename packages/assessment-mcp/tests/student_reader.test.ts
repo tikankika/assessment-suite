@@ -132,3 +132,19 @@ Answer B.
     expect(students[2].index).toBe(2);
   });
 });
+
+describe('StudentReader.findStudent with provided content', () => {
+  // A path that passes validation but does not exist on disk: a returned
+  // student proves the provided content was used instead of reading the file.
+  const missingPath = '/tmp/findstudent_content_test_missing.md';
+
+  it('finds a student from provided content without reading the file', async () => {
+    const found = await reader.findStudent(missingPath, '100001', STANDARD_QFILE);
+    expect(found?.id).toBe('100001');
+  });
+
+  it('returns null for an unknown id using provided content', async () => {
+    const found = await reader.findStudent(missingPath, 'nope', STANDARD_QFILE);
+    expect(found).toBeNull();
+  });
+});

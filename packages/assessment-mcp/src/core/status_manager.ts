@@ -152,11 +152,14 @@ export class StatusManager {
 
   /**
    * Check if file has ASSESSMENT-STATUS frontmatter
+   *
+   * @param filePath - Path to the file
+   * @param content - Optional pre-read file content, to avoid re-reading the file
    */
-  async hasStatus(filePath: string): Promise<boolean> {
+  async hasStatus(filePath: string, content?: string): Promise<boolean> {
     try {
-      const content = await fs.readFile(filePath, 'utf-8');
-      return content.startsWith('---') && content.includes('ASSESSMENT-STATUS:');
+      const fileContent = content ?? await fs.readFile(filePath, 'utf-8');
+      return fileContent.startsWith('---') && fileContent.includes('ASSESSMENT-STATUS:');
     } catch {
       return false;
     }

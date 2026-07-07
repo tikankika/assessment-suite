@@ -1,3 +1,4 @@
+import { promises as fs } from 'fs';
 import { StatusManager } from '../core/status_manager.js';
 import { StudentReader } from '../core/student_reader.js';
 import { AssessmentWriter } from '../core/assessment_writer.js';
@@ -80,17 +81,29 @@ export async function assessmentWrite(args: {
 
   try {
 
+  // Read the pre-write Q-file once; steps 1 and 2 both inspect this same
+  // unmodified content (the STATUS check and the student lookup), so a single
+  // read serves both. If the file is unreadable, leave content undefined and
+  // let hasStatus fall back to its own read+catch, preserving the exact
+  // "no session" error below rather than surfacing a raw filesystem error.
+  let preWriteContent: string | undefined;
+  try {
+    preWriteContent = await fs.readFile(q_file_path, 'utf-8');
+  } catch {
+    preWriteContent = undefined;
+  }
+
   // 1. Check STATUS exists
   debugLog('[assessment_write] Step 1: Checking STATUS exists...');
-  if (!(await statusManager.hasStatus(q_file_path))) {
+  if (!(await statusManager.hasStatus(q_file_path, preWriteContent))) {
     debugLog('[assessment_write] ERROR: No assessment session found');
     throw new Error('No assessment session found. Use assessment_start first.');
   }
   debugLog('[assessment_write] Step 1: OK - STATUS exists');
 
-  // 2. Validate student exists
+  // 2. Validate student exists (reuse the content read above)
   debugLog('[assessment_write] Step 2: Finding student...');
-  const student = await studentReader.findStudent(q_file_path, student_id);
+  const student = await studentReader.findStudent(q_file_path, student_id, preWriteContent);
   if (!student) {
     debugLog('[assessment_write] ERROR: Student not found:', student_id);
     throw new Error(`Student ${student_id} not found in file`);
