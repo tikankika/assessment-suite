@@ -145,10 +145,11 @@ export class StudentReader {
    *
    * @param filePath - Path to Q-file
    * @param studentId - Student ID to find
+   * @param content - Optional pre-read file content, to avoid re-reading the file
    * @returns Student or null if not found
    */
-  async findStudent(filePath: string, studentId: string): Promise<Student | null> {
-    const students = await this.parseStudents(filePath);
+  async findStudent(filePath: string, studentId: string, content?: string): Promise<Student | null> {
+    const students = await this.parseStudents(filePath, content);
     return students.find(s => s.id === studentId) || null;
   }
 
