@@ -154,3 +154,6 @@ CLAUDE.md
 
 # Internal exploration/diagnosis docs — see internal-docs-boundary.md
 docs/explorations/
+
+# ACDM rules — dev-tooling, gitignored downstream (ADR-017)
+.claude/rules/
