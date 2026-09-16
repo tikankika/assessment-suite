@@ -207,7 +207,7 @@ def download_url(url: str, output_path: Path) -> bool:
             content = text
 
         # HTML → Markdown (Skolverket case)
-        elif 'text/html' in content_type or url.startswith('https://www.skolverket.se'):
+        elif 'text/html' in content_type or urlparse(url).hostname == 'www.skolverket.se':
             h = html2text.HTML2Text()
             h.ignore_links = False      # Keep links
             h.ignore_images = False     # Keep images
