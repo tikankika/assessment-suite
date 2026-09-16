@@ -211,50 +211,18 @@ export async function loadPostFormatMethodology(): Promise<string> {
       const content = await fs.readFile(methodologyPath, 'utf-8');
       console.error(`[Phase 6-post] Loaded methodology from: ${methodologyPath}`);
       return content;
-    } catch (error) {
-      // Try next path
-      continue;
+    } catch {
+      // Try the next location
     }
   }
   
-  // Fallback to inline instructions if file not found anywhere
-  console.warn('[Phase 6-post] WARNING: Methodology file not found in any location, using fallback');
-  return `# Phase 6-post: Assessment Format Detection
-
-## Your Task
-Analyze the sample Q-file content and detect the assessment format.
-
-## Format Types
-
-### v2 Format (Standard):
-\`\`\`
-<!-- PHASE6_ASSESSMENT_START student_id="12345" -->
-Assessment text...
-<!-- PHASE6_ASSESSMENT_END -->
-\`\`\`
-
-### Legacy Format:
-\`\`\`
-### BEDÖMNING: 12345
-Assessment text...
-(8/10 poäng)
-\`\`\`
-
-## Steps
-1. Search for v2 markers (\`<!-- PHASE6_ASSESSMENT_START\`)
-2. If not found, search for legacy markers (\`### BEDÖMNING:\`)
-3. For legacy format:
-   - Extract header pattern
-   - Extract points pattern (common: \`\\((\\d+)/(\\d+)\\s*poäng\\)\`)
-4. Verify pattern works on multiple assessments
-5. Ask user to confirm
-6. Call tool again with mode: 'save' and detected format
-
-## Important
-- v2 format requires NO additional config (just type: 'v2')
-- Legacy format requires header + points pattern
-- Always verify pattern against multiple examples
-`;
+  throw new Error(
+    'Phase 6-post methodology file could not be loaded: ' +
+    'methodology/technical/phase6_post_format_detection.md ' +
+    `(looked in: ${possiblePaths.join(', ')}). ` +
+    'The methodology document is the source of truth; provide the file rather than running ' +
+    'with built-in fallback instructions.'
+  );
 }
 
 /**
