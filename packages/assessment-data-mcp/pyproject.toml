@@ -16,8 +16,8 @@ classifiers = [
     "Private :: Do Not Upload",
 ]
 dependencies = [
-    # MCP SDK
-    "mcp>=0.1.0",
+    # Verified low-level Server API; SDK 2 requires a separate migration.
+    "mcp>=1.28.1,<2",
     
     # YAML handling
     "pyyaml>=6.0",
@@ -51,11 +51,11 @@ Repository = "https://github.com/tikankika/assessment-suite"
 Documentation = "https://github.com/tikankika/assessment-suite/tree/main/packages/assessment-data-mcp/docs"
 
 [tool.setuptools]
-packages = ["assessment_data_mcp"]
 package-dir = {"" = "src"}
 
-[tool.setuptools.package-data]
-assessment_data_mcp = ["py.typed"]
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["assessment_data_mcp*"]
 
 [tool.black]
 line-length = 100
