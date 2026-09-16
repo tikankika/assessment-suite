@@ -15,20 +15,12 @@ See: docs/decisions/ADR-005 mcp directory exploration.md
 from pathlib import Path
 from typing import Dict, Optional, List, Tuple
 from ..validators import validate_path_security
-from ..constants.folders import METHODOLOGY
-
-
-def _get_default_methodology_folder() -> Path:
-    """Get methodology folder path relative to this package."""
-    # Navigate: tools/ -> assessment_data_mcp/ -> src/ -> assessment-data-mcp/ -> packages/ -> Assessment_suite/
-    this_file = Path(__file__).resolve()
-    monorepo_root = this_file.parents[5]  # Up 5 levels to Assessment_suite
-    return monorepo_root / METHODOLOGY
+from ..utils.methodology_path import default_methodology_folder
 
 
 def _scan_methodology_files() -> List[Tuple[str, int]]:
     """Scan methodology folder recursively and return list of (relative_path, size_kb) tuples."""
-    methodology_path = _get_default_methodology_folder()
+    methodology_path = default_methodology_folder()
     if not methodology_path.exists():
         return []
 

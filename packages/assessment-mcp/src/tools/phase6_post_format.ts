@@ -183,11 +183,19 @@ async function readSampleContent(qFile: string): Promise<string> {
  * CRITICAL FIX: Read from /methodology/ directory (same as Phase 4d)
  * This is where all methodology documents are stored in Assessment Suite.
  */
-async function loadMethodology(): Promise<string> {
+export async function loadPostFormatMethodology(): Promise<string> {
   // Find Assessment_suite root by going up from current location
   // We're in: Assessment_suite/packages/assessment-mcp/src/tools/
   // We need: Assessment_suite/methodology/
+  // METHODOLOGY_PATH (non-empty) takes precedence, as in the shared loader.
+  const configured = process.env.METHODOLOGY_PATH;
   const possiblePaths = [
+    ...(configured
+      ? [
+          path.join(configured, 'technical/phase6_post_format_detection.md'),
+          path.join(configured, 'phase6_post_format_detection.md'),
+        ]
+      : []),
     // Try subdirectory first (RFC-031 reorganization)
     path.join(__dirname, '../../../../methodology/technical/phase6_post_format_detection.md'),
     path.join(process.cwd(), 'methodology/technical/phase6_post_format_detection.md'),
@@ -467,7 +475,7 @@ export async function phase6_post_format(request: Phase6PostRequest): Promise<Ph
     // Claude must verify against ALL Q-files before saving (see methodology)
     const sampleFile = qFiles[0];
     const sampleContent = await readSampleContent(sampleFile);
-    const methodology = await loadMethodology();
+    const methodology = await loadPostFormatMethodology();
     const examConfig = await loadExamConfig(projectPath);
 
     // Build dynamic instructions (like Phase 4d's buildInstructions)
