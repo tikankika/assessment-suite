@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # bump.sh — Update version across all version-bearing locations in the monorepo
-# (10 sed edits + 2 regenerated lock files). The root README.md and ROADMAP.md
+# (12 sed edits + 2 regenerated lock files). The root README.md and ROADMAP.md
 # are deliberately version-less and are intentionally not touched.
 #
 # Usage:
@@ -43,6 +43,8 @@ declare -a FILES=(
   "packages/assessment-mcp/README.md"
   "packages/assessment-mcp/docs/API.md"
   "packages/assessment-data-mcp/README.md"
+  "packaging/mcpb/assessment/manifest.json"
+  "packaging/mcpb/data/manifest.json"
   # Lock files are regenerated, not sed-edited (see step 12-13 below).
   # NOTE: root README.md and ROADMAP.md are deliberately version-less and are
   # NOT bumped (see step 7-9).
@@ -136,6 +138,14 @@ for doc in packages/assessment-mcp/README.md packages/assessment-mcp/docs/API.md
   update_file "$doc" \
     "\*\*Version:\*\* [0-9]*\.[0-9]*\.[0-9]*" \
     "**Version:** $NEW_VERSION"
+done
+
+# 10-11. MCPB manifests — "version": "X.Y.Z" (manifest_version is the format
+# version and is not touched). scripts/build_mcpb.py refuses a mismatch.
+for manifest in packaging/mcpb/assessment/manifest.json packaging/mcpb/data/manifest.json; do
+  update_file "$manifest" \
+    "\"version\": \"$CURRENT_VERSION\"" \
+    "\"version\": \"$NEW_VERSION\""
 done
 
 # 12-13. Lock files (regenerated, not sed)
