@@ -1,0 +1,42 @@
+{
+  "manifest_version": "0.4",
+  "name": "assessment-suite-assessment",
+  "display_name": "Assessment Suite: assessment",
+  "version": "0.8.0",
+  "description": "Assessment workflows for Assessment Suite: methodology instructions, and saving and retrieving question-level assessments.",
+  "long_description": "One of the two Assessment Suite servers. Install the data server as well, and choose the same workspace folder for both. The server reads and writes only inside the workspace. Material shown in the conversation is processed by the AI service the application uses.",
+  "author": { "name": "Assessment Suite contributors" },
+  "repository": { "type": "git", "url": "https://github.com/tikankika/assessment-suite" },
+  "homepage": "https://github.com/tikankika/assessment-suite",
+  "support": "https://github.com/tikankika/assessment-suite/issues",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "keywords": ["assessment", "education", "rubric", "feedback"],
+  "server": {
+    "type": "node",
+    "entry_point": "packages/assessment-mcp/dist/server.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/packages/assessment-mcp/dist/server.js", "--workspace", "${user_config.workspace}"],
+      "env": { "METHODOLOGY_PATH": "${user_config.methodology}" }
+    }
+  },
+  "user_config": {
+    "workspace": {
+      "type": "directory",
+      "title": "Workspace folder",
+      "description": "The folder holding your assessment projects. Choose the same folder for both Assessment Suite servers.",
+      "required": true
+    },
+    "methodology": {
+      "type": "directory",
+      "title": "Methodology folder (optional)",
+      "description": "Your own editable copy of the methodology folder. Leave empty to use the methodology included in the package.",
+      "required": false,
+      "default": ""
+    }
+  },
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": { "node": ">=18.0.0" }
+  }
+}

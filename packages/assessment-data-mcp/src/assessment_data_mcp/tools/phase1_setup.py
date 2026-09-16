@@ -15,6 +15,7 @@ import time      # For duration tracking (Q4)
 from ..validators.path_validator import validate_path
 from ..validators import validate_path_security
 from ..utils.file_ops import copy_file, copy_directory, count_files, download_url
+from ..utils.methodology_path import default_methodology_folder
 from ..constants.folders import (
     PHASE1_ORIGINAL,
     PHASE2_MARKDOWN,
@@ -33,16 +34,7 @@ def log(msg: str) -> None:
     print(msg, file=sys.stderr)
 
 
-# Default methodology folder path (relative to monorepo root)
-def _get_default_methodology_folder() -> str:
-    """Get methodology folder path relative to this package."""
-    # Navigate: tools/ -> assessment_data_mcp/ -> src/ -> assessment-data-mcp/ -> packages/ -> Assessment_suite/
-    this_file = Path(__file__).resolve()
-    monorepo_root = this_file.parents[5]  # Up 5 levels to Assessment_suite
-    methodology_path = monorepo_root / METHODOLOGY  # Now at monorepo root
-    return str(methodology_path)
 
-DEFAULT_METHODOLOGY_FOLDER = _get_default_methodology_folder()
 
 
 from ..utils.state_manager import (
@@ -256,7 +248,7 @@ async def setup_project_tool(
             }
             log(f"Using shared methodology from parent: {parent_methodology} ({methodology_count} files)")
         else:
-            effective_methodology_folder = None if skip_methodology else (methodology_folder or DEFAULT_METHODOLOGY_FOLDER)
+            effective_methodology_folder = None if skip_methodology else (methodology_folder or str(default_methodology_folder()))
             if effective_methodology_folder:
                 methodology_path = Path(effective_methodology_folder).resolve()
                 if methodology_path.exists() and methodology_path.is_dir():

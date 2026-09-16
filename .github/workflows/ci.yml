@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+# Every job only checks out, builds and tests; none writes to the repository.
+permissions:
+  contents: read
+
 jobs:
   typescript:
     name: TypeScript Build & Test
@@ -39,5 +43,23 @@ jobs:
       - run: pip install uv
       - run: uv lock --check
       - run: pytest tests/ -v
+        env:
+          RUN_PACKAGING_TESTS: "1"
+
+  mcpb:
+    name: MCPB Bundles
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: packages/assessment-mcp/package-lock.json
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install uv
+      - run: uv run --locked --project packages/assessment-data-mcp python -m unittest discover -s scripts/tests -p 'test_build_mcpb.py' -v
         env:
           RUN_PACKAGING_TESTS: "1"
