@@ -141,7 +141,7 @@ The teacher checks that the expected questions, assessments and totals are all p
 
 For the bus example, the student's report would now hold the 3/3 assessment and its reasons next to the same student's other question records.
 
-Sources: [format configuration](../packages/assessment-mcp/src/tools/phase6_post_format.ts#L447), [report generation](../packages/assessment-data-mcp/src/assessment_data_mcp/phase7/generator.py#L148), [numerical parser](../packages/assessment-data-mcp/src/assessment_data_mcp/phase8/hybrid_parser.py#L25).
+Sources: [format configuration](../packages/assessment-mcp/src/tools/phase6_post_format.ts#L455), [report generation](../packages/assessment-data-mcp/src/assessment_data_mcp/phase7/generator.py#L148), [numerical parser](../packages/assessment-data-mcp/src/assessment_data_mcp/phase8/hybrid_parser.py#L25).
 
 ## Interpret the records and decide what to communicate
 
