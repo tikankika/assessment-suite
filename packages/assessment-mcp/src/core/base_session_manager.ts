@@ -8,6 +8,8 @@
  * `createSession()` method and any extra helpers.
  */
 
+import { randomBytes } from 'crypto';
+
 /**
  * Common fields shared by all phase sessions (10, 11, 12).
  */
@@ -31,7 +33,7 @@ export interface BaseSession {
  */
 export function generateSessionId(prefix: string, studentId: string): string {
   const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 8);
+  const random = randomBytes(3).toString('hex');
   return `${prefix}_${studentId}_${timestamp}_${random}`;
 }
 
