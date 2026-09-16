@@ -8,6 +8,7 @@ Quick navigation to Assessment Suite documentation.
 
 - **[GETTING_STARTED.md](GETTING_STARTED.md)** - Installation and first assessment tutorial
 - **[WORKFLOW-INTEGRATION.md](WORKFLOW-INTEGRATION.md)** - Complete pipeline guide
+- **[DESIGN_AND_THEORY.md](DESIGN_AND_THEORY.md)** - What teachers can adapt, what the software fixes, and how research informs the methodology
 
 ---
 

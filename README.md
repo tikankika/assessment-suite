@@ -1,287 +1,98 @@
 # Assessment Suite
 
-> AI-assisted analytic assessment that keeps the teacher's judgement central.
-
-[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-lightgrey.svg)](LICENSE)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Node.js 18+](https://img.shields.io/badge/node.js-18+-green.svg)](https://nodejs.org/)
-
-## What is Assessment Suite?
-
-Marking open-response exams — essays, long written answers — means judging each
-answer against several criteria, scoring it fairly, and writing feedback a student
-can actually use. For a whole class that is slow, and staying consistent across
-dozens of answers is hard.
-
-Assessment Suite helps you do it one aspect at a time, with AI assistance. Claude
-reads each answer, proposes a score for each aspect with the evidence quoted from
-the student's own words, and drafts a correction and a concrete next step. You
-confirm, adjust, or reject every judgement — **the AI never decides a grade.**
-
-The assessment rules are not hidden in code: they live in plain-text methodology
-documents you can read and edit, so every score traces back to a written rule.
-Under the hood it is two [Model Context Protocol](https://modelcontextprotocol.io/)
-servers that run inside Claude Desktop, built for Swedish upper-secondary and
-higher education.
-
----
-
-## Design idea: the methodology is the system; the tools are plumbing
-
-Most of what Assessment Suite "knows" is not in its code. The assessment logic — what to
-look at, how to interpret it, what counts as evidence, how to phrase feedback — lives in
-plain-markdown **methodology documents**. The AI reads those documents and follows them;
-the MCP tools only move data (read a file, write a file, track progress) and contain no
-assessment logic of their own.
-
-Three consequences follow, and they are the point of the design:
-
-- **Transparent.** Every assessment step traces back to a written rule you can read. No
-  hidden model is deciding grades — the reasoning is in the methodology and in the cited
-  evidence from the student's own answer.
-- **Auditable.** Because the logic is text rather than opaque code, a colleague, a
-  researcher, or a reviewing authority can inspect exactly how an assessment was reached.
-- **Yours to adapt.** When you set up a project, the methodology is copied into your
-  project folder as editable markdown. You can read it, question it, and change it to fit
-  your subject and your professional judgement — the system's "brain" is not locked away.
-
-This is also why the teacher stays in control by construction: the AI has no independent
-assessment opinion to impose. It facilitates a methodology that you own, and the teacher
-decides.
-
----
-
-## Part of a teaching-and-assessment ecosystem
-
-These tools share one philosophy — *teacher-led: scaffolding, not automation* — and
-one design: MCP servers (and one pipeline) that run locally over plain-Markdown
-workspaces, each locked to a folder with no network service of their own. They are
-split along a deliberate data boundary: the **teaching side never holds student
-personal data**, and the **assessment side keeps student work walled off** in its
-own workspace.
-
-| Tool | Role | Side |
-|------|------|------|
-| **edusafe-pipeline** | Anonymise Swedish classroom recordings and transcripts offline (names → pseudonyms) before anything is shared or reused. | Data-safety gate |
-| **Teaching Suite** | Plan lessons, capture ideas, and reflect across lesson, course, and profession cycles. | Teaching — course workspace, no student PII |
-| **QuestionForge** | Author exam questions from what was actually taught and export them to QTI for Inspera. Belongs to the teaching side by data zone (course material, no student data) but runs fully on its own — Teaching Suite is not required. | Teaching — course workspace, no student PII |
-| **Assessment Suite** | Assess open-response answers aspect by aspect, with cited evidence and feedback — the teacher deciding every judgement. | Assessment — separate workspace, student data stays here |
-
-How they fit together over one teaching cycle:
-
-```
-   edusafe-pipeline     anonymise recordings/transcripts (offline, names → pseudonyms)
-        │
-        ▼
-   Teaching Suite       plan lessons, capture ideas, reflect
-        │
-        ▼
-   QuestionForge        author exam questions from what was taught
-        │
-        ▼
-   Inspera / QTI LMS    exam delivered and sat
-        │
-        ▼
-   Assessment Suite     assess answers; reports and formative feedback
-        │               (student work stays in this workspace)
-        ▼
-   Teaching Suite       only teacher insights flow back — by design, no student data
-                        (aggregate_logs unifies the timeline)
-```
-
-**Your folders, your files.** Everything every tool writes is plain Markdown in your
-own Nextcloud workspace — no database, no lock-in. The files are the source of truth
-and stay readable on their own, with or without the tools. The teaching side and the
-assessment side are deliberately *separate* folders, so student work never lands in the
-course workspace; only anonymised *insights about teaching* flow from Assessment Suite
-back to Teaching Suite. Point an Obsidian vault at a workspace (one per side, to keep the
-data boundary intact) and your Markdown becomes a browsable, linkable web of your
-practice — richer still where a tool writes `[[wikilinks]]` and `#tags`, as Teaching
-Suite does. Sync the folders — for example via Nextcloud — and they follow you across
-machines.
-
-All tools are licensed under PolyForm Noncommercial 1.0.0.
+Assessment Suite is a set of tools for preparing assessment material and assessing written student answers with AI assistance. The assessment is analytic: each answer is examined against named aspects of quality in a rubric, and the teacher records a judgement, points and reasons for each aspect. The tools convert PDFs to Markdown, organise answers by question, support rubric development, produce AI assessment proposals for the teacher to examine, and save the submitted judgements with their reasons.
 
-> You are reading the **Assessment Suite** README — see also
-> [Teaching Suite](https://github.com/tikankika/teaching-suite) and
-> [QuestionForge](https://github.com/tikankika/question-forge).
+The work moves between two views: all answers to one question across a class, and one student's assessments across questions. Saved judgements and reasons stay readable, so the teacher can return to them when interpreting a student's work and writing feedback.
 
----
+The assessment guidance is written in readable methodology documents that draw on assessment research, rather than fixed in program code. This keeps the instructions open to examination and to adaptation by teachers.
 
-## Who are you?
+The tools are intended for teachers working with written answers, and for researchers and developers who want to inspect how AI-supported assessment is organised and implemented. Version 0.8.0 is under development; see [Development status](#development-status-and-open-questions).
 
-Assessment Suite serves three audiences. Pick the door that fits — they need different things.
+## Preparing material for assessment
 
-### I'm a teacher
+The starting material is a set of questions, the students' written answers and the assessment guidance for the task, typically a rubric and the relevant course criteria. Assessment Suite extracts the text from PDFs into Markdown and groups the answers by question, so that every answer to one question can be examined together.
 
-The tool helps you assess open-response exams aspect by aspect, with AI assistance, while
-you make every decision. Claude proposes a score and a justification grounded in the
-student's own words; you confirm, adjust, or reject it. The output is the kind students
-rarely receive: per-aspect scoring with cited evidence, error corrections, and a concrete
-"next step" for each question.
+The teacher then checks the extracted text and its grouping against the source PDFs. This is the point to catch text that extraction has dropped or garbled, and answers assigned to the wrong question, before any judgement is built on the material.
 
-**You do not install this yourself.** It runs on a computer set up with Claude Desktop,
-Python and Node.js — that part is a technical job. Ask a developer or IT colleague to set
-it up (point them at the developer door), then start here:
+The rubric is prepared in the same stage. The teacher can bring an existing rubric or develop one with AI assistance, and in either case decides whether its aspects, quality descriptions and point allocations express what matters in the task.
 
-- [**docs/TEACHER_GUIDE.md**](docs/TEACHER_GUIDE.md) — how to work with Claude through an assessment session
-- [**docs/WORKFLOW-INTEGRATION.md**](docs/WORKFLOW-INTEGRATION.md) — what each phase produces
-- [**FAQ.md**](FAQ.md) — common questions
+## Examining answers and retaining judgements
 
-*A hosted demo and screenshots are planned but not yet available — see [ROADMAP.md](ROADMAP.md).*
+For each answer, the assessment tools give the AI the methodology instructions, the rubric and the answer itself. The AI proposes a judgement for each aspect, with points and reasons grounded in the text of the answer, and a comment on a possible next step for the answer as a whole. The teacher examines the proposal against the answer, questions or corrects interpretations, and decides what the assessment should say before it is saved.
 
-### I'm a researcher (assessment, pedagogy, AI in education)
+For example, the AI may propose that an answer names two relevant factors but does not explain how they relate. The teacher asks for the passages that support this reading, considers whether a later sentence changes it, and adjusts the judgement accordingly.
 
-The interesting part of this project is its **methodology**, not its plumbing. The pipeline
-is deliberately structured as a validity argument — separating scoring, synthesis,
-extrapolation, and decision so that each inference is explicit and auditable rather than
-collapsed into one opaque judgement. The methodology engages with assessment-validity work
-(Kane, Moss, Messick) and formative-feedback research (Sadler, Black & Wiliam, Hattie &
-Timperley, Lundahl; Hirsh for the Swedish context).
+The assessment the teacher submits is saved in Markdown: a judgement, points and reasons for each aspect, and one next-step comment for the answer. The record holds the submitted assessment, not the conversation that led to it.
 
-**The theoretical layer is under active development** — it is a working framework, not a
-finished claim, and the methodology documents are explicit about where the grounding is
-still being built. Engagement and critique are welcome.
+![Six steps run downwards: prepare materials, define criteria, gather answers, assess and discuss, bring records together, and interpret and communicate. Explanations distinguish organisation from judgement. A dashed arrow returns from compilation to an earlier assessment for review.](docs/assets/assessment-suite-information-flow.svg)
 
-- [**methodology/**](methodology/) — the assessment framework (start with `pedagogical/00_foundation.md`)
-- [**docs/decisions/**](docs/decisions/) — architecture decision records, including why the phases are separated
-- [**SECURITY.md**](SECURITY.md) — data-protection posture (GDPR / AI Act / third-country transfer)
+## From individual assessments to a student overview
 
-### I'm a developer (or deploying this for a teacher)
+The compilation tools bring the saved question-level assessments together into a report for each student and into numerical summaries. The report changes the view from one question across the class to one student across questions, and is the basis for considering the student's work as a whole.
 
-You can clone, install and run Assessment Suite end-to-end in roughly ten minutes on a
-recent macOS or Linux machine.
+From the report, the teacher can retrieve selected question-level assessments to review them in full, as the dashed arrow in the figure shows. Retrieval returns the saved records; it does not reopen the original PDFs or the conversation that preceded saving.
 
-1. **Install:** [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) — clone, build the TypeScript server, install the Python server, configure Claude Desktop
-2. **Try it on sample data:** [examples/](examples/README.md) — a runnable mini-project with fabricated data, no real-student files
-3. **Understand the architecture:** [docs/decisions/](docs/decisions/) — the hybrid Python/TypeScript split, workspace lockdown, and other key choices
+Later workflows ask the AI to propose interpretations across a student's answers, relate the evidence to course criteria, support a grade decision where one is required and draft feedback. Each of these is a further judgement for the teacher to examine. Compiling records and drawing conclusions from them are different activities, and not every assessment needs every later stage.
 
-It is built as two MCP servers — a TypeScript server for text analysis and assessment, and
-a Python server for file processing and reports.
+If a rubric or an earlier judgement changes, the teacher reviews the affected assessments and the reports built on them. Reports are rebuilt from the saved assessments rather than updated in place. Rebuilding an existing analytic report requires an explicit overwrite; the progressive report can be replaced, so anything a later stage has written into it needs to be preserved before the report is rebuilt.
 
----
+## Design rationale
 
-## How it works
+Three intentions guide the design.
 
-Assessment moves through numbered phases, deliberately separated so that each inference is
-explicit and auditable rather than collapsed into a single judgement:
+The first is to inscribe as little assessment judgement as possible in program code. The guidance for rubric construction, assessment, interpretation and feedback is written in methodology documents that anyone can read and revise; the code handles data processing, workflow order and record formats. What is inscribed in code still carries assumptions: the division of an answer into aspects, the use of points, the shape of the saved record and the order of the stages. Where a methodology document cannot be loaded, some stages also fall back to guidance written in the code itself.
 
-- **Phases 1–2 — Prepare:** discover the exam files and convert PDFs to markdown.
-- **Phase 4 — Rubric:** design or confirm a rubric with named aspects.
-- **Phase 5 — Extract:** gather each student's answers, organised per question.
-- **Phase 6 — Assess:** the core step — per-aspect scoring with cited evidence and a
-  concrete next step, confirmed by the teacher.
-- **Phases 7–8 — Reports:** compile per-student reports and class-level quantitative summaries.
-- **Phases 9–14 — Synthesis to feedback:** synthesise each student's profile, map it to the
-  course criteria, and produce grade decisions and student-facing feedback.
+The second is that teachers should be able to adapt the system to their own purposes: change a rubric, rewrite an instruction, add or drop a stage. This is a form of end-user development, in which the people who use a system also take part in developing it, as Mørch, Ludvigsen and Gilje discuss in [*Teachers as End-User Developers*](https://ceur-ws.org/Vol-3978/short-s2-07.pdf). How far an edit reaches depends on where a stage looks for its instructions. The assessment stage resolves them from the assessment project itself, so an edit to the project's own methodology takes effect there. The later interpretation and feedback stages load from a shared installation directory and keep the content in memory, so an edit to a project copy does not reach them.
 
-The separation mirrors a validity argument: scoring → synthesis → extrapolation → decision,
-each step warranted on its own rather than read directly off a single answer. The full
-pipeline is described in [docs/WORKFLOW-INTEGRATION.md](docs/WORKFLOW-INTEGRATION.md); the
-reasoning behind each phase lives in [methodology/](methodology/).
+The third is local operation: the servers run on the teacher's own computer, and the aim is that the model can too.
 
----
+## How research ideas inform the methodology
 
-## Status and maturity
+The methodology is built around analytic assessment as Jönsson (2010) describes it: each aspect of an answer is judged separately, rather than the answer as a whole, because separate judgements give the differentiated information that feedback needs. The methodology also names the known risks of this approach and assigns a countermeasure to each. Fragmentation, where the aspects obscure the whole, is met by a later synthesis stage that reads across aspects and questions. Aspect inflation, where easily measured aspects crowd out demanding ones, is met by checking the rubric's levels against the SOLO taxonomy. Mechanical application is met by an instruction to the teacher to read the whole answer before reviewing the aspect-level proposal.
 
-Assessment Suite is **alpha software for supervised use** — suitable for pilot work where a
-teacher reviews every result, not for unsupervised or high-stakes grading.
+Assessment is criterion-referenced in Sadler's (1989) sense: an answer is judged against the rubric's criteria, not against other students, and the judgement is written so that the student can see how the answer relates to the criteria. Sadler (2009) objects that criteria fixed in advance cannot anticipate every valid answer. The methodology's answer is generous interpretation (*snälltolkning*): when an answer is valid in a way the rubric did not foresee, the teacher gives credit and writes down the interpretation, so that the choice is visible and can be contested. Two further principles come from the same concern with transparency: every judgement cites the student's own words, and assessments describe what the answer shows rather than what the student understands.
 
-- **Phases 1–8 (the core)** are the most developed: the pipeline from PDFs through
-  assessment to quantitative summaries.
-- **Phases 9–14 (synthesis and feedback)** are functional but **less theoretically grounded**
-  than the core assessment step; their methodology is under active development.
-- The **theoretical framework as a whole is a work in progress** — the methodology documents
-  are explicit about where the grounding is still being built.
-- It has been used in real assessment work in Swedish upper-secondary and higher education,
-  always with teacher review.
+Quality levels in [rubric design](methodology/pedagogical/phase4_rubric_design_method.md) and in the [assessment itself](methodology/pedagogical/phase6_assessment_method.md) follow the SOLO taxonomy (Biggs and Collis, 1982): one relevant element, several elements, elements related to each other, and generalisation beyond the task.
 
-Per-student / lab-report mode is **experimental and not yet supported** in this version —
-use the standard per-question flow.
+The stages after assessment are kept separate because of the structure of a validity argument (Kane, 2006; Hirsh, 2019). Scoring what the student wrote, [synthesising](methodology/pedagogical/phase9_generalization_method.md) what the exam shows about the student's understanding, [extrapolating](methodology/pedagogical/phase10_extrapolation_method.md) to the course criteria and deciding a grade are four inferences, and each needs its own warrant. Hirsh identifies skipping a step as the most common validity error: reading a missing answer directly as a missing competence. The synthesis stage is hermeneutic (Moss, 1994): it looks for patterns across a student's answers and treats inconsistency as information rather than noise.
 
-Versions and roadmap: see [ROADMAP.md](ROADMAP.md).
+The [feedback guidance](methodology/pedagogical/phase12_feedback_method.md) follows Hattie and Timperley (2007) and Sadler (1989): where the student is now, where the student is heading and what the next step is, written so that the student can act on it.
 
----
+The [foundation document](methodology/pedagogical/00_foundation.md) sets out these principles in full and is loaded at the start of every assessment session.
 
-## Data & privacy
+## Technical organisation
 
-Student answers are personal data, so be deliberate about how they flow.
+Assessment Suite consists of two servers that run on the teacher's computer and connect to an AI application through the Model Context Protocol (MCP), which lets the application call their tools. The [Python server](packages/assessment-data-mcp/README.md) handles document preparation, data organisation and reports. The [TypeScript server](packages/assessment-mcp/README.md) runs the assessment workflows: it supplies the methodology instructions and saves and retrieves assessments.
 
-- **Local file operations, but not local-only AI.** File processing runs on your
-  machine, but the AI-assisted phases send the student answers they reason over to
-  Anthropic's API through Claude Desktop. This is not a self-contained, offline
-  tool — understand this before loading real student data.
-- **Workspace lockdown.** The MCP tools can only read and write inside a required
-  `--workspace` directory, with symlink-escape and dangerous-path guards.
-- **You stay the decision-maker.** The teacher confirms every judgement; the tool
-  never sets a grade autonomously.
-- **Anonymise first.** Assessment Suite has no built-in PII detection — strip names
-  and identifiers from answer files before loading them. (For classroom recordings
-  and transcripts, edusafe-pipeline does this offline.)
+The AI application manages the conversation and the tool calls; the model generates the proposals and interpretations. The files and the servers stay on the computer. The model runs wherever the application runs it, which for most applications today means a remote service, so the material sent to the model leaves the computer.
 
-The full posture — GDPR, the EU AI Act, third-country transfer, and Skollagen — is
-in [SECURITY.md](SECURITY.md).
+## Development status and open questions
 
----
+Version 0.8.0 contains the preparation, assessment and reporting tools described above, and the methodology documents for every stage. The workflows for assessing by question and saving assessments are the most used parts of the system. The separate mode for assessing one student's work as a whole, such as a lab report, is experimental.
 
-## Requirements
+Several parts of the workflow have not yet been verified for this documentation. A clean installation and first run have not been tested across the intended AI applications, and a download route without Git is planned but not built. Report generation has been checked directly against the implementation with fabricated test material, which produced both report types and the numerical summary; the same sequence has not been run through an AI application from beginning to end. No local model configuration has yet been found that handles the workflow adequately. The later stages of interpretation and feedback need further technical and theoretical development.
 
-- Python 3.10+
-- Node.js 18+
-- Claude Desktop
-- macOS, Linux, or Windows (WSL)
+The open questions about assessment itself are these. Whether a rubric captures the qualities that matter in a task, and what is lost when an answer is divided into aspects and points. Whether summaries and reports preserve conflicting evidence or smooth it over. How far a conclusion can extend from the answers assessed to a claim about what a student knows. And what saved judgements and reasons do to a teacher's later decisions: they may support memory and overview, and they may also anchor later judgements to earlier ones. None of these effects has been studied. Readable instructions, quoted evidence and teacher review make the assessment inspectable; they do not by themselves make it valid.
 
----
+## Risks and conditions of use
 
-## Documentation
+- **Personal data.** PDFs and answers must be free of personal data before they reach the AI application. Assessment Suite does not detect or remove identifiers. Check the content, the filenames and the file metadata; replacing a name is not enough to make an answer anonymous. Use fabricated student answers for first trials, and keep real student material outside this repository.
+- **AI processing and permissions.** Material sent to a remote model leaves the computer. Establish how the chosen AI application handles data, and what file and tool access it has, before supplying material. Installing the servers locally does not by itself make the work GDPR-compliant, and the servers' workspace restriction does not limit what the application itself can do.
+- **Downloaded software.** An MCP package contains server software that the AI application executes on the computer. Check the source and contents of the package, the commands it runs and the access it asks for before installing it.
+- **Errors and incomplete records.** Extraction can drop text, AI proposals can be wrong, and summaries can hide evidence that points the other way. Examine the prepared text, the proposals and the records behind any later conclusion. A saved assessment shows what was submitted, not that it was reviewed or that it is defensible.
 
-- [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md) — installation walkthrough with a first-assessment tutorial
-- [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) — full setup, troubleshooting, Claude Desktop configuration
-- [docs/WORKFLOW-INTEGRATION.md](docs/WORKFLOW-INTEGRATION.md) — the assessment pipeline, phase by phase
-- [docs/TEACHER_GUIDE.md](docs/TEACHER_GUIDE.md) — working with Claude through an assessment session
-- [methodology/](methodology/) — the assessment framework and its theoretical grounding (under active development)
-- [docs/decisions/](docs/decisions/) — architecture decision records
-- [SECURITY.md](SECURITY.md) · [CONTRIBUTING.md](CONTRIBUTING.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+For vulnerability reporting and the supported-version policy, see [SECURITY.md](SECURITY.md). Report vulnerabilities through [private vulnerability reporting](https://github.com/tikankika/assessment-suite/security/advisories/new).
 
----
+## Access and further reading
 
-## Contributing
+The [source setup guide](docs/SETUP_GUIDE.md) describes how to install both servers from the repository and connect them to an AI application; see [Development status](#development-status-and-open-questions) for what has and has not been tested. A download route without Git, using the MCPB package format, is planned.
 
-Contributions are welcome — bug reports, documentation improvements, feature ideas, and
-testing with real assessments. See [CONTRIBUTING.md](CONTRIBUTING.md). By contributing you
-agree that your contributions are licensed under PolyForm Noncommercial 1.0.0.
+The [example materials](examples/README.md) combine fabricated student answers with an authentic set of questions, rubric and syllabus. They are the material to use for a first trial.
 
----
+The [documentation index](docs/README.md) lists the rest. The [workflow guide](docs/WORKFLOW-INTEGRATION.md) follows the stages in order and shows which tools each one uses. The [architecture decisions](docs/decisions/) record the technical choices, and the [roadmap](ROADMAP.md) the planned development.
 
-## Licence
+## Participation and licence
 
-**PolyForm Noncommercial License 1.0.0** — see [LICENSE](LICENSE).
+Questions, bug reports and critique of the design or of its assessment assumptions are welcome as [GitHub Issues](https://github.com/tikankika/assessment-suite/issues). See the [contribution guidance](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md). Cite the project using [CITATION.cff](CITATION.cff).
 
-This project is **source-available, not OSI-approved open source**: free for any
-noncommercial purpose, with commercial use reserved.
-
-- Free for teachers, researchers, and educational institutions (any noncommercial purpose)
-- Commercial use requires a separate licence
-- See [ADR-010](docs/decisions/ADR-010-licence-polyform-noncommercial.md) for why PolyForm rather than CC BY-NC-SA
-
----
-
-## Acknowledgements
-
-Built with the [Model Context Protocol](https://modelcontextprotocol.io/),
-[Claude](https://www.anthropic.com/claude), and [pdfplumber](https://github.com/jsvine/pdfplumber).
-
-The assessment methodology draws on analytic and formative-assessment scholarship — among
-others Sadler, Black & Wiliam, and Hattie & Timperley — and on validity theory from Kane,
-Moss, and Messick, contextualised for Swedish education by Hirsh. The theoretical grounding
-is under active development.
-
-Thanks to the teachers and colleagues who tested the workflow with real exams and provided
-pedagogical feedback.
-
----
-
-## Support
-
-- Questions and bugs: [GitHub Issues](https://github.com/tikankika/assessment-suite/issues)
-- Discussion: [GitHub Discussions](https://github.com/tikankika/assessment-suite/discussions)
+Assessment Suite is released under the **PolyForm Noncommercial License 1.0.0**; see [LICENSE](LICENSE) for the terms.
