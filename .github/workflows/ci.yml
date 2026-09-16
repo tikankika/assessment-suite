@@ -36,4 +36,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -e ".[dev]"
+      - run: pip install uv
+      - run: uv lock --check
       - run: pytest tests/ -v
+        env:
+          RUN_PACKAGING_TESTS: "1"
