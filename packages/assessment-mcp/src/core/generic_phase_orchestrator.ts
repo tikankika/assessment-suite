@@ -141,7 +141,13 @@ export class GenericPhaseOrchestrator {
     }
 
     // 4. Load methodology (validated at construction time)
-    const methodology = await this.loadMethodology();
+    let methodology: string;
+    try {
+      methodology = await this.loadMethodology();
+    } catch (error) {
+      this.sessionManager.deleteSession(session.session_id);
+      throw error;
+    }
 
     // 5. Load project info + assessment purpose
     const projectInfo = await this.loadProjectInfo(projectPath);

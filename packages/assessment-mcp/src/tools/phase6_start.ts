@@ -295,15 +295,12 @@ export async function assessmentStart(args: {
     }
   }
 
-  // Fallback: minimal methodology for backwards compatibility
+  // No project methodology: use the condensed installation methodology.
+  // getCondensed() throws, naming the documents, if none can be loaded.
   let methodology = '';
   if (methodologyContent.length === 0) {
-    try {
-      methodology = await methodologyLoader.getCondensed();
-      validationWarnings.push('Using fallback methodology - sources.yaml not configured');
-    } catch {
-      methodology = 'Use analytical assessment methodology.';
-    }
+    methodology = await methodologyLoader.getCondensed();
+    validationWarnings.push('Using fallback methodology - sources.yaml not configured');
   }
 
   // 8b. RFC-018: Create assessment file copy in 06_analytic_assessment/
@@ -585,11 +582,7 @@ async function assessmentStartPerStudent(args: {
 
   let methodology = '';
   if (methodologyContent.length === 0) {
-    try {
-      methodology = await methodologyLoader.getCondensed();
-    } catch {
-      methodology = 'Use analytical assessment methodology.';
-    }
+    methodology = await methodologyLoader.getCondensed();
   }
 
   // 6. Load rubric
