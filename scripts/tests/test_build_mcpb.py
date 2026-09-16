@@ -100,13 +100,13 @@ async def call_server(unpacked, user_config, tool=None, arguments=None):
 
     async with stdio_client(launch_parameters(unpacked, user_config)) as (read, write):
         async with ClientSession(read, write) as session:
-            await session.initialize()
+            info = (await session.initialize()).serverInfo
             tools = {t.name for t in (await session.list_tools()).tools}
             text = None
             if tool:
                 result = await session.call_tool(tool, arguments or {})
                 text = "".join(c.text for c in result.content if hasattr(c, "text"))
-            return tools, text
+            return tools, text, info
 
 
 @unittest.skipUnless(os.environ.get("RUN_PACKAGING_TESTS") == "1", "opt-in packaging test")
@@ -188,10 +188,13 @@ class BundleTest(unittest.TestCase):
             "assessment": {"phase6_start", "phase6_write", "phase6_post_format"},
             "data": {"initialize_project", "extract_student_answers", "generate_reports"},
         }
+        versions = package_versions()
         for name, (_, unpacked) in self.bundles.items():
             with self.subTest(bundle=name):
-                tools, _ = asyncio.run(call_server(unpacked, config))
+                tools, _, info = asyncio.run(call_server(unpacked, config))
                 self.assertLessEqual(expected[name], tools)
+                # The installed release must be identifiable from the client.
+                self.assertEqual(info.version, versions[name])
 
     def test_methodology_setting_reaches_the_data_server(self):
         workspace = self.root / "workspace-methodology"
@@ -200,7 +203,7 @@ class BundleTest(unittest.TestCase):
         custom.mkdir(parents=True)
         (custom / "teacher_marker.md").write_text("# Teacher's own method\n")
         config = {"workspace": str(workspace), "methodology": str(custom.parent)}
-        _, text = asyncio.run(call_server(
+        _, text, _ = asyncio.run(call_server(
             self.bundles["data"][1], config,
             "scan_source_directory", {"directory_path": str(workspace / "exam")},
         ))

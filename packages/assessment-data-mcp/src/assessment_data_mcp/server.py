@@ -19,6 +19,7 @@ from .tools.phase3_prepare import phase3_prepare_tool
 from .tools.phase3_annotate import phase3_annotate_tool
 from .tools.phase3_file_edit import phase3_file_edit_tool
 from .tools.core_list_files import list_files_tool
+from . import __version__
 from .validators.path_validator import validate_workspace_access
 from .validators.workspace_preflight import validate_workspace_arg
 
@@ -52,7 +53,7 @@ if _preflight.get('warning'):
     print(f"WARNING: {_preflight['warning']}", file=sys.stderr)
 
 # Create server instance
-app = Server("assessment-data")
+app = Server("assessment-data", version=__version__)
 
 
 @app.list_tools()
