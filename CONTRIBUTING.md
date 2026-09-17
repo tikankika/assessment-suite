@@ -1,32 +1,22 @@
 # Contributing to Assessment Suite
 
-Thank you for considering contributing to Assessment Suite!
+Thank you for considering contributing to Assessment Suite.
 
-## Critical rules — data protection
+## Critical rules: data protection
 
-Assessment Suite processes real student exam answers. This is a public repository —
-never let real personal data into the repo, in code, tests, comments, documentation,
-examples or commit messages. Git history is permanent.
+Assessment Suite processes student exam answers. This is a public repository: never let real personal data into it, in code, tests, comments, documentation, examples or commit messages. Git history is permanent.
 
-- **Never commit real personal data:** names (students, colleagues, teachers),
-  school or institution names, identifying places, personal-identity numbers, file
-  paths containing a username (`/Users/...`), secrets (API keys, tokens, `.env`),
-  and real student answers or assessment outputs.
-- **Use fabricated or anonymised data in every example and test.** The bundled
-  project under `examples/` is fully fabricated — use it as the model, and see
-  [EXAMPLES_POLICY.md](EXAMPLES_POLICY.md).
-- **Watch quasi-identifiers:** a class plus a date plus a subject can identify a
-  student even with no name attached.
-- **Already committed something real?** Deleting the file is not enough — it stays
-  in the git history forever. Stop, scrub the history, rotate any exposed secret,
-  and escalate before the next push.
+- **Never commit real personal data:** names (students, colleagues, teachers), school or institution names, identifying places, personal-identity numbers, file paths containing a username (`/Users/...`), secrets (API keys, tokens, `.env`), and real student answers or assessment outputs.
+- **Use fabricated data in every example and test.** Anonymised real data is not accepted, because anonymisation can leak. The bundled example combines fabricated student answers with authentic questions, a rubric and a syllabus; see [EXAMPLES_POLICY.md](EXAMPLES_POLICY.md).
+- **Watch quasi-identifiers:** a class plus a date plus a subject can identify a student even with no name attached.
+- **Already committed something real?** Deleting the file is not enough; it stays in the git history. Stop, scrub the history, rotate any exposed secret, and escalate before the next push.
 
 ## Ways to contribute
 
-- 🐛 **Report bugs** - [Open an issue](https://github.com/tikankika/assessment-suite/issues/new)
-- 💡 **Suggest features** - [Start a discussion](https://github.com/tikankika/assessment-suite/discussions)
-- 📖 **Improve documentation** - Submit a PR
-- 💻 **Submit code** - Fix bugs or add features
+- **Report bugs:** [open an issue](https://github.com/tikankika/assessment-suite/issues/new)
+- **Suggest features:** [start a discussion](https://github.com/tikankika/assessment-suite/discussions)
+- **Improve documentation:** submit a PR
+- **Submit code:** fix bugs or add features
 
 ---
 
@@ -36,7 +26,7 @@ examples or commit messages. Git history is permanent.
 
 - Python 3.10+
 - Node.js 18+
-- Claude Desktop
+- An AI application that supports MCP servers
 - Git
 
 ### Quick setup
@@ -56,7 +46,7 @@ npm install
 npm run build
 ```
 
-**Full guide:** [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md)
+**Full guide:** [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md)
 
 ---
 
@@ -95,10 +85,10 @@ pytest tests/ -v
 ### TypeScript
 ```bash
 cd packages/assessment-mcp
-npm run build  # Must compile without errors
+npm run build && npm test
 ```
 
-**Note:** TypeScript test coverage is limited. Focus on manual testing with Claude Desktop.
+Both suites run in CI. Manual testing through an AI application is still needed for the conversational workflow.
 
 ---
 
@@ -111,10 +101,7 @@ npm run build  # Must compile without errors
 
 ### For new features
 - Add to README.md
-- Create ADR for architectural decisions
-- Create RFC for major changes
-
-See design process documentation for examples.
+- Create an ADR for architectural decisions
 
 ---
 
@@ -139,9 +126,9 @@ See design process documentation for examples.
 
 ## Questions?
 
-- 📚 Check [WORKFLOW-INTEGRATION.md](docs/WORKFLOW-INTEGRATION.md)
-- 🏗️ Review [ADRs](docs/decisions/) for design rationale
-- 💬 Ask in [discussions](https://github.com/tikankika/assessment-suite/discussions)
+- Check [WORKFLOW-INTEGRATION.md](docs/WORKFLOW-INTEGRATION.md)
+- Review [ADRs](docs/decisions/) for design rationale
+- Ask in [discussions](https://github.com/tikankika/assessment-suite/discussions)
 
 ---
 

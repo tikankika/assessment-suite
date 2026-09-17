@@ -20,5 +20,5 @@ keywords:
 abstract: >-
   An AI-augmented exam assessment pipeline that assists teachers with
   structured, rubric-based assessment of student examinations. Built as
-  MCP servers for use with AI assistants, supporting the complete workflow
+  MCP servers for use with AI assistants, supporting the workflow
   from PDF conversion through qualitative assessment to formative feedback.

@@ -193,12 +193,6 @@ write_json_file.ts → json_write.ts
 
 ---
 
-## References
-
-* [ROADMAP.md](../../ROADMAP.md) - Phase definitions
-
----
-
 **Status:** Accepted (Updated)
 **Last Updated:** 2026-01-01
 **Next Review:** When Phase 3 or Phase 8 is implemented
