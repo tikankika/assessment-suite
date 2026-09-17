@@ -1,254 +1,78 @@
-# Security Policy
+# Assessment Suite 0.8.0: security and data handling
 
-## Supported versions
-
-| Version | Supported |
-|---------|-----------|
-| 0.8.x   | ✅ |
-| < 0.8   | ❌ |
+Assessment Suite runs two local servers that an AI application calls to prepare materials and save and retrieve assessments. This document explains the data and execution risks, the controls implemented in the servers, and the project's vulnerability reporting policy. Version 0.8.0 is under development.
 
 ## Reporting a vulnerability
 
-Please **do not** open a public issue for security problems.
+Report security problems through GitHub's [private vulnerability reporting](https://github.com/tikankika/assessment-suite/security/advisories/new), available under **Security → Report a vulnerability**. Do not open a public issue for a vulnerability.
 
-Report vulnerabilities privately through GitHub's [private vulnerability reporting](https://github.com/tikankika/assessment-suite/security/advisories/new) (the **Security** tab → **Report a vulnerability**).
+Include the affected version or source revision, the AI application and operating system, a description of the impact, and steps to reproduce the problem. Include a suggested mitigation if you have one. Use fabricated material for the reproduction, and check screenshots and logs for personal data, credentials and private file paths before attaching them.
 
-Please include:
+You can expect an acknowledgement within a week. Please allow time for a fix before public disclosure.
 
-- a description of the issue and its impact,
-- steps to reproduce (a minimal example if possible),
-- any suggested mitigation.
+## Supported versions
 
-You can expect an acknowledgement within a week, and responsible disclosure is appreciated — please allow time for a fix before any public disclosure.
+| Version | Security support |
+|---|---|
+| 0.8.x | Supported |
+| Earlier than 0.8 | Unsupported |
 
----
+## Material supplied to the tools
 
-## Threat Model
+PDFs, answers and other supplied material must be free of personal data before they reach the AI application. Assessment Suite does not detect or remove identifiers. Check the text, filenames and file metadata before supplying material.
 
-Assessment Suite is an AI-assisted assessment tool that runs as MCP
-servers inside Claude Desktop. Understanding what this means for
-data flow is essential before deploying it with real student data.
+Replacing a name with a code does not by itself establish anonymity. An answer can still identify someone through its contents or through other information that can be linked to it, such as a described event, a workplace or a family circumstance, even when no name appears. See the Swedish Authority for Privacy Protection's explanation of [personal data](https://www.imy.se/en/organisations/data-protection/this-applies-accordning-to-gdpr/the-purposes-and-scope-of-gdpr/personal-data/).
 
-### What Assessment Suite is
+Use fabricated student answers for first trials. Keep real student material outside the source repository, including folders excluded by `.gitignore`. Examples, tests, issue reports and contributions must use student material fabricated from the outset.
 
-- A set of MCP tools (TypeScript and Python) that organise
-  assessment workflow into discrete phases.
-- A methodology library that scaffolds teacher reflection during
-  assessment.
-- A locally-run pipeline — the MCP processes execute on your
-  machine, not on a remote server.
+## Where material is processed
 
-### What Assessment Suite is *not*
+The servers perform file operations on the computer and return tool results to the AI application. These results can contain student answers, saved judgements and methodology instructions. When the application includes this material in a request to a remote model, it leaves the computer. A locally executed operation does not determine where its result is subsequently processed.
 
-- It is **not a self-contained AI** — the assessment intelligence
-  comes from Claude Desktop / Anthropic's API, not from
-  Assessment Suite itself.
-- It is **not local-only** — although the file operations are
-  local, the conversation with Claude Desktop necessarily reaches
-  Anthropic's servers (see "Data Flow" below).
-- It is **not a substitute for regulatory due diligence** — using
-  Assessment Suite with real student data requires compliance
-  with the regulations listed in "Regulatory Considerations" below.
+Which stages send answers to the model depends on what the model is asked to read. Assessment reads every answer to every question, and the later interpretation and feedback stages read the compiled records; these send student text by design. Stages that move or transform files, such as conversion, extraction and report generation, do not need the model to read answers, but their tool results and any preview the teacher opens still enter the conversation.
 
----
+The chosen application, model service and account configuration determine model processing, retention and access. Establish those conditions before supplying material. Assessment Suite does not select a model provider or guarantee a processing region, and the repository does not determine a fixed number of model requests per answer.
 
-## Data Flow
+Network activity also occurs outside model requests. The setup tool downloads course material when supplied with a syllabus URL. Installing the Python MCPB bundle can require the application and `uv` to download a runtime and dependencies. These are separate operations from sending assessment material to a model.
 
-Assessment Suite has 16 phases. They split into two categories
-based on whether student data is sent to Anthropic's API:
+## Workspace checks and their limits
 
-### Phases that stay 100% local
+Both servers require a workspace directory at startup. Choose a dedicated folder for assessment work and configure both servers to use it.
 
-Phase 1 (Setup), 2 (Convert), 2D (Students), 5 (Q-files),
-7 (Reports), 8 (Quantitative). These run as Python scripts, do not
-involve Claude Desktop, and never transmit student data.
+Startup checks reject the filesystem root, the user's home directory, specified system directories, nonexistent directories, ordinary files and directories that are not writable. Some broad folders, such as the user's Documents folder, produce a warning but remain permitted.
 
-### Phases that send student data to Anthropic
+Before dispatching a tool call, each server checks a defined list of file and directory argument names against its workspace. The path validators resolve existing symbolic links when checking whether a path is inside the permitted directory. Selected tools also validate identifiers used to construct filenames. The implementation can be inspected in the [assessment server](packages/assessment-mcp/src/server.ts), [data server](packages/assessment-data-mcp/src/assessment_data_mcp/server.py) and their [TypeScript](packages/assessment-mcp/src/core/path_validator.ts) and [Python](packages/assessment-data-mcp/src/assessment_data_mcp/validators/path_validator.py) validators.
 
-Phase 2C (Boundaries), 3 (Annotation), 6 (Assessment),
-9 (Generalization), 10 (Extrapolation), 11 (Grading),
-12 (Feedback), 13 (Teacher Summary), 14 (Student Feedback). These
-require Claude Desktop to read and reason about student answers,
-and consequently the student data is processed by Anthropic's API
-under Anthropic's [usage policy](https://www.anthropic.com/policies).
+These checks are application code. They do not isolate the server processes from the operating system, constrain every possible file operation, or restrict the AI application's other tools and file permissions. The server processes run with the user's privileges and are not isolated from the network; a compromised dependency from npm or pip could send data out regardless of the workspace boundary. The servers also load software and methodology from their installation and configuration, including an optional `METHODOLOGY_PATH` outside the assessment workspace. Workspace validation does not inspect file contents for personal data or control subsequent model processing.
 
-**Phase 6 is the most data-intensive.** Each student × each
-question = one API call. A typical 22-student × 7-question exam
-produces 154 API calls containing student answers.
+## Saved files, reports and logs
 
-This is not a defect in Assessment Suite — it is what enables
-the AI-assisted assessment to function. But you must understand
-this before placing real student data into the pipeline.
+Assessment work creates local copies and derived records. Generated reports can contain answer text as well as judgements, points and feedback. Treat a report as assessment material when deciding where to store or share it.
 
----
+The tools also write project logs. These can contain file paths and student identifiers; workflow action records can contain points and assessment aspect details. Rejected workspace requests write the requested path and workspace path to the server's diagnostic output. The AI application may retain that output under its own logging settings.
 
-## Workspace Lockdown
+Account for source copies, reports, logs, conversation history, synchronisation and backups when managing access and deletion. Check the contents of any file before sharing it for support or research. Excluding a folder from Git does not restrict access to it or prevent other software from copying it.
 
-Assessment Suite restricts which files its MCP tools can read or
-write. The mechanism:
+## Executable software and editable instructions
 
-- A `--workspace <path>` argument is required at MCP startup.
-- All file operations are checked against the workspace boundary.
-- Symlinks are resolved (`realpathSync` / Python equivalent) to
-  prevent symlink-based escapes.
-- Pre-flight checks refuse dangerous workspaces (`/`, `$HOME`,
-  `/tmp`, `/Users`, `/private/*`, non-existent paths, files,
-  unwritable paths) and warn on broad workspaces (`~/Documents`,
-  `~/Nextcloud`).
+An MCPB bundle contains server software that the AI application runs on the computer. Check its source, contents, startup commands and requested access before installing it. The current manifests launch the assessment server with Node.js and the data server through `uv`. Review the [assessment manifest](packaging/mcpb/assessment/manifest.json) and [data manifest](packaging/mcpb/data/manifest.json) for those commands and settings.
 
-### What workspace lockdown protects against
+Methodology documents supply instructions to the model. Changes to those files can change the guidance it receives. Which stages read which file is described in the design document: an edited project copy reaches the assessment stage, while the later stages read from the installation or from `METHODOLOGY_PATH`. Review an edited or shared methodology before using it, and review tool actions prompted by material being assessed. Instructions embedded in an answer must not be treated as permission to disclose files or change the assessment procedure.
 
-- Accidental writes outside the workspace by Assessment Suite's
-  tools (e.g., a methodology bug that constructs a wrong path).
-- Symlink-based path-traversal attacks against Assessment Suite's
-  tools.
-- Misconfigured workspace pointing at a system directory.
+The workflow asks the teacher to examine AI proposals and decide what to save. Saving a judgement or recording a confirmation does not demonstrate that this review occurred. The [workflow guide](docs/WORKFLOW-INTEGRATION.md) describes the review activities and the records they produce.
 
-### What workspace lockdown does **not** protect against
+## Organisational conditions
 
-- **Data sent to Anthropic.** Once Assessment Suite reads a file
-  and Claude Desktop sees its content, that content is part of
-  the conversation and goes to Anthropic's API. Workspace
-  lockdown limits *which files* Assessment Suite can access. It
-  does not change what happens to file content after access.
-- **Claude Desktop's own file access.** The Filesystem MCP,
-  drag-and-drop attachments, and `@file` mentions in Claude
-  Desktop bypass Assessment Suite entirely. Workspace lockdown
-  applies to Assessment Suite's MCP tools only.
-- **The MCP process's own network calls.** Assessment Suite runs
-  as Node.js / Python processes with your user's privileges. A
-  compromised npm or pip dependency could exfiltrate data via
-  HTTP. Workspace lockdown does not isolate the process from
-  the network.
-- **PII inside the workspace.** Workspace lockdown sees where
-  files are located, not what they contain. If a file with
-  personal data sits inside the workspace, that data flows
-  through the MCP tools to Anthropic.
-- **Intentional misconfiguration.** Pre-flight warns on
-  `~/Documents` but does not refuse it. A user who chooses an
-  overly broad workspace can defeat the protection.
+Before institutional use, establish who is responsible for the material, which application and services are permitted, and how access, retention and incidents are handled. The local servers and the teacher-review workflow do not establish compliance with data-protection or education requirements.
 
----
+The EU AI Act addresses systems intended to evaluate learning outcomes in Annex III, point 3(b). Its classification rules require examination of the intended use; teacher involvement alone does not settle that classification. Consult the [current regulation](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02024R1689-20260727), particularly Article 6 and Annex III, when assessing a proposed institutional use.
 
-## Recommendations for Users
+In Sweden, the school's responsible authority (*huvudmannen*) is the data controller for student material, not the individual teacher; inform them before institutional use, and carry out a data protection impact assessment where one is required. Grades are set by a teacher under the Education Act (skollagen 3 kap. 16 §); the grade-decision stage produces a proposal for the teacher's decision and must not be used to set grades on its own.
 
-### Before placing real student data into the pipeline
+## Known open issues
 
-- **Anonymise first.** Remove names, personal identification
-  numbers, and identifying details from student answer files
-  before placing them in the workspace. Pseudonymous IDs
-  (`student_042`) are preferable to initials or first names.
-
-  > Within the same teaching ecosystem, the **edusafe-pipeline** tool anonymises
-  > classroom *recordings and transcripts* offline — replacing names with pseudonyms
-  > before they are shared or reused. That is a different data type from exam answers:
-  > Assessment Suite has no automated PII detection of its own (see "Known Open Issues"),
-  > so anonymising answer files here remains a manual step.
-
-- **Use a dedicated workspace.** Do not use `~/Documents` or your
-  general work folder. Create a workspace such as
-  `~/AssessmentWork` that contains only assessment-related files.
-- **Understand Anthropic's data handling.** Read Anthropic's
-  [usage policy](https://www.anthropic.com/policies) and
-  [privacy policy](https://www.anthropic.com/privacy). Decide
-  whether you have a lawful basis to send your students' data
-  to Anthropic before you do so.
-- **Inform stakeholders.** If you are a teacher in a regulated
-  education system, your school's data controller (in Sweden:
-  *huvudmannen*) is the legal data controller — not you. Inform
-  them. Conduct a Data Protection Impact Assessment (DPIA) if
-  required by your jurisdiction.
-
-### General
-
-- Keep your MCP client (Claude Desktop) updated.
-- Do not commit `.env` files or API keys to the repository.
-- Store student exam data in directories covered by `.gitignore`.
-- Review the `.gitignore` patterns before pushing any changes.
-- Always review AI-generated assessments before sharing with
-  students. Phase 11 (grade decision) in particular requires
-  active teacher judgement — the system is designed to require
-  it, but the responsibility is yours.
-
----
-
-## Regulatory Considerations
-
-The list below is informational, not legal advice. Compliance is
-your responsibility.
-
-### European Union
-
-- **GDPR (Regulation 2016/679):** Assessment Suite processes
-  personal data when handling student answers. Articles 5(1)(c)
-  (data minimisation), 22 (automated decision-making), 35
-  (DPIA), and 44–49 (third-country transfers) are particularly
-  relevant. Anthropic's servers are in the United States;
-  third-country-transfer safeguards apply.
-- **EU AI Act (Regulation 2024/1689):** Assessment Suite falls
-  under Annex III, point 3(a) — "AI systems intended to be used
-  to evaluate learning outcomes". The Annex III high-risk
-  classification may apply. Article 6(3) provides a possible
-  exemption when the system "does not pose a significant risk"
-  and "does not materially influence the outcome of decision
-  making" — applicable when human review is genuine, not
-  rubber-stamping. Documented assessment by the provider is
-  required to claim this exemption. The full requirements
-  package becomes enforceable on **2 August 2026**.
-
-### Sweden (jurisdiction of original deployment)
-
-- **Skollagen (Education Act) 3 kap 16§:** Grades must be set by
-  a *teacher*. Assessment Suite must not set grades autonomously.
-  Phase 11 produces a *suggestion*; the teacher decides.
-- **OSL 23 kap (Public Access and Secrecy Act):** Student exam
-  data may be subject to confidentiality — third-party
-  transmission may require an explicit confidentiality
-  assessment.
-- **IMY (Swedish data protection authority) focus areas 2026:**
-  AI in the public sector; children and youth. Assessment Suite
-  intersects both.
-
-### Other jurisdictions
-
-If you are not in the EU/Sweden, the analogous regulations in
-your jurisdiction apply. Assessment Suite's authors have not
-performed compliance analyses for jurisdictions outside the EU.
-
----
-
-## Known Open Issues
-
-The following items are known limitations or unfinished work, not
-defects:
-
-- **Pseudonymisation of student IDs is weak.** Current ID format
-  may be reverse-engineerable by someone familiar with the
-  class. Stronger pseudonymisation is planned.
-- **No DPIA template.** A DPIA template for phases 9–12 is
-  planned.
-- **No automated PII detection.** Anonymisation is currently a
-  manual responsibility of the teacher. Microsoft Presidio
-  integration is under consideration.
-- **No process isolation.** Assessment Suite runs with your
-  user's privileges. Process-level isolation (sandbox-exec,
-  Docker) is under consideration but not implemented.
-- **No EU data residency.** Anthropic's standard API processes
-  in the United States. Anthropic's EU data-residency status
-  is being investigated.
-
-
----
-
-## Acknowledgements
-
-The current security posture has been shaped by:
-
-- **`pedagogical/00_foundation.md` §3.7–3.9** — Audience
-  discipline framework that prevents student-facing output from
-  containing inappropriate phrasing or information about other
-  students.
-
----
-
-*Last updated: 2026-06-17*
+- Pseudonymisation of student IDs is weak, and pseudonymisation on its own does not meet the input condition above.
+- There is no automated detection of personal data; removing it is the teacher's manual responsibility.
+- There is no data protection impact assessment template.
+- There is no process isolation; the servers run with the user's privileges.
+- Where the model provider processes data depends on the application and the provider; check this for the application you use.

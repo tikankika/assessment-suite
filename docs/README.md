@@ -15,7 +15,6 @@ Quick navigation to Assessment Suite documentation.
 ## Decision Records
 
 - **[ADRs](decisions/)** - Architecture Decision Records
-- **[RFCs](rfcs/)** - Request for Comments (design proposals)
 
 ---
 

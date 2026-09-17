@@ -1,94 +1,86 @@
-# Examples
+# Assessment Suite 0.8.0: example materials
 
-This directory contains one runnable, fully worked example for Assessment
-Suite, built from **fabricated data only**. A developer can clone the repo,
-follow [SETUP_GUIDE](../docs/SETUP_GUIDE.md), point a workspace at the example,
-and see the full pipeline work end-to-end without any real-student data.
+The repository contains a worked example based on the Swedish biology assessment *Immunförsvaret* (the immune system). It combines authentic questions, a rubric and a syllabus with answers written for four invented students. You can inspect the saved assessments directly, or copy the inputs into a separate workspace to begin a new assessment.
 
----
+The example is material for examining how an answer is assessed and how that assessment appears in later records. Its saved judgements are open to critique.
 
-## The example
+## What the example contains
 
-[`biog2000x_immunforsvaret/`](biog2000x_immunforsvaret/) — a complete run of the
-pipeline on a fabricated biology exam (course code `BIOG2000X`, *Biologi 2*):
-the immune-system exam *Immunförsvaret*. It is not just input files. Every phase
-output (01→14), the readable assessment dialogue, and the full execution trace
-are kept, so you can study the whole process or re-run it yourself.
+The [source materials](biog2000x_immunforsvaret/immune_system_exam/01_original) are in Swedish. They contain 18 questions worth 65 points, an aspect-based rubric, a biology syllabus and four sets of fabricated student answers. The answer files use synthetic identifiers beginning `10001` through `10004`. All seven input files are Markdown, so this example exercises file preparation without testing PDF extraction.
 
-Start with [`biog2000x_immunforsvaret/README.md`](biog2000x_immunforsvaret/README.md)
-for the full walkthrough — it explains the example from three angles (teacher,
-researcher, developer) and lists every folder in the run.
+The [saved project](biog2000x_immunforsvaret/immune_system_exam/) includes answers grouped by question, assessed question files, student reports, numerical summaries, interpretations and feedback. Its [assessment-purpose record](biog2000x_immunforsvaret/immune_system_exam/assessment_purpose.md) sets Phase 11, grading, to `off`. There is no grading output to reproduce.
 
-### The exam
+The [assessment dialogue](biog2000x_immunforsvaret/assessment_dialogue.md) and [detailed log](biog2000x_immunforsvaret/assessment_dialogue_full_log.md) provide additional records of the earlier run. They help explain the saved work; use the current workflow guide for tool names and operating instructions.
 
-18 questions in three parts, marked against an aspect-level rubric (65 points in
-total):
+## Follow one answer through the saved records
 
-- **Del A — Faktafrågor** (A1–A9): nine short factual questions, 15p
-- **Del B — Förklara och beskriva** (B1–B6): six explain-and-describe questions, 20p
-- **Del C — Fördjupning** (C1–C3): three extended-answer questions, 30p
+Start with question 17 and the invented student whose full identifier is `10004_100000000_example`. The source labels this question `Q017A`, the rubric calls it `C2`, and the prepared question files use `Q017`. Its topic is the immune response to a wound.
 
-The questions, rubric and syllabus are reused authentic Swedish teaching
-material (kept in Swedish as source text). The rubric also carries a
-misconception register (*missuppfattningsregister*) that the assessment checks
-each answer against.
+| Open | What to examine |
+|---|---|
+| [Questions](biog2000x_immunforsvaret/immune_system_exam/01_original/exam_questions.md) and [rubric](biog2000x_immunforsvaret/immune_system_exam/01_original/rubric.md) | Find `Q017A` and rubric section `C2`. Read the task and the seven aspects against which the answer will be assessed. |
+| [The fourth invented student's original answers](biog2000x_immunforsvaret/immune_system_exam/01_original/student_answers/10004_100000000_example.md) | Find the answer to question 17 and read it as a whole. |
+| [Question 17: extracted answers](biog2000x_immunforsvaret/immune_system_exam/05_answers_by_question/Q017_alla_elever.md) | Find the same identifier. Check what was carried into the question file, where all four students' answers are brought together. |
+| [Question 17: saved assessments](biog2000x_immunforsvaret/immune_system_exam/06_analytic_assessment/Q017_alla_elever.md) | Examine the points and reasons for each rubric aspect. Check whether the cited passages support the judgement and whether the next-step comment follows from it. |
+| [The fourth invented student's analytic report](biog2000x_immunforsvaret/immune_system_exam/07_analytic_student/Analytic_10004_100000000_example.md) | Find `Fråga Q017` and compare it with the saved question assessment. Then look at the other questions and the numerical overview. |
 
-### The four students
+The saved report awards this student 12 of 12 points on question 17 and 0 of 1 on question 1. Read the answers and reasons behind those figures before interpreting the total. The example lets you examine such differences without treating a numerical summary as a complete account of an answer.
 
-The four fabricated students (`10001`–`10004`) were calibrated so that a raw
-point total is *not* enough to understand a student — which is the whole reason
-the method reads aspect by aspect rather than summing:
+## Prepare a separate trial
 
-- **10001** — strong, with the strength sitting in the Del C extended answers.
-- **10002** — middling; solid recall on the short questions, thin on the essays.
-- **10003** — weak; blanks and deliberate misconceptions that exercise the
-  rubric's misconception flags.
-- **10004** — uneven; near-complete essays alongside blank answers on easy
-  questions, so the total lands near 10002 but the profile is the opposite.
+Use a dedicated workspace outside the source repository. For installation and AI-application configuration, see the [setup guide](../docs/SETUP_GUIDE.md). Both servers need access to the same assessment workspace for the subsequent workflow. Review the [data-handling conditions](../SECURITY.md) before supplying additional material.
 
----
+Copy the contents of the example's `01_original/` directory into a new folder called `example-inputs` inside that workspace. Keep the `student_answers` subfolder. Leave the saved assessments and configuration in the repository as reference material.
 
-## Running the example
+The copied inputs should be:
 
-### 1. Set up Assessment Suite
-
-Follow [docs/SETUP_GUIDE.md](../docs/SETUP_GUIDE.md). You will end up with:
-
-- The two MCP servers built (`packages/assessment-mcp/dist/server.js` exists,
-  `assessment_data_mcp` importable in Python)
-- Claude Desktop configured to talk to both servers, pointed at a workspace
-  directory you choose
-
-### 2. Copy the input layer into your workspace
-
-```bash
-# Replace /path/to/assessment_workspace with the workspace you set in
-# claude_desktop_config.json
-cp -r examples/biog2000x_immunforsvaret/immune_system_exam/01_original \
-  /path/to/assessment_workspace/immune_system_exam/
+```text
+example-inputs/
+  exam_questions.md
+  rubric.md
+  Amnesplan_Biologi_GY25.md
+  student_answers/
+    10001_100000000_example.md
+    10002_100000000_example.md
+    10003_100000000_example.md
+    10004_100000000_example.md
 ```
 
-`01_original/` holds the exam questions, the rubric, the syllabus and the four
-students' answers — everything the pipeline needs as its starting input. The
-later phase folders are created as you run.
+Ask the AI application to call `scan_source_directory` on the absolute path to `example-inputs`. The scan may return incomplete suggestions. Supply the following mapping when it calls `initialize_project`; each file or folder path must be absolute.
 
-### 3. Walk through the pipeline in Claude Desktop
+| Argument | Value |
+|---|---|
+| `exam_path` | `example-inputs/exam_questions.md` inside your workspace |
+| `rubric_path` | `example-inputs/rubric.md` |
+| `syllabus_source` | `example-inputs/Amnesplan_Biologi_GY25.md` |
+| `student_answers_path` | `example-inputs/student_answers` |
+| `output_base_path` | Your workspace directory |
+| `project_name` | `immune-system-trial`, provided that name is unused |
 
-Restart Claude Desktop so it picks up the new files, then ask Claude to explore
-and set up an assessment project at your new `immune_system_exam/` directory.
-Claude steps through the phases using the MCP tools — it proposes, you decide.
-If anything looks off, compare your run against the finished artefacts already
-present under
-[`biog2000x_immunforsvaret/immune_system_exam/`](biog2000x_immunforsvaret/immune_system_exam/);
-refer to [WORKFLOW-INTEGRATION.md](../docs/WORKFLOW-INTEGRATION.md) for the full
-phase guide.
+For the standard methodology, leave the optional `methodology_folder` argument unset. Setup uses the configured or default methodology; it can also reuse a methodology folder in the parent directory. Check the methodology location reported by setup so you know which instructions the trial will use.
 
----
+Next, call `convert_documents` with the new project's `01_original` directory as `input_dir` and its `02_markdown` directory as `output_dir`. The tool copies these Markdown files. There are no PDFs to extract.
 
-## Why fabricated data
+Before proceeding, check that:
 
-This example was designed so the data-protection rule
-([`.claude/rules/data-protection.md`](../.claude/rules/data-protection.md)) holds
-without exception: no real names, no real student answers, and only a realistic
-course-code *label*. If you adapt the example for your own training material,
-keep the same discipline — even in a public example directory.
+- The new project contains `sources.yaml` and `project_state.json`.
+- Both `01_original` and `02_markdown` contain the three source documents and four answer files.
+- The prepared files preserve the supplied text, including the answer boundaries and identifiers.
+
+This is the first checkpoint: a separate project with prepared materials.
+
+## Continue into assessment
+
+Follow the [workflow guide](../docs/WORKFLOW-INTEGRATION.md) to establish the questions, answer boundaries and student identifiers; prepare and check the annotated material; review the rubric; and extract the question files.
+
+For a first assessment, work through one question across the four invented students. Examine each proposal against the answer and rubric before submitting it to be saved. Compare the resulting records with the supplied example and investigate differences. A new run involves new proposals and decisions; the saved example does not prescribe their wording or points.
+
+Before generating student reports, establish the assessment format through the workflow's `phase6_post_format` step, or check that an existing format configuration is suitable. After generation, inspect the questions, assessments and totals in each report before using it for later interpretation or feedback.
+
+## Verification status
+
+On 17 September 2026, the preparation route was run through the Python server's MCP interface at revision `112af99`, using Python 3.11.14 on macOS. Scanning, project initialisation and document preparation completed. The seven inputs matched their copies in both project directories byte for byte, and setup supplied 22 methodology documents.
+
+That check used an existing development environment. It did not test a clean installation, a named AI application's handling of the conversation, PDF extraction, or a fresh assessment through the later stages. The saved example provides records to inspect; a complete rerun with the current software remains to be verified.
+
+If you extend the example or share a reproduction of a problem, use fabricated student answers and synthetic identifiers. Keep real student material outside the repository.
