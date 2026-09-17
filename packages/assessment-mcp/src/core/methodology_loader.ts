@@ -186,7 +186,7 @@ export class MethodologyLoader {
       // Extract key sections only
       return await this.extractKeySections(content);
     } catch (error) {
-      return await this.getFallbackSummary();
+      return await this.getFallbackSummary(error);
     }
   }
 
@@ -241,13 +241,7 @@ export class MethodologyLoader {
       const content = await this.cachedReadFile(filePath);
       return this.formatSection('phase2b_question_detection.md', content);
     } catch (error) {
-      const reason = error instanceof Error ? error.message : String(error);
-      throw new Error(
-        `Phase 2B methodology file could not be loaded: ` +
-        `methodology/technical/phase2b_question_detection.md (resolved to ${filePath}). ` +
-        `The methodology document is the source of truth; provide the file rather than running ` +
-        `with degraded fallback instructions. Underlying error: ${reason}`
-      );
+      throw this.missingMethodology('Phase 2B', 'technical/phase2b_question_detection.md', filePath, error);
     }
   }
 
@@ -268,13 +262,7 @@ export class MethodologyLoader {
       const content = await this.cachedReadFile(filePath);
       return this.formatSection('phase4b_rubric_validation.md', content);
     } catch (error) {
-      const reason = error instanceof Error ? error.message : String(error);
-      throw new Error(
-        `Phase 4B methodology file could not be loaded: ` +
-        `methodology/technical/phase4b_rubric_validation.md (resolved to ${filePath}). ` +
-        `The methodology document is the source of truth; provide the file rather than running ` +
-        `with degraded fallback instructions. Underlying error: ${reason}`
-      );
+      throw this.missingMethodology('Phase 4B', 'technical/phase4b_rubric_validation.md', filePath, error);
     }
   }
 
@@ -296,8 +284,7 @@ export class MethodologyLoader {
       const content = await this.cachedReadFile(filePath);
       return this.formatSection('phase4c_save.md', content);
     } catch (error) {
-      console.error('[MethodologyLoader] Phase 4C Save methodology not found:', error);
-      return this.getPhase4CSaveFallback();
+      throw this.missingMethodology('Phase 4C', 'technical/phase4c_save.md', filePath, error);
     }
   }
 
@@ -318,8 +305,7 @@ export class MethodologyLoader {
       const content = await this.cachedReadFile(filePath);
       return this.formatSection('phase2c_answer_boundaries.md', content);
     } catch (error) {
-      console.error('[MethodologyLoader] Phase 2C methodology not found:', error);
-      return this.getPhase2CFallback();
+      throw this.missingMethodology('Phase 2C', 'technical/phase2c_answer_boundaries.md', filePath, error);
     }
   }
 
@@ -342,30 +328,8 @@ export class MethodologyLoader {
       const content = await this.cachedReadFile(filePath);
       return content;
     } catch (error) {
-      console.error('[MethodologyLoader] Assessment Purpose methodology not found:', error);
-      return this.getAssessmentPurposeFallback();
+      throw this.missingMethodology('Assessment purpose', 'pedagogical/assessment_purpose_method.md', filePath, error);
     }
-  }
-
-  private getAssessmentPurposeFallback(): string {
-    return `
-# Assessment Purpose (Fallback)
-
-Deklarera bedömningens syfte och djup innan bedömning börjar.
-
-## Nivåer
-| Nivå | Typiskt | Behov |
-|------|---------|-------|
-| Minitest | KK, quiz | Feedback + formativ översikt |
-| Prov | Delprov | Mönsteranalys + indikation |
-| Stort prov | Tung bedömning | Full analys, kriteriemappning |
-| Tenta | Formell examination | Komplett validitetsdokumentation |
-
-## Touch Points
-1. **Deklaration** — Innan Phase 6: syfte + pipeline-djup
-2. **Påverkan** — Phase 6 (framtida): syfte påverkar bedömningsdjup
-3. **Bekräftelse** — Efter Phase 8: bekräfta/justera med data
-    `.trim();
   }
 
   // ============================================================
@@ -391,8 +355,7 @@ Deklarera bedömningens syfte och djup innan bedömning börjar.
       const content = await this.cachedReadFile(filePath);
       return content;
     } catch (error) {
-      console.error('[MethodologyLoader] Phase 9 methodology not found:', error);
-      return this.getPhase9Fallback();
+      throw this.missingMethodology('Phase 9', 'pedagogical/phase9_generalization_method.md', filePath, error);
     }
   }
 
@@ -413,8 +376,7 @@ Deklarera bedömningens syfte och djup innan bedömning börjar.
       const content = await this.cachedReadFile(filePath);
       return content;
     } catch (error) {
-      console.error('[MethodologyLoader] Phase 10 methodology not found:', error);
-      return this.getPhase10Fallback();
+      throw this.missingMethodology('Phase 10', 'pedagogical/phase10_extrapolation_method.md', filePath, error);
     }
   }
 
@@ -435,8 +397,7 @@ Deklarera bedömningens syfte och djup innan bedömning börjar.
       const content = await this.cachedReadFile(filePath);
       return content;
     } catch (error) {
-      console.error('[MethodologyLoader] Phase 11 methodology not found:', error);
-      return this.getPhase11Fallback();
+      throw this.missingMethodology('Phase 11', 'pedagogical/phase11_grade_decision_method.md', filePath, error);
     }
   }
 
@@ -457,8 +418,7 @@ Deklarera bedömningens syfte och djup innan bedömning börjar.
       const content = await this.cachedReadFile(filePath);
       return content;
     } catch (error) {
-      console.error('[MethodologyLoader] Phase 12 methodology not found:', error);
-      return this.getPhase12Fallback();
+      throw this.missingMethodology('Phase 12', 'pedagogical/phase12_feedback_method.md', filePath, error);
     }
   }
 
@@ -479,8 +439,7 @@ Deklarera bedömningens syfte och djup innan bedömning börjar.
       const content = await this.cachedReadFile(filePath);
       return content;
     } catch (error) {
-      console.error('[MethodologyLoader] Phase 13 methodology not found:', error);
-      return this.getPhase13Fallback();
+      throw this.missingMethodology('Phase 13', 'pedagogical/phase13_teacher_summary_method.md', filePath, error);
     }
   }
 
@@ -491,8 +450,7 @@ Deklarera bedömningens syfte och djup innan bedömning börjar.
       const content = await this.cachedReadFile(filePath);
       return content;
     } catch (error) {
-      console.error('[MethodologyLoader] Phase 14 methodology not found:', error);
-      return this.getPhase14Fallback();
+      throw this.missingMethodology('Phase 14', 'pedagogical/phase14_student_feedback_method.md', filePath, error);
     }
   }
 
@@ -513,23 +471,8 @@ Deklarera bedömningens syfte och djup innan bedömning börjar.
       const content = await this.cachedReadFile(filePath);
       return content;
     } catch (error) {
-      console.error('[MethodologyLoader] Hermeneutic guidance not found:', error);
-      return this.getHermeneuticGuidanceFallback();
+      throw this.missingMethodology('Hermeneutic guidance', 'pedagogical/hermeneutic_guidance.md', filePath, error);
     }
-  }
-
-  private getHermeneuticGuidanceFallback(): string {
-    return `
-# Hermeneutisk vägledning (Fallback)
-
-Hermeneutic_guidance.md saknas. Kontextuella frågor kan inte laddas.
-
-## Allmänt
-Vid hermeneutisk läsning (Moss 1994):
-1. Läs helheten först — vad är det övergripande intrycket?
-2. Gå till delarna — vad säger enskilda svar?
-3. Återvänd till helheten — förändras bilden?
-    `.trim();
   }
 
   /**
@@ -555,160 +498,20 @@ Vid hermeneutisk läsning (Moss 1994):
     return `[Section ${step} not found in methodology]`;
   }
 
-  // ============================================================
-  // PHASE 9-12 FALLBACKS
-  // ============================================================
-
-  private getPhase9Fallback(): string {
-    return `
-# Phase 9: Generalisering (Fallback)
-
-## STEG 1: Områdesanalys
-För varje kunskapsområde:
-1. Presentera kvantitativa data
-2. Fråga om styrkor
-3. Fråga om svagheter
-4. Sammanfatta
-
-## STEG 2: Mönsteridentifiering
-1. När lyckas studenten?
-2. När har studenten svårigheter?
-3. Finns återkommande mönster?
-
-## STEG 3: Övergripande generalisering
-1. Sammanfatta kunskapsprofil
-2. Identifiera kritiska frågor för Phase 10
-    `.trim();
-  }
-
-  private getPhase10Fallback(): string {
-    return `
-# Phase 10: Extrapolering (Fallback)
-
-1. Mappa generalisering till kurskriterier
-2. Identifiera evidens för varje kriterium
-3. Notera luckor i evidens
-4. Förbereda för betygsbeslut
-    `.trim();
-  }
-
-  private getPhase11Fallback(): string {
-    return `
-# Phase 11: Betygsbeslut (Fallback)
-
-1. Granska kriterieuppfyllelse
-2. Gör helhetsbedömning
-3. Dokumentera resonemang
-4. Föreslå betyg med motivering
-    `.trim();
-  }
-
-  private getPhase12Fallback(): string {
-    return `
-# Phase 12: Återkoppling (Fallback)
-
-Lundahls trestegsmodell:
-1. VAR ÄR JAG? - Nulägesbeskrivning
-2. VART SKA JAG? - Mål och kriterier
-3. HUR KOMMER JAG DIT? - Konkreta åtgärder
-    `.trim();
-  }
-
-  private getPhase13Fallback(): string {
-    return `
-# Phase 13: Lärarsammanfattning (Fallback)
-
-Aggregera data från alla elever (Phase 8-12) och skapa en formativ sammanfattning:
-
-1. **Klassammanfattning** - Statistik och översikt
-2. **Misconceptions** - Systematiska missuppfattningar
-3. **Undervisningsrekommendationer** - Vad kan förbättras
-4. **Frågeanalys** - Hur fungerade provfrågorna
-5. **Stödbehov** - Elever som behöver extra stöd
-6. **Rekommendationer** - För nästa kursomgång
-    `.trim();
-  }
-
-  private getPhase14Fallback(): string {
-    return `
-# Phase 14: Elevåterkoppling (Fallback)
-
-Generera ett elevvänligt återkopplingsdokument:
-
-1. **Poängtabell** - Visa resultat per fråga
-2. **Styrkor** - 2-3 konkreta saker eleven gjort bra
-3. **Utvecklingsområden** - 2-3 saker att jobba med (uppmuntrande ton)
-4. **Nästa steg** - 3-4 konkreta åtgärder eleven kan ta
-
-Ton: Positiv, uppmuntrande, konkret. Skriv direkt till eleven ("du").
-    `.trim();
-  }
-
   /**
-   * Fallback instructions if Phase 4D methodology file missing
+   * The error for a methodology document that cannot be loaded. The document
+   * is the source of truth, so loaders stop rather than use text in code.
    * @private
    */
-  private getPhase2CFallback(): string {
-    return `
-# Phase 4D: Answer Boundary Detection (Fallback)
-
-Detect per-QUESTION boundary markers that work across ALL students.
-
-1. **Key Insight:**
-   - Markers are SAME for all students per question
-   - Identify once, verify for all
-
-2. **Inspera Patterns:**
-   - Swedish: "Skriv ditt svar här..." → "Ord: XX"
-   - English: "Write your answer here..." → "Words: XX"
-
-3. **For each manual question:**
-   - Find start_marker (text before answer)
-   - Find end_marker (text after answer)
-   - Verify consistency across all students
-
-4. **Auto-graded questions:**
-   - skip_boundary_detection: true
-   - No text answer to extract
-
-5. **Output to exam_config.yaml:**
-   - answer_boundaries.global (language, markers)
-   - answer_boundaries.questions (per-question boundaries)
-    `.trim();
+  private missingMethodology(stage: string, relativePath: string, resolvedPath: string, error: unknown): Error {
+    const reason = error instanceof Error ? error.message : String(error);
+    return new Error(
+      `${stage} methodology file could not be loaded: methodology/${relativePath} ` +
+      `(resolved to ${resolvedPath}). The methodology document is the source of truth; ` +
+      `provide the file rather than running with degraded fallback instructions. ` +
+      `Underlying error: ${reason}`
+    );
   }
-
-  /**
-   * Fallback instructions if Phase 4C Student Report methodology file missing
-   * @private
-   */
-  private getPhase4CSaveFallback(): string {
-    return `
-# Phase 4C: Student Report (Fallback)
-
-Create a per-student completion report:
-
-1. **For each student in 02_markdown/student_answers/:**
-   - Identify answered questions (Q001, Q002, etc.)
-   - Count words per answer
-   - Flag short answers: ⚠️ 30-39 words, ❌ <30 words
-
-2. **Output format:**
-   - student_report.md
-   - Per-student table with question, status, word count
-   - Completion rate per student
-
-3. **Status icons:**
-   - ✅ Answered (≥40 words)
-   - ⚠️ Short (30-39 words)
-   - ❌ Very short (<30 words)
-   - ➖ Not answered
-    `.trim();
-  }
-
-  // getPhase4CFallback() REMOVED - phase4c_answer_extraction deprecated
-
-  // getPhase4BFallback() REMOVED — methodology file is the source of truth (see code-as-plumber rule)
-  // getPhase2BFallback() REMOVED — methodology file is the source of truth (see code-as-plumber rule)
 
   /**
    * Format a document section with clear header
@@ -796,37 +599,25 @@ Create a per-student completion report:
   }
 
   /**
-   * Fallback summary if documents can't be loaded
-   * Loads from /methodology/fallback-summary.md
+   * Summary document used when the foundation cannot be condensed.
+   * Loads methodology/fallback-summary.md; stops if that is missing too.
    * @private
    */
-  private async getFallbackSummary(): Promise<string> {
+  private async getFallbackSummary(cause?: unknown): Promise<string> {
+    const summaryPath = join(this.DEFAULT_PATH, 'fallback-summary.md');
     try {
-      const fallbackPath = join(this.DEFAULT_PATH, 'fallback-summary.md');
-      return await fs.readFile(fallbackPath, 'utf-8');
-    } catch {
-      // Ultimate fallback if even the fallback file can't be loaded
-      return `# Analytic Assessment - Summary
-
-## Quality Symbols
-
-| Symbol | Level | Description |
-|--------|-------|-------------|
-| ✓✓✓ | Excellent | Full understanding |
-| ✓✓ | Good | Good understanding |
-| ✓ | Basic | Basic understanding |
-| ⚠ | Incomplete | Partial answer |
-| ✗ | Incorrect | Wrong or missing |
-| - | Unanswered | No answer |
-
-## Core Principles
-
-1. Content before form
-2. Transparency
-3. Concreteness
-4. Generosity at basic level
-5. Forward-looking feedback
-`;
+      return await fs.readFile(summaryPath, 'utf-8');
+    } catch (error) {
+      const why = cause instanceof Error ? ` (${cause.message})` : '';
+      throw this.missingMethodology(
+        'Condensed assessment',
+        'fallback-summary.md',
+        summaryPath,
+        new Error(
+          `methodology/pedagogical/00_foundation.md could not be condensed${why}, ` +
+          `and the summary document could not be read: ${error instanceof Error ? error.message : String(error)}`
+        ),
+      );
     }
   }
 }
