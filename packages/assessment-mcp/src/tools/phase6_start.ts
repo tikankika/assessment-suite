@@ -31,6 +31,93 @@ const PHASE6_DOCS = [
   'pedagogical/phase6_assessment_method.md',
 ];
 
+interface Phase6Methodology {
+  documents: string[];
+  content: Array<{ name: string; content: string }>;
+  methodology: string;
+  warnings: string[];
+}
+
+/**
+ * Load the Phase 6 methodology documents for an assessment project.
+ *
+ * Looks in the folder recorded in sources.yaml, then <project>/methodology,
+ * then <project>/../methodology. Assessment does not start while a document is
+ * missing: continuing needs an explicit decision by the teacher, passed as
+ * continueWithoutMethodology, and the missing documents are then named in a
+ * warning. Callers run this before writing anything.
+ */
+async function loadPhase6Methodology(
+  projectPath: string,
+  continueWithoutMethodology: boolean
+): Promise<Phase6Methodology> {
+  let folder = '';
+  try {
+    const sourcesContent = await fs.readFile(path.join(projectPath, 'sources.yaml'), 'utf-8');
+    const sources = yamlLoad(sourcesContent) as Partial<SourcesYaml>;
+    if (sources?.sources?.methodology?.copied_to) {
+      folder = path.join(projectPath, sources.sources.methodology.copied_to);
+    }
+  } catch {
+    debugLog('[assessment_start] sources.yaml not found or unreadable');
+  }
+  if (!folder) {
+    for (const candidate of [path.join(projectPath, 'methodology'), path.join(projectPath, '..', 'methodology')]) {
+      try {
+        await fs.access(candidate);
+        folder = candidate;
+        break;
+      } catch {
+        // Try the next candidate
+      }
+    }
+  }
+
+  const documents: string[] = [];
+  const content: Array<{ name: string; content: string }> = [];
+  const missing: string[] = [];
+  for (const doc of PHASE6_DOCS) {
+    const basename = doc.split('/').pop() ?? doc;
+    const candidates = folder ? [[path.join(folder, doc), doc], [path.join(folder, basename), basename]] : [];
+    let loaded = false;
+    for (const [docPath, docName] of candidates) {
+      try {
+        const text = await fs.readFile(docPath, 'utf-8');
+        documents.push(docName);
+        content.push({ name: docName, content: text });
+        loaded = true;
+        break;
+      } catch {
+        // Try the flat layout used by older projects
+      }
+    }
+    if (!loaded) missing.push(`methodology/${doc}`);
+  }
+
+  const warnings: string[] = [];
+  if (missing.length > 0) {
+    const where = folder
+      ? `in ${folder}`
+      : `for a folder in sources.yaml, ${path.join(projectPath, 'methodology')} and ${path.join(projectPath, '..', 'methodology')}`;
+    if (!continueWithoutMethodology) {
+      throw new Error(
+        `Assessment has not started: required methodology documents are missing: ${missing.join(', ')} ` +
+        `(looked ${where}). Provide the documents, or ask the teacher whether to continue without them. ` +
+        `Only if the teacher explicitly decides to continue, call phase6_start again with ` +
+        `continue_without_methodology: true.`
+      );
+    }
+    warnings.push(`The teacher chose to continue without: ${missing.join(', ')} (looked ${where}).`);
+  }
+
+  let methodology = '';
+  if (content.length === 0) {
+    methodology = await methodologyLoader.getCondensed();
+    warnings.push('No project methodology documents were loaded; the condensed installation methodology is used.');
+  }
+  return { documents, content, methodology, warnings };
+}
+
 /**
  * assessment_start - Initialize an assessment session
  *
@@ -62,8 +149,10 @@ export async function assessmentStart(args: {
   create_copy?: boolean;
   assessment_title?: string;
   project_path?: string;
+  continue_without_methodology?: boolean;
 }): Promise<AssessmentStartResult> {
   const { q_file_path, student_files_dir, rubric_path, assessor, create_copy = true, assessment_title } = args;
+  const continueWithoutMethodology = args.continue_without_methodology === true;
 
   // Validate: at least one input mode must be specified
   if (!q_file_path && !student_files_dir) {
@@ -81,6 +170,7 @@ export async function assessmentStart(args: {
       assessor,
       assessment_title,
       project_path: args.project_path,
+      continue_without_methodology: continueWithoutMethodology,
     });
   }
 
@@ -178,6 +268,19 @@ export async function assessmentStart(args: {
     throw new Error('No students found in Q-file');
   }
 
+  // 6b. Derive the project and load its methodology BEFORE anything is written
+  // (ADR-003; RFC-018: Q-files come from 05_answers_by_question/).
+  debugLog('[assessment_start] Step 6b: Finding project path and methodology docs...');
+  const stateProjectPath = await deriveProjectPath(q_file_path);
+  projectPath = stateProjectPath || path.dirname(q_file_path)
+    .replace(`/${FOLDERS.PHASE5_ANSWERS}`, '')
+    .replace(`/${FOLDERS.PHASE6_ASSESSMENT}`, '');
+  const phase6Methodology = await loadPhase6Methodology(projectPath, continueWithoutMethodology);
+  methodologyDocuments = phase6Methodology.documents;
+  const methodologyContent = phase6Methodology.content;
+  const methodology = phase6Methodology.methodology;
+  validationWarnings.push(...phase6Methodology.warnings);
+
   // 7. Check if already has STATUS (resume mode)
   debugLog('[assessment_start] Step 7: Checking for existing STATUS...');
   const hasExistingStatus = await statusManager.hasStatus(q_file_path);
@@ -221,86 +324,6 @@ export async function assessmentStart(args: {
     );
     firstStudent = students[0] || null;
     debugLog('[assessment_start] Step 7: New STATUS created');
-  }
-
-  // 8. ADR-003: Derive project path and read sources.yaml for methodology
-  // RFC-018: Q-files now come from 05_answers_by_question/
-  debugLog('[assessment_start] Step 8: Finding project path and methodology docs...');
-  const stateProjectPath = await deriveProjectPath(q_file_path);
-  projectPath = stateProjectPath || path.dirname(q_file_path)
-    .replace(`/${FOLDERS.PHASE5_ANSWERS}`, '')
-    .replace(`/${FOLDERS.PHASE6_ASSESSMENT}`, '');
-
-  // Try to read sources.yaml to find methodology folder
-  let methodologyFolder = '';
-  try {
-    const sourcesPath = path.join(projectPath, 'sources.yaml');
-    const sourcesContent = await fs.readFile(sourcesPath, 'utf-8');
-    const sources = yamlLoad(sourcesContent) as Partial<SourcesYaml>;
-    if (sources?.sources?.methodology?.copied_to) {
-      methodologyFolder = path.join(projectPath, sources.sources.methodology.copied_to);
-      debugLog('[assessment_start] Step 8: Found methodology from sources.yaml:', methodologyFolder);
-    }
-  } catch {
-    debugLog('[assessment_start] Step 8: sources.yaml not found, using default');
-  }
-
-  // Fallback: check project/methodology/ then parent/methodology/
-  if (!methodologyFolder) {
-    const localMethodology = path.join(projectPath, 'methodology');
-    const parentMethodology = path.join(projectPath, '..', 'methodology');
-    try {
-      await fs.access(localMethodology);
-      methodologyFolder = localMethodology;
-      debugLog('[assessment_start] Step 8: Found local methodology/');
-    } catch {
-      try {
-        await fs.access(parentMethodology);
-        methodologyFolder = parentMethodology;
-        debugLog('[assessment_start] Step 8: Found parent methodology/');
-      } catch {
-        debugLog('[assessment_start] Step 8: No methodology folder found');
-      }
-    }
-  }
-
-  // List and AUTO-LOAD Phase 6 methodology documents (same pattern as GenericPhaseOrchestrator)
-  const methodologyContent: Array<{ name: string; content: string }> = [];
-  if (methodologyFolder) {
-    try {
-      for (const doc of PHASE6_DOCS) {
-        let docPath = path.join(methodologyFolder, doc);
-        let docName = doc;
-        try {
-          await fs.access(docPath);
-        } catch {
-          // Fallback: try basename in flat structure (existing projects)
-          const basename = doc.split('/').pop() ?? '';
-          docPath = path.join(methodologyFolder, basename);
-          docName = basename;
-          try {
-            await fs.access(docPath);
-          } catch {
-            continue; // Not found
-          }
-        }
-        methodologyDocuments.push(docName);
-        const content = await fs.readFile(docPath, 'utf-8');
-        methodologyContent.push({ name: docName, content });
-        debugLog('[assessment_start] Step 8: Loaded methodology doc:', docName, 'size:', content.length);
-      }
-      debugLog('[assessment_start] Step 8: Auto-loaded', methodologyContent.length, 'methodology docs');
-    } catch {
-      debugLog('[assessment_start] Step 8: Could not read methodology folder');
-    }
-  }
-
-  // No project methodology: use the condensed installation methodology.
-  // getCondensed() throws, naming the documents, if none can be loaded.
-  let methodology = '';
-  if (methodologyContent.length === 0) {
-    methodology = await methodologyLoader.getCondensed();
-    validationWarnings.push('Using fallback methodology - sources.yaml not configured');
   }
 
   // 8b. RFC-018: Create assessment file copy in 06_analytic_assessment/
@@ -467,6 +490,7 @@ async function assessmentStartPerStudent(args: {
   assessor?: string;
   assessment_title?: string;
   project_path?: string;
+  continue_without_methodology?: boolean;
 }): Promise<AssessmentStartResult> {
   const { student_files_dir, rubric_path, assessor, assessment_title } = args;
 
@@ -531,59 +555,12 @@ async function assessmentStartPerStudent(args: {
     projectPath = stateProjectPath || path.dirname(student_files_dir);
   }
 
-  // 5. Load methodology documents (same pattern as Q-file mode)
-  const methodologyDocuments: string[] = [];
-  const methodologyContent: Array<{ name: string; content: string }> = [];
-  let methodologyFolder = '';
-
-  try {
-    const sourcesPath = path.join(projectPath, 'sources.yaml');
-    const sourcesContent = await fs.readFile(sourcesPath, 'utf-8');
-    const sources = yamlLoad(sourcesContent) as Partial<SourcesYaml>;
-    if (sources?.sources?.methodology?.copied_to) {
-      methodologyFolder = path.join(projectPath, sources.sources.methodology.copied_to);
-    }
-  } catch {
-    debugLog('[assessment_start_per_student] sources.yaml not found');
-  }
-
-  // Fallback: check project/methodology/ then parent/methodology/
-  if (!methodologyFolder) {
-    const localMethodology = path.join(projectPath, 'methodology');
-    const parentMethodology = path.join(projectPath, '..', 'methodology');
-    try {
-      await fs.access(localMethodology);
-      methodologyFolder = localMethodology;
-    } catch {
-      try {
-        await fs.access(parentMethodology);
-        methodologyFolder = parentMethodology;
-      } catch { /* no methodology found */ }
-    }
-  }
-
-  if (methodologyFolder) {
-    for (const doc of PHASE6_DOCS) {
-      let docPath = path.join(methodologyFolder, doc);
-      let docName = doc;
-      try {
-        await fs.access(docPath);
-      } catch {
-        const basename = doc.split('/').pop() ?? '';
-        docPath = path.join(methodologyFolder, basename);
-        docName = basename;
-        try { await fs.access(docPath); } catch { continue; }
-      }
-      methodologyDocuments.push(docName);
-      const content = await fs.readFile(docPath, 'utf-8');
-      methodologyContent.push({ name: docName, content });
-    }
-  }
-
-  let methodology = '';
-  if (methodologyContent.length === 0) {
-    methodology = await methodologyLoader.getCondensed();
-  }
+  // 5. Load methodology documents (nothing has been written yet)
+  const phase6Methodology = await loadPhase6Methodology(projectPath, args.continue_without_methodology === true);
+  const methodologyDocuments = phase6Methodology.documents;
+  const methodologyContent = phase6Methodology.content;
+  const methodology = phase6Methodology.methodology;
+  validationWarnings.push(...phase6Methodology.warnings);
 
   // 6. Load rubric
   let rubricSection = '';
