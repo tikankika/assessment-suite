@@ -62,6 +62,12 @@ class ManifestTest(unittest.TestCase):
                 index = args.index("--workspace")
                 self.assertEqual(args[index + 1], "${user_config.workspace}")
 
+    def test_data_bundle_runs_uv_from_its_root(self):
+        # The host's install-time step syncs the project at ${__dirname}.
+        args = load_manifest("data")["server"]["mcp_config"]["args"]
+        self.assertEqual(args[:3], ["run", "--directory", "${__dirname}"])
+        self.assertIn("--locked", args)
+
     def test_methodology_setting_is_optional_and_defaults_to_empty(self):
         # An optional setting without a default reaches the server as the
         # literal placeholder. An empty default is read as "not set".
@@ -151,8 +157,10 @@ class BundleTest(unittest.TestCase):
             "data": [
                 "manifest.json", "LICENSE",
                 "methodology/pedagogical/00_foundation.md",
-                "packages/assessment-data-mcp/pyproject.toml",
-                "packages/assessment-data-mcp/uv.lock",
+                # Claude Desktop runs its uv set-up at the bundle root and
+                # expects the project files there.
+                "pyproject.toml",
+                "uv.lock",
                 "packages/assessment-data-mcp/src/assessment_data_mcp/server.py",
                 "packages/assessment-data-mcp/src/assessment_data_mcp/utils/methodology_path.py",
             ],
@@ -170,9 +178,12 @@ class BundleTest(unittest.TestCase):
             r"(^|/)(\.venv|__pycache__|[^/]+\.egg-info|tests|\.git)(/|$)|(^|/)\.env|\.map$"
         )
         dev_dependency = re.compile(r"^packages/assessment-mcp/node_modules/(vitest|typescript|@vitest|vite)(/|$)")
-        for name, (_, unpacked) in self.bundles.items():
-            for path in unpacked.rglob("*"):
-                relative = path.relative_to(unpacked).as_posix()
+        # Inspect the archive itself: launching a server from the unpacked
+        # copy legitimately creates a .venv there.
+        for name, (bundle, _) in self.bundles.items():
+            with zipfile.ZipFile(bundle) as archive:
+                entries = archive.namelist()
+            for relative in entries:
                 with self.subTest(bundle=name, path=relative):
                     self.assertIsNone(dev_dependency.search(relative))
                     if "/node_modules/" not in f"/{relative}":
@@ -195,6 +206,32 @@ class BundleTest(unittest.TestCase):
                 self.assertLessEqual(expected[name], tools)
                 # The installed release must be identifiable from the client.
                 self.assertEqual(info.version, versions[name])
+
+    def test_host_install_step_sets_up_the_data_bundle(self):
+        # Reproduces Claude Desktop's install-time step for a uv bundle:
+        # `uv sync` at the bundle root, here with the lockfile enforced and an
+        # empty cache. Before this layout the step failed with "No pyproject.toml".
+        unpacked = self.bundles["data"][1]
+        cache = self.root / "uv-cache"
+        result = subprocess.run(
+            [shutil.which("uv"), "sync", "--locked", "--quiet"],
+            cwd=unpacked, capture_output=True, text=True, timeout=600,
+            env={**os.environ, "UV_CACHE_DIR": str(cache)},
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((unpacked / ".venv").is_dir())
+
+    def test_bundled_methodology_is_found_without_the_setting(self):
+        # With the project installed from the bundle root, the Python resolver
+        # must still find the bundled methodology folder.
+        workspace = self.root / "workspace-default-methodology"
+        (workspace / "exam").mkdir(parents=True)
+        config = {"workspace": str(workspace), "methodology": ""}
+        _, text, _ = asyncio.run(call_server(
+            self.bundles["data"][1], config,
+            "scan_source_directory", {"directory_path": str(workspace / "exam")},
+        ))
+        self.assertIn("00_foundation.md", text)
 
     def test_methodology_setting_reaches_the_data_server(self):
         workspace = self.root / "workspace-methodology"

@@ -17,7 +17,7 @@
     "mcp_config": {
       "command": "uv",
       "args": [
-        "run", "--directory", "${__dirname}/packages/assessment-data-mcp", "--locked",
+        "run", "--directory", "${__dirname}", "--locked",
         "python", "-m", "assessment_data_mcp.server", "--workspace", "${user_config.workspace}"
       ],
       "env": { "METHODOLOGY_PATH": "${user_config.methodology}" }

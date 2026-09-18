@@ -3,7 +3,8 @@
 
 Each bundle keeps the repository layout (packages/<server>/ and methodology/)
 because both servers locate the bundled methodology relative to their own
-code. The TypeScript server is compiled in a staging copy, so the checkout's
+code. The data bundle additionally carries pyproject.toml and uv.lock at its
+root, where Claude Desktop runs its uv set-up. The TypeScript server is compiled in a staging copy, so the checkout's
 dist/ and node_modules/ are left untouched.
 
 Usage:
@@ -82,12 +83,34 @@ def stage_assessment(stage):
 
 
 def stage_data(stage):
+    """Stage the Python server as a uv project rooted at the bundle root.
+
+    Claude Desktop runs `uv sync` at the bundle root when a uv bundle is
+    installed and expects pyproject.toml there. The source stays under
+    packages/assessment-data-mcp/src so that the code's own path resolution
+    still finds the bundled methodology folder; the root pyproject.toml points
+    setuptools at that source tree, and the package's lockfile applies
+    unchanged because the project name, version and dependencies are the same.
+    """
     bundle = stage / "data"
     package = bundle / "packages" / "assessment-data-mcp"
     package.mkdir(parents=True)
     shutil.copytree(PY_PACKAGE / "src", package / "src", ignore=IGNORE)
-    for name in ("pyproject.toml", "uv.lock", "README.md", "LICENSE"):
-        shutil.copy2(PY_PACKAGE / name, package / name)
+
+    pyproject = (PY_PACKAGE / "pyproject.toml").read_text(encoding="utf-8")
+    source = "packages/assessment-data-mcp/src"
+    replacements = [
+        ('package-dir = {"" = "src"}', f'package-dir = {{"" = "{source}"}}'),
+        ('where = ["src"]', f'where = ["{source}"]'),
+        ('readme = "README.md"\n', ""),
+    ]
+    for old, new in replacements:
+        if pyproject.count(old) != 1:
+            sys.exit(f"pyproject.toml: expected exactly one {old!r}")
+        pyproject = pyproject.replace(old, new)
+    (bundle / "pyproject.toml").write_text(pyproject, encoding="utf-8")
+    shutil.copy2(PY_PACKAGE / "uv.lock", bundle / "uv.lock")
+    run(["uv", "lock", "--check"], bundle)
     return bundle
 
 
