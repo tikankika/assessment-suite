@@ -164,6 +164,13 @@ class AssessmentServer {
                 type: 'string',
                 description: 'Explicit project path (per-student mode). Use when student_files_dir is outside the project folder.',
               },
+              continue_without_methodology: {
+                type: 'boolean',
+                description:
+                  'Default false. Assessment does not start when a Phase 6 methodology document is missing. ' +
+                  'Set true ONLY after the teacher has been told which documents are missing and has explicitly ' +
+                  'decided to continue without them. Never set it on your own initiative.',
+              },
             },
             required: ['rubric_path'],
           },
@@ -1191,6 +1198,7 @@ class AssessmentServer {
                 rubric_path: string;
                 assessor?: string;
                 create_copy?: boolean;
+                continue_without_methodology?: boolean;
               }
             );
             break;
