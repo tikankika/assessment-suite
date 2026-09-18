@@ -7,7 +7,7 @@ local directories due to environment mismatch (container tools vs MCP tools).
 Pattern matching logic:
 - Exam: Large PDF in root (>10MB = medium, >20MB = high confidence)
 - Rubric: Filename contains "rubric", "bedömning", "matris" (high confidence)
-- Student answers: Directory with "inspera" (high) or >1 PDF (medium confidence)
+- Student answers: Directory with "inspera" (high) or >1 PDF/Markdown file (medium confidence)
 
 See: docs/decisions/ADR-005 mcp directory exploration.md
 """
@@ -107,10 +107,10 @@ async def explore_directory_tool(directory_path: str) -> dict:
                 confidence_scores["exam"] = "high" if size_mb > 20 else "medium"
                 break
 
-        # Heuristic 2: Filename pattern matching for txt/docx/smaller pdfs
+        # Heuristic 2: Filename pattern matching for md/txt/docx/smaller pdfs
         if "exam_path" not in suggestions:
             exam_patterns = ["exam", "dugga", "tenta", "prov", "test"]
-            for file in txt_files + docx_files + pdf_files:
+            for file in md_files + txt_files + docx_files + pdf_files:
                 if any(pattern in file.name.lower() for pattern in exam_patterns):
                     suggestions["exam_path"] = str(file)
                     confidence_scores["exam"] = "medium"
@@ -127,14 +127,14 @@ async def explore_directory_tool(directory_path: str) -> dict:
 
         # STUDENT ANSWERS DETECTION
         # 1. Inspera directory (specific pattern)
-        # 2. Directory with multiple PDFs (>1)
+        # 2. Directory with more than one PDF or Markdown answer file
         for subdir in subdirs:
-            pdf_count = len(list(subdir.glob("*.pdf")))
+            answer_count = len(list(subdir.glob("*.pdf"))) + len(list(subdir.glob("*.md")))
             if "inspera" in subdir.name.lower():
                 suggestions["student_answers_path"] = str(subdir)
                 confidence_scores["students"] = "high"
                 break
-            elif pdf_count > 1:
+            elif answer_count > 1:
                 suggestions["student_answers_path"] = str(subdir)
                 confidence_scores["students"] = "medium"
 
@@ -160,7 +160,7 @@ async def explore_directory_tool(directory_path: str) -> dict:
             "overall_confidence": overall_confidence,
             "ready_for_auto_setup": overall_confidence == "high",
             "next_steps": {
-                "instruction": "BEFORE calling setup_project, you MUST ask the teacher these questions:",
+                "instruction": "BEFORE calling initialize_project, you MUST ask the teacher these questions:",
                 "required_questions": [
                     "1. Syllabus: 'Vilken kursplan ska användas? (URL eller filsökväg)'",
                     "2. Output location: 'Var ska projektet sparas? (output_base_path)'",
@@ -175,7 +175,7 @@ async def explore_directory_tool(directory_path: str) -> dict:
                 "optional_questions": [
                     "5. Course content: 'Har du kursmaterial (föreläsningar, anteckningar)?'"
                 ],
-                "then": "Confirm ALL parameters with teacher before calling setup_project"
+                "then": "Confirm ALL parameters with teacher before calling initialize_project"
             }
         }
 
