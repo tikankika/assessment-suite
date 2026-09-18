@@ -53,7 +53,7 @@ AssessmentFormat = AssessmentFormatV2 | AssessmentFormatLegacy
 
 
 def load_assessment_format(project_path: Path) -> Optional[AssessmentFormat]:
-    """
+    r"""
     Load assessment format configuration from exam_config.yaml
 
     Args:
