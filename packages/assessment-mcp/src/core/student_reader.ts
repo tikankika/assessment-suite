@@ -52,22 +52,35 @@ export class StudentReader {
    * separator that follows the student's text.
    */
   private cleanAnswerText(answerText: string): string {
-    // v2 assessment block, delimited by markers
-    let text = answerText.replace(
-      /<!-- PHASE6_ASSESSMENT_START[\s\S]*?<!-- PHASE6_ASSESSMENT_END -->/g, ''
-    );
-    // legacy assessment block: from the heading to the next separator line
-    const heading = text.search(/^### (?:BEDÖMNING|ANALYTIC ASSESSMENT):/m);
-    if (heading !== -1) {
-      const rest = text.slice(heading);
-      const separator = rest.search(/^---\s*$/m);
-      text = text.slice(0, heading) + (separator === -1 ? '' : rest.slice(separator));
+    // Markers and assessment blocks occupy whole lines in question files, so
+    // the answer is rebuilt line by line: comment blocks (from a line that
+    // opens "<!--" to the line that closes "-->"), assessment blocks (from
+    // the heading to the next separator) and separator lines are dropped.
+    const kept: string[] = [];
+    let inComment = false;
+    let inAssessment = false;
+    for (const line of answerText.split('\n')) {
+      const trimmed = line.trim();
+      if (inComment) {
+        if (trimmed.includes('-->')) inComment = false;
+        continue;
+      }
+      if (trimmed.startsWith('<!--')) {
+        if (!trimmed.includes('-->')) inComment = true;
+        continue;
+      }
+      if (/^### (?:BEDÖMNING|ANALYTIC ASSESSMENT):/.test(trimmed)) {
+        inAssessment = true;
+        continue;
+      }
+      if (trimmed === '---') {
+        inAssessment = false;
+        continue;
+      }
+      if (inAssessment) continue;
+      kept.push(line);
     }
-    return text
-      .replace(/<!--[\s\S]*?-->/g, '')
-      .replace(/^---\s*$/gm, '')
-      .replace(/\n{3,}/g, '\n\n')
-      .trim();
+    return kept.join('\n').replace(/\n{3,}/g, '\n\n').trim();
   }
 
   /**
