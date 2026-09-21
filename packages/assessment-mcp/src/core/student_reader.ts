@@ -47,6 +47,30 @@ export class StudentReader {
   }
 
   /**
+   * The answer as the teacher should see it: without the assessment block,
+   * without the Phase 5 / Phase 6 comment markers and without the section
+   * separator that follows the student's text.
+   */
+  private cleanAnswerText(answerText: string): string {
+    // v2 assessment block, delimited by markers
+    let text = answerText.replace(
+      /<!-- PHASE6_ASSESSMENT_START[\s\S]*?<!-- PHASE6_ASSESSMENT_END -->/g, ''
+    );
+    // legacy assessment block: from the heading to the next separator line
+    const heading = text.search(/^### (?:BEDÖMNING|ANALYTIC ASSESSMENT):/m);
+    if (heading !== -1) {
+      const rest = text.slice(heading);
+      const separator = rest.search(/^---\s*$/m);
+      text = text.slice(0, heading) + (separator === -1 ? '' : rest.slice(separator));
+    }
+    return text
+      .replace(/<!--[\s\S]*?-->/g, '')
+      .replace(/^---\s*$/gm, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  }
+
+  /**
    * Parse students from content string
    *
    * @param content - File content
@@ -92,9 +116,7 @@ export class StudentReader {
                           this.BEDÖMNING_PATTERN.test(answerText);
 
           // Remove assessment section from answer if present (supports both Swedish and English headers)
-          const cleanAnswer = answerText
-            .replace(/### (?:BEDÖMNING|ANALYTIC ASSESSMENT):[\s\S]*?(?=^---$|$)/m, '')
-            .trim();
+          const cleanAnswer = this.cleanAnswerText(answerText);
 
           students.push({
             id: currentStudent.id,
@@ -124,9 +146,7 @@ export class StudentReader {
       const assessed = assessedStudentIds.has(currentStudent.id) ||
                       this.BEDÖMNING_PATTERN.test(answerText);
 
-      const cleanAnswer = answerText
-        .replace(/### (?:BEDÖMNING|ANALYTIC ASSESSMENT):[\s\S]*?(?=^---$|$)/m, '')
-        .trim();
+      const cleanAnswer = this.cleanAnswerText(answerText);
 
       students.push({
         id: currentStudent.id,
