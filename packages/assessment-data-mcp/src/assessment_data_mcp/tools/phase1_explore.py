@@ -93,7 +93,7 @@ async def explore_directory_tool(directory_path: str) -> dict:
         md_files = list(path.glob("*.md"))
         txt_files = list(path.glob("*.txt"))
         docx_files = list(path.glob("*.docx"))
-        subdirs = [d for d in path.iterdir() if d.is_dir()]
+        subdirs = sorted(d for d in path.iterdir() if d.is_dir())
 
         suggestions = {}
         confidence_scores = {}
@@ -110,7 +110,7 @@ async def explore_directory_tool(directory_path: str) -> dict:
         # Heuristic 2: Filename pattern matching for md/txt/docx/smaller pdfs
         if "exam_path" not in suggestions:
             exam_patterns = ["exam", "dugga", "tenta", "prov", "test"]
-            for file in md_files + txt_files + docx_files + pdf_files:
+            for file in pdf_files + md_files + txt_files + docx_files:
                 if any(pattern in file.name.lower() for pattern in exam_patterns):
                     suggestions["exam_path"] = str(file)
                     confidence_scores["exam"] = "medium"
@@ -128,13 +128,26 @@ async def explore_directory_tool(directory_path: str) -> dict:
         # STUDENT ANSWERS DETECTION
         # 1. Inspera directory (specific pattern)
         # 2. Directory with more than one PDF or Markdown answer file
+        best_answer_count = 0
         for subdir in subdirs:
-            answer_count = len(list(subdir.glob("*.pdf"))) + len(list(subdir.glob("*.md")))
             if "inspera" in subdir.name.lower():
                 suggestions["student_answers_path"] = str(subdir)
                 confidence_scores["students"] = "high"
                 break
-            elif answer_count > 1:
+            try:
+                entries = list(subdir.iterdir())
+            except PermissionError:
+                # A folder the teacher cannot read is not a candidate; the
+                # scan of the folders beside it must still finish.
+                continue
+            answer_count = sum(
+                1 for entry in entries
+                if entry.is_file() and entry.suffix.lower() in {".pdf", ".md"}
+            )
+            if answer_count > 1 and answer_count > best_answer_count:
+                # The folder that looks most like a set of answers wins; a
+                # material folder with a few Markdown files must not take it.
+                best_answer_count = answer_count
                 suggestions["student_answers_path"] = str(subdir)
                 confidence_scores["students"] = "medium"
 

@@ -9,7 +9,9 @@ import { MethodologyLoader } from '../src/core/methodology_loader.js';
 // not continue with instructions written into the code.
 
 const LOADERS: Array<[keyof MethodologyLoader, string]> = [
+  ['loadPhase2B', 'technical/phase2b_question_detection.md'],
   ['loadPhase2C', 'technical/phase2c_answer_boundaries.md'],
+  ['loadPhase4B', 'technical/phase4b_rubric_validation.md'],
   ['loadPhase4CSave', 'technical/phase4c_save.md'],
   ['loadAssessmentPurposeMethodology', 'pedagogical/assessment_purpose_method.md'],
   ['loadPhase9Methodology', 'pedagogical/phase9_generalization_method.md'],

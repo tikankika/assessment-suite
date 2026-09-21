@@ -24,6 +24,8 @@ import zipfile
 
 REPO = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = REPO / "scripts" / "build_mcpb.py"
+sys.path.insert(0, str(REPO / "scripts"))
+from build_mcpb import package_version  # noqa: E402  — the script under test
 MANIFESTS = {
     "assessment": REPO / "packaging" / "mcpb" / "assessment" / "manifest.json",
     "data": REPO / "packaging" / "mcpb" / "data" / "manifest.json",
@@ -31,10 +33,8 @@ MANIFESTS = {
 
 
 def package_versions():
-    ts = json.loads((REPO / "packages/assessment-mcp/package.json").read_text())["version"]
-    pyproject = (REPO / "packages/assessment-data-mcp/pyproject.toml").read_text()
-    py = re.search(r'^version\s*=\s*"([^"]+)"', pyproject, re.M).group(1)
-    return {"assessment": ts, "data": py}
+    # read through the build script itself, so the test cannot drift from it
+    return {name: package_version(name) for name in ("assessment", "data")}
 
 
 def load_manifest(name):

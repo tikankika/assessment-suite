@@ -76,3 +76,44 @@ describe('student answers read from a question file with markers', () => {
     expect(students[0].assessed).toBe(false);
   });
 });
+
+// An assessment block is free text written by the model. A rule line inside it
+// must not end it: everything from the assessment heading to the end of the
+// student's section is assessment, never the student's answer.
+describe('answers are separated from assessment text', () => {
+  const QFILE_WITH_RULE_IN_ASSESSMENT = `## Elev elev_a (5 ord)
+
+Cellen omsluter patogenen.
+
+### BEDÖMNING: elev_a
+
+**A1a:** 1p
+
+---
+
+**TOTALPOÄNG: 1/1p**
+**Nästa steg:** Förklara mer.
+
+---
+`;
+
+  it('keeps assessment text out of the answer even when it contains a rule', () => {
+    const [student] = reader.parseStudentsFromContent(QFILE_WITH_RULE_IN_ASSESSMENT);
+    expect(student.answer).toBe('Cellen omsluter patogenen.');
+  });
+
+  it("keeps a rule the student wrote in their own answer", () => {
+    const qfile = `## Elev elev_b (8 ord)
+
+Del ett av svaret.
+
+---
+
+Del två av svaret.
+
+---
+`;
+    const [student] = reader.parseStudentsFromContent(qfile);
+    expect(student.answer).toBe('Del ett av svaret.\n\n---\n\nDel två av svaret.');
+  });
+});

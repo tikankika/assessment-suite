@@ -102,14 +102,15 @@ def stage_data(stage):
     replacements = [
         ('package-dir = {"" = "src"}', f'package-dir = {{"" = "{source}"}}'),
         ('where = ["src"]', f'where = ["{source}"]'),
-        ('readme = "README.md"\n', ""),
     ]
     for old, new in replacements:
         if pyproject.count(old) != 1:
             sys.exit(f"pyproject.toml: expected exactly one {old!r}")
         pyproject = pyproject.replace(old, new)
     (bundle / "pyproject.toml").write_text(pyproject, encoding="utf-8")
-    shutil.copy2(PY_PACKAGE / "uv.lock", bundle / "uv.lock")
+    # README.md stays with the project metadata that names it.
+    for name in ("uv.lock", "README.md"):
+        shutil.copy2(PY_PACKAGE / name, bundle / name)
     run(["uv", "lock", "--check"], bundle)
     return bundle
 

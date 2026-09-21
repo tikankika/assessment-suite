@@ -69,17 +69,16 @@ export class StudentReader {
         if (!trimmed.includes('-->')) inComment = true;
         continue;
       }
-      if (/^### (?:BEDÖMNING|ANALYTIC ASSESSMENT):/.test(trimmed)) {
+      if (inAssessment) continue;
+      if (this.BEDÖMNING_PATTERN.test(trimmed)) {
         inAssessment = true;
         continue;
       }
-      if (trimmed === '---') {
-        inAssessment = false;
-        continue;
-      }
-      if (inAssessment) continue;
       kept.push(line);
     }
+    // The separator that closes the section is not part of the answer; one the
+    // student wrote between two paragraphs is.
+    while (kept.length > 0 && ['', '---'].includes(kept[kept.length - 1].trim())) kept.pop();
     return kept.join('\n').replace(/\n{3,}/g, '\n\n').trim();
   }
 
@@ -96,6 +95,22 @@ export class StudentReader {
     let currentStudent: Partial<Student> | null = null;
     let answerLines: string[] = [];
     let lineIndex = 0;
+
+    // One place builds a Student: for a section that just ended, and for the
+    // last section in the file.
+    const pushStudent = (student: Partial<Student>, collected: string[]): void => {
+      const answerText = collected.join('\n').trim();
+      const id = student.id as string;
+      students.push({
+        id,
+        index: students.length,
+        wordCount: student.wordCount || 0,
+        answer: this.cleanAnswerText(answerText),
+        // The pre-scan finds assessment headings anywhere in the file; the
+        // pattern also catches a heading with no identifier after the colon.
+        assessed: assessedStudentIds.has(id) || this.BEDÖMNING_PATTERN.test(answerText),
+      });
+    };
 
     // Skip YAML frontmatter if present
     if (lines[0] === '---') {
@@ -123,21 +138,7 @@ export class StudentReader {
       if (headerMatch) {
         // Save previous student if exists
         if (currentStudent && currentStudent.id) {
-          const answerText = answerLines.join('\n').trim();
-          // BUGFIX: Check pre-scanned set instead of just within section
-          const assessed = assessedStudentIds.has(currentStudent.id) ||
-                          this.BEDÖMNING_PATTERN.test(answerText);
-
-          // Remove assessment section from answer if present (supports both Swedish and English headers)
-          const cleanAnswer = this.cleanAnswerText(answerText);
-
-          students.push({
-            id: currentStudent.id,
-            index: students.length,
-            wordCount: currentStudent.wordCount || 0,
-            answer: cleanAnswer,
-            assessed,
-          });
+          pushStudent(currentStudent, answerLines);
         }
 
         // Start new student
@@ -154,20 +155,7 @@ export class StudentReader {
 
     // Don't forget the last student
     if (currentStudent && currentStudent.id) {
-      const answerText = answerLines.join('\n').trim();
-      // BUGFIX: Check pre-scanned set instead of just within section
-      const assessed = assessedStudentIds.has(currentStudent.id) ||
-                      this.BEDÖMNING_PATTERN.test(answerText);
-
-      const cleanAnswer = this.cleanAnswerText(answerText);
-
-      students.push({
-        id: currentStudent.id,
-        index: students.length,
-        wordCount: currentStudent.wordCount || 0,
-        answer: cleanAnswer,
-        assessed,
-      });
+      pushStudent(currentStudent, answerLines);
     }
 
     return students;

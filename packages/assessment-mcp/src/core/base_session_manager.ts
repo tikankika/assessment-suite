@@ -33,7 +33,7 @@ export interface BaseSession {
  */
 export function generateSessionId(prefix: string, studentId: string): string {
   const timestamp = Date.now();
-  const random = randomBytes(3).toString('hex');
+  const random = randomBytes(6).toString('hex');
   return `${prefix}_${studentId}_${timestamp}_${random}`;
 }
 
