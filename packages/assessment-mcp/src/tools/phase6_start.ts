@@ -109,8 +109,16 @@ async function loadPhase6Methodology(
 
   let methodology = '';
   if (content.length === 0) {
-    methodology = await methodologyLoader.getCondensed();
-    warnings.push('No project methodology documents were loaded; the condensed installation methodology is used.');
+    // Only reached once the teacher has decided to continue. That decision
+    // stands even when the installation methodology cannot be read either;
+    // the warning says so rather than stopping the assessment a second time.
+    try {
+      methodology = await methodologyLoader.getCondensed();
+      warnings.push('No project methodology documents were loaded; the condensed installation methodology is used.');
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
+      warnings.push(`No methodology was loaded at all: ${reason}`);
+    }
   }
   return { content, methodology, warnings };
 }

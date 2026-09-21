@@ -69,17 +69,16 @@ export class StudentReader {
         if (!trimmed.includes('-->')) inComment = true;
         continue;
       }
+      if (inAssessment) continue;
       if (this.BEDÖMNING_PATTERN.test(trimmed)) {
         inAssessment = true;
         continue;
       }
-      if (trimmed === '---') {
-        inAssessment = false;
-        continue;
-      }
-      if (inAssessment) continue;
       kept.push(line);
     }
+    // The separator that closes the section is not part of the answer; one the
+    // student wrote between two paragraphs is.
+    while (kept.length > 0 && ['', '---'].includes(kept[kept.length - 1].trim())) kept.pop();
     return kept.join('\n').replace(/\n{3,}/g, '\n\n').trim();
   }
 

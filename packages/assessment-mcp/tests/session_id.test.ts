@@ -7,7 +7,7 @@ describe('generateSessionId', () => {
   });
 
   it('keeps the <prefix>_<student>_<timestamp>_<random> format', () => {
-    expect(generateSessionId('phase10', 'student-a')).toMatch(/^phase10_student-a_\d+_[0-9a-f]{6}$/);
+    expect(generateSessionId('phase10', 'student-a')).toMatch(/^phase10_student-a_\d+_[0-9a-f]{12}$/);
   });
 
   it('does not use Math.random, which is not a cryptographic source', () => {

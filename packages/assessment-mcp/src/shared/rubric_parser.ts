@@ -503,8 +503,11 @@ export class RubricParser {
    * Extract section by question number
    */
   private extractSectionByNumber(content: string, questionNumber: number): string | null {
+    // The number must stand alone: "Fråga 6A" is a different question from
+    // "Fråga 6", and a lettered heading must not pre-empt the exact
+    // identifier strategy that follows.
     const numberPattern = new RegExp(
-      `^#+ (?:Question|Fråga)\\s+${ID_PREFIX}${questionNumber}${ID_SUFFIX}[:\\s]`,
+      `^#+ (?:Question|Fråga)\\s+${questionNumber}[:\\s]`,
       'mi'
     );
 
@@ -550,14 +553,34 @@ export class RubricParser {
     const remaining = content.slice(startIndex);
     const afterHeader = remaining.slice(headerMatch.length);
     const level = (headerMatch.match(/^#+/) ?? ['#'])[0].length;
-    const nextHeading = new RegExp(`^#{1,${level}} `, 'm');
-    const nextMatch = nextHeading.exec(afterHeader);
+    const end = this.findSectionEnd(afterHeader, level);
 
-    if (nextMatch) {
-      return remaining.slice(0, headerMatch.length + nextMatch.index).trim();
+    if (end !== null) {
+      return remaining.slice(0, headerMatch.length + end).trim();
     }
 
     // No next section, return everything from header to end
     return remaining.trim();
+  }
+
+  /**
+   * Offset of the next heading at the same or a higher level, or null when the
+   * section runs to the end. A rubric may quote an example answer in a fenced
+   * block, so a "#" line inside a fence is quoted text, not a heading.
+   */
+  private findSectionEnd(text: string, level: number): number | null {
+    const heading = new RegExp(`^#{1,${level}} `);
+    let offset = 0;
+    let inFence = false;
+    for (const line of text.split('\n')) {
+      const trimmed = line.trimStart();
+      if (trimmed.startsWith('```') || trimmed.startsWith('~~~')) {
+        inFence = !inFence;
+      } else if (!inFence && heading.test(line)) {
+        return offset;
+      }
+      offset += line.length + 1;
+    }
+    return null;
   }
 }

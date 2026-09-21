@@ -113,7 +113,7 @@ export class GenericPhaseOrchestrator {
     await setupProjectLogging(projectPath);
     await logPhaseStart(cfg.phaseNumber, `phase${cfg.phaseNumber}_start`, { student: studentId });
 
-    // 2. Load methodology before anything is created or written
+    // 2. Load the methodology before the session is created
     const methodology = await this.loadMethodology();
 
     // 3. Create session

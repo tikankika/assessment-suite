@@ -70,6 +70,50 @@ describe('rubric section with alphanumeric question identifiers', () => {
     expect(section).not.toContain('B1a');
   });
 
+  // The question number must identify one question. A heading that merely
+  // contains the digit belongs to another question, and the exact identifier
+  // must decide instead.
+  it('does not take a sub-question heading for its parent question', async () => {
+    const rubric = [
+      '## Fråga 6A: Delfråga (1p)', '', '**6Aa:** något', '',
+      '## Fråga 6: Diffusion (2p)', '', '**6a:** diffusion förklaras', '',
+    ].join('\n');
+    const section = await parser.extractFullSectionFromContent(
+      rubric, question({ question_title: 'no such title', rubric_id: undefined, number: 6 }),
+    );
+    expect(section).toContain('Fråga 6: Diffusion');
+    expect(section).not.toContain('Delfråga');
+  });
+
+  it('prefers the exact identifier when parts repeat the same number', async () => {
+    const rubric = [
+      '## Fråga A1: Första delen (1p)', '', '**Identifier:** A1', '', '**A1a:** del A', '',
+      '## Fråga B1: Andra delen (2p)', '', '**Identifier:** B1', '', '**B1a:** del B', '',
+    ].join('\n');
+    const section = await parser.extractFullSectionFromContent(
+      rubric, question({ question_title: 'no such title', rubric_id: 'B1', number: 1 }),
+    );
+    expect(section).toContain('Fråga B1');
+    expect(section).not.toContain('Fråga A1');
+  });
+
+  // A rubric may quote an example answer in a fenced block. A line inside the
+  // fence that starts with "#" is quoted text, not the next question.
+  it('does not end the section inside a fenced example answer', async () => {
+    const fence = '```';
+    const rubric = [
+      '## Fråga 3: Titel (2p)', '', 'Exempelsvar:', '',
+      fence, '# rubrik i elevsvar', 'mer text', fence, '',
+      '**3a:** aspekt som måste visas', '',
+      '## Fråga 4: Nästa (1p)', '', '**4a:** nästa aspekt', '',
+    ].join('\n');
+    const section = await parser.extractFullSectionFromContent(
+      rubric, question({ question_title: 'no such title', rubric_id: undefined, number: 3 }),
+    );
+    expect(section).toContain('**3a:**');
+    expect(section).not.toContain('Fråga 4');
+  });
+
   it('returns only question 1 from the fabricated example rubric', async () => {
     const section = await parser.extractFullSection(EXAMPLE_RUBRIC, question({}));
     expect(section).toContain('Fråga A1');
