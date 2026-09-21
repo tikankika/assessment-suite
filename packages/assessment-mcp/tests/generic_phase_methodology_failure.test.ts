@@ -25,8 +25,10 @@ const CONFIG: PhaseConfig = {
   classLevel: true,
 };
 
+// The methodology is loaded before the session is created, so a failure leaves
+// nothing behind.
 describe('GenericPhaseOrchestrator.start() when the methodology cannot be loaded', () => {
-  it('rejects and removes the session it created', async () => {
+  it('rejects without creating a session', async () => {
     const { GenericPhaseOrchestrator } = await import('../src/core/generic_phase_orchestrator.js');
     const { MethodologyLoader } = await import('../src/core/methodology_loader.js');
 
@@ -49,7 +51,7 @@ describe('GenericPhaseOrchestrator.start() when the methodology cannot be loaded
     try {
       const orchestrator = new GenericPhaseOrchestrator(CONFIG, manager as never, loader);
       await expect(orchestrator.start(project, 'class')).rejects.toThrow('methodology missing');
-      expect(manager.createSession).toHaveBeenCalledTimes(1);
+      expect(manager.createSession).not.toHaveBeenCalled();
       expect(sessions.size).toBe(0);
     } finally {
       await fs.rm(project, { recursive: true, force: true });

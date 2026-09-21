@@ -129,12 +129,15 @@ async def explore_directory_tool(directory_path: str) -> dict:
         # 1. Inspera directory (specific pattern)
         # 2. Directory with more than one PDF or Markdown answer file
         for subdir in subdirs:
-            answer_count = len(list(subdir.glob("*.pdf"))) + len(list(subdir.glob("*.md")))
             if "inspera" in subdir.name.lower():
                 suggestions["student_answers_path"] = str(subdir)
                 confidence_scores["students"] = "high"
                 break
-            elif answer_count > 1:
+            answer_count = sum(
+                1 for entry in subdir.iterdir()
+                if entry.is_file() and entry.suffix.lower() in {".pdf", ".md"}
+            )
+            if answer_count > 1:
                 suggestions["student_answers_path"] = str(subdir)
                 confidence_scores["students"] = "medium"
 

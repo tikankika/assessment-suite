@@ -34,9 +34,6 @@ def log(msg: str) -> None:
     print(msg, file=sys.stderr)
 
 
-
-
-
 from ..utils.state_manager import (
     create_project_state,
     save_project_state,

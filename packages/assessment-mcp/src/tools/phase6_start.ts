@@ -32,7 +32,6 @@ const PHASE6_DOCS = [
 ];
 
 interface Phase6Methodology {
-  documents: string[];
   content: Array<{ name: string; content: string }>;
   methodology: string;
   warnings: string[];
@@ -73,7 +72,6 @@ async function loadPhase6Methodology(
     }
   }
 
-  const documents: string[] = [];
   const content: Array<{ name: string; content: string }> = [];
   const missing: string[] = [];
   for (const doc of PHASE6_DOCS) {
@@ -83,7 +81,6 @@ async function loadPhase6Methodology(
     for (const [docPath, docName] of candidates) {
       try {
         const text = await fs.readFile(docPath, 'utf-8');
-        documents.push(docName);
         content.push({ name: docName, content: text });
         loaded = true;
         break;
@@ -115,7 +112,7 @@ async function loadPhase6Methodology(
     methodology = await methodologyLoader.getCondensed();
     warnings.push('No project methodology documents were loaded; the condensed installation methodology is used.');
   }
-  return { documents, content, methodology, warnings };
+  return { content, methodology, warnings };
 }
 
 /**
@@ -194,7 +191,6 @@ export async function assessmentStart(args: {
   let rubricSection: string = '';
   let questionConfig: QuestionConfig | null = null;
   let assessmentFile: string | undefined;
-  let methodologyDocuments: string[] = [];
   let projectPath: string = '';
   let phaseMarkedInProgress = false;
 
@@ -276,8 +272,8 @@ export async function assessmentStart(args: {
     .replace(`/${FOLDERS.PHASE5_ANSWERS}`, '')
     .replace(`/${FOLDERS.PHASE6_ASSESSMENT}`, '');
   const phase6Methodology = await loadPhase6Methodology(projectPath, continueWithoutMethodology);
-  methodologyDocuments = phase6Methodology.documents;
   const methodologyContent = phase6Methodology.content;
+  const methodologyDocuments = methodologyContent.map((doc) => doc.name);
   const methodology = phase6Methodology.methodology;
   validationWarnings.push(...phase6Methodology.warnings);
 
@@ -296,9 +292,8 @@ export async function assessmentStart(args: {
     debugLog('[assessment_start] Step 7: RESUMING, progress:', existingStatus.progress);
 
     // ADR-005: Check if methodology was loaded in previous session
-    const tempProjectPath = await deriveProjectPath(q_file_path);
-    if (tempProjectPath) {
-      const previousSession = await getPhase6Session(tempProjectPath);
+    if (projectPath) {
+      const previousSession = await getPhase6Session(projectPath);
       if (previousSession && !previousSession.methodology_loaded) {
         validationWarnings.push(
           '⚠️ METODDOKUMENT EJ LADDADE. Överväg att köra phase6_methodology för komplexa bedömningar.'
@@ -557,8 +552,8 @@ async function assessmentStartPerStudent(args: {
 
   // 5. Load methodology documents (nothing has been written yet)
   const phase6Methodology = await loadPhase6Methodology(projectPath, args.continue_without_methodology === true);
-  const methodologyDocuments = phase6Methodology.documents;
   const methodologyContent = phase6Methodology.content;
+  const methodologyDocuments = methodologyContent.map((doc) => doc.name);
   const methodology = phase6Methodology.methodology;
   validationWarnings.push(...phase6Methodology.warnings);
 

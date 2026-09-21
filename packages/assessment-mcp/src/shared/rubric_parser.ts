@@ -12,7 +12,9 @@ import { escapeRegex } from '../utils/regex_utils.js';
  * @see docs/design/001-assessment-format.md
  */
 /** Question identifier in a rubric heading: 6, A1, B12, E4A. */
-const QUESTION_ID = '[A-Za-z]{0,2}\\d+[A-Za-z]?';
+const ID_PREFIX = '[A-Za-z]{0,2}';
+const ID_SUFFIX = '[A-Za-z]?';
+const QUESTION_ID = `${ID_PREFIX}\\d+${ID_SUFFIX}`;
 
 export class RubricParser {
   /**
@@ -502,7 +504,7 @@ export class RubricParser {
    */
   private extractSectionByNumber(content: string, questionNumber: number): string | null {
     const numberPattern = new RegExp(
-      `^#+ (?:Question|Fråga)\\s+[A-Za-z]{0,2}${questionNumber}[:\\s]`,
+      `^#+ (?:Question|Fråga)\\s+${ID_PREFIX}${questionNumber}${ID_SUFFIX}[:\\s]`,
       'mi'
     );
 

@@ -113,14 +113,17 @@ export class GenericPhaseOrchestrator {
     await setupProjectLogging(projectPath);
     await logPhaseStart(cfg.phaseNumber, `phase${cfg.phaseNumber}_start`, { student: studentId });
 
-    // 2. Create session
+    // 2. Load methodology before anything is created or written
+    const methodology = await this.loadMethodology();
+
+    // 3. Create session
     const session = this.sessionManager.createSession(
       projectPath,
       studentId,
       `phase${cfg.phaseNumber}`,
     );
 
-    // 3. Load input files
+    // 4. Load input files
     const loadedData: Record<string, unknown> = {};
     for (const spec of cfg.inputFiles) {
       const fileName = spec.filePattern.replace('{studentId}', studentId);
@@ -140,14 +143,6 @@ export class GenericPhaseOrchestrator {
       }
     }
 
-    // 4. Load methodology (validated at construction time)
-    let methodology: string;
-    try {
-      methodology = await this.loadMethodology();
-    } catch (error) {
-      this.sessionManager.deleteSession(session.session_id);
-      throw error;
-    }
 
     // 5. Load project info + assessment purpose
     const projectInfo = await this.loadProjectInfo(projectPath);

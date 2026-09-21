@@ -33,24 +33,6 @@ export class MethodologyLoader {
   private readonly pathCache = new Map<string, string>();
 
   /**
-   * Path to Claude Desktop instructions (in docs/mcp-usage)
-   */
-  private readonly INSTRUCTIONS_PATH = join(__dirname, '../../docs/mcp-usage');
-
-  /**
-   * Key methodology documents to load
-   */
-  private readonly METHODOLOGY_FILES = [
-    'pedagogical/00_foundation.md',
-    'pedagogical/phase6_assessment_method.md',
-  ];
-
-  /**
-   * Claude Desktop instructions file (loaded first)
-   */
-  private readonly INSTRUCTIONS_FILE = 'claude-desktop-instructions.md';
-
-  /**
    * Resolve methodology file path with subdirectory support and flat fallback.
    * Tries subdir/filename first, then filename in root (for existing projects).
    */
@@ -94,94 +76,15 @@ export class MethodologyLoader {
   }
 
   /**
-   * Load all methodology documents
-   *
-   * @param methodologyPath - Custom path (optional, uses default if not provided)
-   * @returns Combined methodology text
-   */
-  async load(methodologyPath?: string): Promise<string> {
-    const basePath = methodologyPath || this.DEFAULT_PATH;
-
-    const sections: string[] = [];
-    const loadedFiles: string[] = [];
-    const failedFiles: string[] = [];
-
-    // FIRST: Load Claude Desktop instructions (CRITICAL)
-    try {
-      const instructionsPath = join(this.INSTRUCTIONS_PATH, this.INSTRUCTIONS_FILE);
-      const instructionsContent = await fs.readFile(instructionsPath, 'utf-8');
-      sections.push('# KRITISKA INSTRUKTIONER FÖR MPC-VERKTYG\n\n' + instructionsContent);
-      loadedFiles.push(this.INSTRUCTIONS_FILE);
-    } catch (error) {
-      failedFiles.push(this.INSTRUCTIONS_FILE);
-    }
-
-    // THEN: Load assessment methodology files
-    for (const filename of this.METHODOLOGY_FILES) {
-      try {
-        const filePath = join(basePath, filename);
-        let content: string;
-        try {
-          content = await fs.readFile(filePath, 'utf-8');
-        } catch {
-          // Fallback: try just the basename in flat structure
-          const basename = filename.split('/').pop() ?? '';
-          content = await fs.readFile(join(basePath, basename), 'utf-8');
-        }
-
-        sections.push(this.formatSection(filename, content));
-        loadedFiles.push(filename);
-      } catch (error) {
-        failedFiles.push(filename);
-      }
-    }
-
-    if (loadedFiles.length === 0) {
-      throw new Error(
-        `No methodology files found in ${basePath}. ` +
-          `Expected: ${this.METHODOLOGY_FILES.join(', ')}`
-      );
-    }
-
-    // Build header with load status
-    const header = this.buildHeader(basePath, loadedFiles, failedFiles);
-
-    return `${header}\n\n${sections.join('\n\n---\n\n')}`;
-  }
-
-  /**
-   * Load a single methodology document
-   *
-   * @param filename - Filename to load
-   * @param methodologyPath - Custom path (optional)
-   * @returns Document content
-   */
-  async loadDocument(
-    filename: string,
-    methodologyPath?: string
-  ): Promise<string> {
-    const basePath = methodologyPath || this.DEFAULT_PATH;
-    const filePath = join(basePath, filename);
-
-    try {
-      return await fs.readFile(filePath, 'utf-8');
-    } catch (error) {
-      throw new Error(`Failed to load methodology document ${filename}: ${error}`);
-    }
-  }
-
-  /**
    * Get condensed methodology summary (for context refresh)
    *
    * @param methodologyPath - Custom path (optional)
    * @returns Condensed summary
    */
-  async getCondensed(methodologyPath?: string): Promise<string> {
-    const basePath = methodologyPath || this.DEFAULT_PATH;
-
+  async getCondensed(): Promise<string> {
     try {
       const filePath = await this.resolveMethodologyPath('00_foundation.md', 'pedagogical');
-      const content = await fs.readFile(filePath, 'utf-8');
+      const content = await this.cachedReadFile(filePath);
 
       // Extract key sections only
       return await this.extractKeySections(content);
@@ -191,37 +94,26 @@ export class MethodologyLoader {
   }
 
   /**
-   * Check if methodology files exist at path
+   * Load one methodology document, or stop and name the document.
    *
-   * @param methodologyPath - Path to check
-   * @returns Status of each file
+   * @param stage - Stage name used in the error, e.g. "Phase 9"
+   * @param subdir - Folder under methodology/
+   * @param filename - Document file name
+   * @param withHeader - Prefix the content with a METODOLOGI header
    */
-  async checkAvailability(methodologyPath?: string): Promise<{
-    path: string;
-    available: string[];
-    missing: string[];
-  }> {
-    const basePath = methodologyPath || this.DEFAULT_PATH;
-    const available: string[] = [];
-    const missing: string[] = [];
-
-    for (const filename of this.METHODOLOGY_FILES) {
-      try {
-        await fs.access(join(basePath, filename));
-        available.push(filename);
-      } catch {
-        // Fallback: try just the basename in flat structure
-        const basename = filename.split('/').pop() ?? '';
-        try {
-          await fs.access(join(basePath, basename));
-          available.push(basename);
-        } catch {
-          missing.push(filename);
-        }
-      }
+  private async loadMethodologyDocument(
+    stage: string,
+    subdir: 'pedagogical' | 'technical',
+    filename: string,
+    withHeader = false
+  ): Promise<string> {
+    const filePath = await this.resolveMethodologyPath(filename, subdir);
+    try {
+      const content = await this.cachedReadFile(filePath);
+      return withHeader ? this.formatSection(filename, content) : content;
+    } catch (error) {
+      throw this.missingMethodology(stage, `${subdir}/${filename}`, filePath, error);
     }
-
-    return { path: basePath, available, missing };
   }
 
   /**
@@ -236,13 +128,7 @@ export class MethodologyLoader {
    * @returns Instructions markdown content
    */
   async loadPhase2B(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('phase2b_question_detection.md', 'technical');
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return this.formatSection('phase2b_question_detection.md', content);
-    } catch (error) {
-      throw this.missingMethodology('Phase 2B', 'technical/phase2b_question_detection.md', filePath, error);
-    }
+    return this.loadMethodologyDocument('Phase 2B', 'technical', 'phase2b_question_detection.md', true);
   }
 
   /**
@@ -257,13 +143,7 @@ export class MethodologyLoader {
    * @returns Instructions markdown content
    */
   async loadPhase4B(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('phase4b_rubric_validation.md', 'technical');
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return this.formatSection('phase4b_rubric_validation.md', content);
-    } catch (error) {
-      throw this.missingMethodology('Phase 4B', 'technical/phase4b_rubric_validation.md', filePath, error);
-    }
+    return this.loadMethodologyDocument('Phase 4B', 'technical', 'phase4b_rubric_validation.md', true);
   }
 
   /**
@@ -278,14 +158,7 @@ export class MethodologyLoader {
    * @returns Instructions markdown content
    */
   async loadPhase4CSave(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('phase4c_save.md', 'technical');
-
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return this.formatSection('phase4c_save.md', content);
-    } catch (error) {
-      throw this.missingMethodology('Phase 4C', 'technical/phase4c_save.md', filePath, error);
-    }
+    return this.loadMethodologyDocument('Phase 4C', 'technical', 'phase4c_save.md', true);
   }
 
   /**
@@ -299,14 +172,7 @@ export class MethodologyLoader {
    * @returns Instructions markdown content
    */
   async loadPhase2C(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('phase2c_answer_boundaries.md', 'technical');
-
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return this.formatSection('phase2c_answer_boundaries.md', content);
-    } catch (error) {
-      throw this.missingMethodology('Phase 2C', 'technical/phase2c_answer_boundaries.md', filePath, error);
-    }
+    return this.loadMethodologyDocument('Phase 2C', 'technical', 'phase2c_answer_boundaries.md', true);
   }
 
   // ============================================================
@@ -322,14 +188,7 @@ export class MethodologyLoader {
    * @returns Assessment Purpose methodology content
    */
   async loadAssessmentPurposeMethodology(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('assessment_purpose_method.md', 'pedagogical');
-
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return content;
-    } catch (error) {
-      throw this.missingMethodology('Assessment purpose', 'pedagogical/assessment_purpose_method.md', filePath, error);
-    }
+    return this.loadMethodologyDocument('Assessment purpose', 'pedagogical', 'assessment_purpose_method.md');
   }
 
   // ============================================================
@@ -349,14 +208,7 @@ export class MethodologyLoader {
    * @returns Phase 9 methodology content (54 KB)
    */
   async loadPhase9Methodology(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('phase9_generalization_method.md', 'pedagogical');
-
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return content;
-    } catch (error) {
-      throw this.missingMethodology('Phase 9', 'pedagogical/phase9_generalization_method.md', filePath, error);
-    }
+    return this.loadMethodologyDocument('Phase 9', 'pedagogical', 'phase9_generalization_method.md');
   }
 
   /**
@@ -370,14 +222,7 @@ export class MethodologyLoader {
    * @returns Phase 10 methodology content
    */
   async loadPhase10Methodology(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('phase10_extrapolation_method.md', 'pedagogical');
-
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return content;
-    } catch (error) {
-      throw this.missingMethodology('Phase 10', 'pedagogical/phase10_extrapolation_method.md', filePath, error);
-    }
+    return this.loadMethodologyDocument('Phase 10', 'pedagogical', 'phase10_extrapolation_method.md');
   }
 
   /**
@@ -391,14 +236,7 @@ export class MethodologyLoader {
    * @returns Phase 11 methodology content
    */
   async loadPhase11Methodology(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('phase11_grade_decision_method.md', 'pedagogical');
-
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return content;
-    } catch (error) {
-      throw this.missingMethodology('Phase 11', 'pedagogical/phase11_grade_decision_method.md', filePath, error);
-    }
+    return this.loadMethodologyDocument('Phase 11', 'pedagogical', 'phase11_grade_decision_method.md');
   }
 
   /**
@@ -412,14 +250,7 @@ export class MethodologyLoader {
    * @returns Phase 12 methodology content
    */
   async loadPhase12Methodology(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('phase12_feedback_method.md', 'pedagogical');
-
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return content;
-    } catch (error) {
-      throw this.missingMethodology('Phase 12', 'pedagogical/phase12_feedback_method.md', filePath, error);
-    }
+    return this.loadMethodologyDocument('Phase 12', 'pedagogical', 'phase12_feedback_method.md');
   }
 
   /**
@@ -433,25 +264,11 @@ export class MethodologyLoader {
    * @returns Phase 14 methodology content
    */
   async loadPhase13Methodology(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('phase13_teacher_summary_method.md', 'pedagogical');
-
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return content;
-    } catch (error) {
-      throw this.missingMethodology('Phase 13', 'pedagogical/phase13_teacher_summary_method.md', filePath, error);
-    }
+    return this.loadMethodologyDocument('Phase 13', 'pedagogical', 'phase13_teacher_summary_method.md');
   }
 
   async loadPhase14Methodology(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('phase14_student_feedback_method.md', 'pedagogical');
-
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return content;
-    } catch (error) {
-      throw this.missingMethodology('Phase 14', 'pedagogical/phase14_student_feedback_method.md', filePath, error);
-    }
+    return this.loadMethodologyDocument('Phase 14', 'pedagogical', 'phase14_student_feedback_method.md');
   }
 
   // ============================================================
@@ -465,37 +282,7 @@ export class MethodologyLoader {
    * @returns Hermeneutic guidance content
    */
   async loadHermeneuticGuidance(): Promise<string> {
-    const filePath = await this.resolveMethodologyPath('hermeneutic_guidance.md', 'pedagogical');
-
-    try {
-      const content = await this.cachedReadFile(filePath);
-      return content;
-    } catch (error) {
-      throw this.missingMethodology('Hermeneutic guidance', 'pedagogical/hermeneutic_guidance.md', filePath, error);
-    }
-  }
-
-  /**
-   * Extract a specific workflow section from Phase 9 methodology
-   *
-   * @param step - The step to extract ('steg1', 'steg2', 'steg3')
-   * @returns Relevant section content
-   */
-  async extractPhase9Section(step: 'steg1' | 'steg2' | 'steg3'): Promise<string> {
-    const methodology = await this.loadPhase9Methodology();
-
-    const stepPatterns: Record<string, RegExp> = {
-      steg1: /## STEG 1[:\s]*([\s\S]*?)(?=## STEG 2|## DEL 2|$)/i,
-      steg2: /## STEG 2[:\s]*([\s\S]*?)(?=## STEG 3|## DEL 3|$)/i,
-      steg3: /## STEG 3[:\s]*([\s\S]*?)(?=## STEG 4|## AVSLUTNING|$)/i,
-    };
-
-    const match = methodology.match(stepPatterns[step]);
-    if (match) {
-      return `## STEG ${step.replace('steg', '').toUpperCase()}\n${match[1].trim()}`;
-    }
-
-    return `[Section ${step} not found in methodology]`;
+    return this.loadMethodologyDocument('Hermeneutic guidance', 'pedagogical', 'hermeneutic_guidance.md');
   }
 
   /**
@@ -532,32 +319,6 @@ export class MethodologyLoader {
       .replace(/_/g, ' ')
       .replace(/v\d+$/, '')
       .trim();
-  }
-
-  /**
-   * Build header with load status
-   * @private
-   */
-  private buildHeader(
-    path: string,
-    loaded: string[],
-    failed: string[]
-  ): string {
-    const lines = [
-      '# ANALYTISK BEDÖMNING - METODOLOGI',
-      '',
-      `**Källa:** ${path}`,
-      `**Laddade dokument:** ${loaded.join(', ')}`,
-    ];
-
-    if (failed.length > 0) {
-      lines.push(`**Varning - kunde ej ladda:** ${failed.join(', ')}`);
-    }
-
-    lines.push('');
-    lines.push('---');
-
-    return lines.join('\n');
   }
 
   /**
@@ -613,10 +374,8 @@ export class MethodologyLoader {
         'Condensed assessment',
         'fallback-summary.md',
         summaryPath,
-        new Error(
-          `methodology/pedagogical/00_foundation.md could not be condensed${why}, ` +
-          `and the summary document could not be read: ${error instanceof Error ? error.message : String(error)}`
-        ),
+        `methodology/pedagogical/00_foundation.md could not be condensed${why}, ` +
+          `and the summary document could not be read: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }

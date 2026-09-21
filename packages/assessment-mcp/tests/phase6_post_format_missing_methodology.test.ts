@@ -27,11 +27,4 @@ describe('phase6_post_format without its methodology document', () => {
     );
   });
 
-  it('does not return built-in instructions', async () => {
-    const outcome = await loadPostFormatMethodology().then(
-      (content) => content,
-      () => null,
-    );
-    expect(outcome).toBeNull();
-  });
 });
