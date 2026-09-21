@@ -11,6 +11,9 @@ import { escapeRegex } from '../utils/regex_utils.js';
  *
  * @see docs/design/001-assessment-format.md
  */
+/** Question identifier in a rubric heading: 6, A1, B12, E4A. */
+const QUESTION_ID = '[A-Za-z]{0,2}\\d+[A-Za-z]?';
+
 export class RubricParser {
   /**
    * Parse rubric for a specific question from bedömningsanvisningar file
@@ -409,6 +412,13 @@ export class RubricParser {
     questionConfig: QuestionConfig
   ): Promise<string> {
     const content = await fs.readFile(rubricPath, 'utf-8');
+    return this.extractFullSectionFromContent(content, questionConfig);
+  }
+
+  /**
+   * Same as extractFullSection, for rubric content already in memory.
+   */
+  extractFullSectionFromContent(content: string, questionConfig: QuestionConfig): string {
 
     // Strategy 1: Find by section_title from rubric_data
     if (questionConfig.rubric_data?.section_title) {
@@ -468,7 +478,7 @@ export class RubricParser {
     // Try to find header containing the title
     const escapedTitle = escapeRegex(title);
     const titlePattern = new RegExp(
-      `^#+ (?:Question|Fråga)\\s+\\d+[:\\s]+.*${escapedTitle}.*$`,
+      `^#+ (?:Question|Fråga)\\s+${QUESTION_ID}[:\\s]+.*${escapedTitle}.*$`,
       'mi'
     );
 
@@ -492,7 +502,7 @@ export class RubricParser {
    */
   private extractSectionByNumber(content: string, questionNumber: number): string | null {
     const numberPattern = new RegExp(
-      `^#+ (?:Question|Fråga)\\s+${questionNumber}[:\\s]`,
+      `^#+ (?:Question|Fråga)\\s+[A-Za-z]{0,2}${questionNumber}[:\\s]`,
       'mi'
     );
 
@@ -519,7 +529,7 @@ export class RubricParser {
     const beforeId = content.slice(0, matchIndex);
 
     // Find the last question header before this identifier
-    const headerMatches = beforeId.match(/^#+ (?:Question|Fråga)\s+\d+[:\s].+$/gim);
+    const headerMatches = beforeId.match(new RegExp(`^#+ (?:Question|Fråga)\\s+${QUESTION_ID}[:\\s].+$`, 'gim'));
     if (!headerMatches) return null;
 
     const lastHeader = headerMatches[headerMatches.length - 1];
@@ -533,16 +543,16 @@ export class RubricParser {
     const startIndex = content.indexOf(headerMatch);
     if (startIndex === -1) return headerMatch;
 
-    // Find next question header
+    // The section ends at the next heading of the same or a higher level:
+    // the next question, or the next part of the rubric ("# Del B").
     const remaining = content.slice(startIndex);
     const afterHeader = remaining.slice(headerMatch.length);
-
-    // Look for next # Question N: or # Fråga N:
-    const nextMatch = afterHeader.match(/^#+ (?:Question|Fråga)\s+\d+[:\s]/mi);
+    const level = (headerMatch.match(/^#+/) ?? ['#'])[0].length;
+    const nextHeading = new RegExp(`^#{1,${level}} `, 'm');
+    const nextMatch = nextHeading.exec(afterHeader);
 
     if (nextMatch) {
-      const endIndex = afterHeader.indexOf(nextMatch[0]);
-      return remaining.slice(0, headerMatch.length + endIndex).trim();
+      return remaining.slice(0, headerMatch.length + nextMatch.index).trim();
     }
 
     // No next section, return everything from header to end

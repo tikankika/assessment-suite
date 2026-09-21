@@ -47,6 +47,43 @@ export class StudentReader {
   }
 
   /**
+   * The answer as the teacher should see it: without the assessment block,
+   * without the Phase 5 / Phase 6 comment markers and without the section
+   * separator that follows the student's text.
+   */
+  private cleanAnswerText(answerText: string): string {
+    // Markers and assessment blocks occupy whole lines in question files, so
+    // the answer is rebuilt line by line: comment blocks (from a line that
+    // opens "<!--" to the line that closes "-->"), assessment blocks (from
+    // the heading to the next separator) and separator lines are dropped.
+    const kept: string[] = [];
+    let inComment = false;
+    let inAssessment = false;
+    for (const line of answerText.split('\n')) {
+      const trimmed = line.trim();
+      if (inComment) {
+        if (trimmed.includes('-->')) inComment = false;
+        continue;
+      }
+      if (trimmed.startsWith('<!--')) {
+        if (!trimmed.includes('-->')) inComment = true;
+        continue;
+      }
+      if (/^### (?:BEDÖMNING|ANALYTIC ASSESSMENT):/.test(trimmed)) {
+        inAssessment = true;
+        continue;
+      }
+      if (trimmed === '---') {
+        inAssessment = false;
+        continue;
+      }
+      if (inAssessment) continue;
+      kept.push(line);
+    }
+    return kept.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  /**
    * Parse students from content string
    *
    * @param content - File content
@@ -92,9 +129,7 @@ export class StudentReader {
                           this.BEDÖMNING_PATTERN.test(answerText);
 
           // Remove assessment section from answer if present (supports both Swedish and English headers)
-          const cleanAnswer = answerText
-            .replace(/### (?:BEDÖMNING|ANALYTIC ASSESSMENT):[\s\S]*?(?=^---$|$)/m, '')
-            .trim();
+          const cleanAnswer = this.cleanAnswerText(answerText);
 
           students.push({
             id: currentStudent.id,
@@ -124,9 +159,7 @@ export class StudentReader {
       const assessed = assessedStudentIds.has(currentStudent.id) ||
                       this.BEDÖMNING_PATTERN.test(answerText);
 
-      const cleanAnswer = answerText
-        .replace(/### (?:BEDÖMNING|ANALYTIC ASSESSMENT):[\s\S]*?(?=^---$|$)/m, '')
-        .trim();
+      const cleanAnswer = this.cleanAnswerText(answerText);
 
       students.push({
         id: currentStudent.id,
