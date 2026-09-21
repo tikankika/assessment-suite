@@ -72,3 +72,53 @@ def test_modules_import_without_syntax_warnings():
         capture_output=True, text=True,
     )
     assert completed.returncode == 0, completed.stderr
+
+
+@pytest.mark.asyncio
+async def test_unreadable_subdirectory_does_not_stop_the_scan(tmp_path):
+    """A folder the teacher cannot read must be skipped, not abort the scan.
+
+    Volumes carry folders such as .Spotlight-V100 that deny access. Counting
+    answer files must survive them.
+    """
+    answers = tmp_path / "svar"
+    answers.mkdir()
+    for name in ("student-a.md", "student-b.md"):
+        (answers / name).write_text("Svar.\n")
+    closed = tmp_path / "private"
+    closed.mkdir()
+    closed.chmod(0o000)
+    try:
+        result = await explore_directory_tool(str(tmp_path))
+    finally:
+        closed.chmod(0o700)
+    assert result["suggestions"]["student_answers_path"].endswith("svar")
+
+
+@pytest.mark.asyncio
+async def test_the_folder_with_most_answers_wins_over_a_notes_folder(tmp_path):
+    """Counting Markdown made ordinary material folders candidates too.
+
+    The suggestion must be the folder that looks most like a set of answers,
+    not whichever folder the file system happens to list last.
+    """
+    (tmp_path / "prov.md").write_text("# Prov\n")
+    answers = tmp_path / "01_student_answers"
+    answers.mkdir()
+    for name in ("student-a.md", "student-b.md", "student-c.md", "student-d.md"):
+        (answers / name).write_text("Svar.\n")
+    notes = tmp_path / "kursmaterial"
+    notes.mkdir()
+    for name in ("lecture-1.md", "lecture-2.md", "lecture-3.md"):
+        (notes / name).write_text("Anteckningar.\n")
+    result = await explore_directory_tool(str(tmp_path))
+    assert result["suggestions"]["student_answers_path"].endswith("01_student_answers")
+
+
+@pytest.mark.asyncio
+async def test_a_matching_pdf_is_preferred_over_a_markdown_near_miss(tmp_path):
+    """Both file-name heuristics must read the formats in the same order."""
+    (tmp_path / "Dugga_2.pdf").write_bytes(b"%PDF-1.4\n")
+    (tmp_path / "provschema.md").write_text("# Schema\n")
+    result = await explore_directory_tool(str(tmp_path))
+    assert result["suggestions"]["exam_path"].endswith("Dugga_2.pdf")
