@@ -18,9 +18,9 @@ Du skapar en **enkel överskiktsrapport** som visar vilka studenter som svarat p
 
 ### Vad du INTE gör i 4C
 
-- Du extraherar **inte** svarstexten (det gör 4D)
+- Du extraherar **inte** svarstexten (det gör 2C)
 - Du bedömer **inte** svaren (det gör assessment)
-- Du hittar **inte** exakta radnummer (det gör 4D)
+- Du hittar **inte** exakta radnummer (det gör 2C)
 
 ---
 

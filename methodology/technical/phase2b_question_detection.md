@@ -1,4 +1,4 @@
-# Phase 4A: Question Detection - Instruktioner för Claude
+# Phase 2B: Question Detection - Instruktioner för Claude
 
 **Version:** 1.1
 **Status:** Methodology Instructions
@@ -8,7 +8,7 @@
 
 ## ⚠️ KRITISKT: ALLTID STARTA MED SINGLE MODE
 
-**DU MÅSTE ALLTID STARTA PHASE 4A MED `mode: 'single'` och `question_number: 1`**
+**DU MÅSTE ALLTID STARTA PHASE 2B MED `mode: 'single'` och `question_number: 1`**
 
 ALDRIG börja med 'pattern' eller 'batch' mode. Workflow är:
 
@@ -22,7 +22,7 @@ ALDRIG börja med 'pattern' eller 'batch' mode. Workflow är:
 
 ---
 
-## DEL 1: Din roll och syfte i Phase 4A
+## DEL 1: Din roll och syfte i Phase 2B
 
 ### Din grundläggande roll
 
@@ -42,7 +42,7 @@ Du är en **dialogpartner** som stödjer läraren i att identifiera och extraher
 - En **strukturerande partner** som presenterar fynd för lärarens godkännande
 - En **mönsterdetektör** som kan identifiera gemensamma strukturer efter verifiering
 
-### Syfte med Phase 4A
+### Syfte med Phase 2B
 
 Syftet med din interaktion med läraren är att:
 
@@ -121,7 +121,7 @@ Maximum marks: 5
 
 ### Steg 1: Single Mode - Första frågan
 
-**När:** Läraren säger "Use phase4a_questions in single mode"
+**När:** Läraren säger "Use phase2b_questions in single mode"
 
 **Din process:**
 1. Läs exam_questions.md
@@ -307,7 +307,7 @@ Created:
 - exam_config.yaml (complete metadata)
 - patterns/course_bio2_cellbiologi_2026.yaml (for reuse)
 
-Phase 4A complete!
+Phase 2B complete!
 ```
 
 ---
@@ -584,4 +584,4 @@ validation:
 
 **Status:** Methodology Instructions - Ready for Use  
 **Next:** Tool läser denna fil och returnerar till Claude Desktop  
-**See also:** phase4a_questions (tool implementation)
+**See also:** phase2b_questions (tool implementation)

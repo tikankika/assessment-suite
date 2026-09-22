@@ -1,5 +1,5 @@
 /**
- * Phase 4A: Question Detection Patterns
+ * Phase 2B: Question Detection Patterns
  *
  * Pattern matchers for extracting question information from exam content.
  * Supports multiple exam-question formats; identifiers are named by what the

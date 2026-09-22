@@ -87,7 +87,7 @@ export type Phase2bOutput = Phase2bLoadOutput | Phase2bSaveOutput;
 // ============================================================================
 
 /**
- * Phase 4A Question Detection Tool
+ * Phase 2B Question Detection Tool
  *
  * TWO-PHASE WORKFLOW:
  * 1. LOAD mode: Returns exam_content + methodology → Claude analyzes with AI
@@ -115,7 +115,7 @@ export async function phase2bQuestionDetection(
 }
 
 /**
- * Verify Phase 2 (PDF→Markdown) is complete before allowing Phase 4A
+ * Verify Phase 2 (PDF→Markdown) is complete before allowing Phase 2B
  *
  * Checks:
  * 1. 02_markdown folder exists

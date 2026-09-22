@@ -17,7 +17,7 @@ import { FOLDERS } from '../shared/folder_constants.js';
 /**
  * Phase 4B: Rubric Validation Tool
  *
- * Two-phase workflow (like Phase 4A):
+ * Two-phase workflow (like Phase 2B):
  * 1. LOAD mode: Returns rubric_content + exam_questions + methodology
  * 2. SAVE mode: Updates exam_config.yaml with validated rubric data
  *
@@ -127,7 +127,7 @@ async function loadRubricAndQuestions(
     );
   }
 
-  // 2. Load questions from Phase 4A (exam_config.yaml)
+  // 2. Load questions from Phase 2B (exam_config.yaml)
   const examConfigPath = join(project_path, 'exam_config.yaml');
   const examConfigContent = await fs.readFile(examConfigPath, 'utf-8');
   const examConfig = load(examConfigContent) as Partial<ExamConfig>;
