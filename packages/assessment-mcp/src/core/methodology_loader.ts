@@ -117,7 +117,7 @@ export class MethodologyLoader {
   }
 
   /**
-   * Load Phase 4A Question Detection methodology
+   * Load Phase 2B Question Detection methodology
    *
    * Returns instructions for Claude on how to detect questions:
    * - Skip TOC (Page 1-2)
@@ -162,7 +162,7 @@ export class MethodologyLoader {
   }
 
   /**
-   * Load Phase 4D Answer Boundaries methodology
+   * Load Phase 2C Answer Boundaries methodology
    *
    * Returns instructions for Claude on how to detect per-question boundaries:
    * - Identify start/end markers that work for ALL students

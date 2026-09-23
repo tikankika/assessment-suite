@@ -3,7 +3,7 @@
  *
  * REQUIRED step between Phase 6 (assessment) and Phase 7 (report generation).
  * Detects and configures assessment format in Q-files to enable Phase 7.
- * Follows the proven Phase 4d pattern: LOAD → human analysis → SAVE
+ * Follows the proven Phase 2C pattern: LOAD → human analysis → SAVE
  *
  * RFC-022: Human-in-the-loop format detection before automated report generation
  *
@@ -180,7 +180,7 @@ async function readSampleContent(qFile: string): Promise<string> {
 /**
  * Load methodology document
  * 
- * CRITICAL FIX: Read from /methodology/ directory (same as Phase 4d)
+ * CRITICAL FIX: Read from /methodology/ directory (same as Phase 2C)
  * This is where all methodology documents are stored in Assessment Suite.
  */
 export async function loadPostFormatMethodology(): Promise<string> {
@@ -257,7 +257,7 @@ async function loadExamConfig(projectPath: string): Promise<{
 }
 
 /**
- * Build dynamic instructions for Claude Desktop (like Phase 4d)
+ * Build dynamic instructions for Claude Desktop (like Phase 2C)
  */
 function buildInstructions(
   qFileCount: number,
@@ -432,21 +432,21 @@ export async function phase6_post_format(request: Phase6PostRequest): Promise<Ph
   }
   
   if (mode === 'load') {
-    // LOAD mode: Return Q-files, exam_config, methodology, and instructions (like Phase 4d)
+    // LOAD mode: Return Q-files, exam_config, methodology, and instructions (like Phase 2C)
     const qFiles = await findQFiles(projectPath);
 
     if (qFiles.length === 0) {
       throw new Error('No Q-files found. Run Phase 6 assessment first.');
     }
 
-    // Return first Q-file as sample (like Phase 4d returns first student)
+    // Return first Q-file as sample (like Phase 2C returns first student)
     // Claude must verify against ALL Q-files before saving (see methodology)
     const sampleFile = qFiles[0];
     const sampleContent = await readSampleContent(sampleFile);
     const methodology = await loadPostFormatMethodology();
     const examConfig = await loadExamConfig(projectPath);
 
-    // Build dynamic instructions (like Phase 4d's buildInstructions)
+    // Build dynamic instructions (like Phase 2C's buildInstructions)
     const instructions = buildInstructions(
       qFiles.length,
       examConfig.student_count,

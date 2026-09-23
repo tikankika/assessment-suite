@@ -134,14 +134,14 @@ Spara som `student_report.md` i projektmappen.
 ## Tool Usage
 
 ```
-phase4c_report(
+phase4c_save(
   project_path: "/path/to/project",
-  mode: "preview" | "save"
+  mode: "load" | "save"
 )
 ```
 
-**Preview mode:** Visa rapport i response utan att spara
-**Save mode:** Spara till fil
+**Load mode:** Returnerar studentfilerna och metodiken för analys
+**Save mode:** Sparar rapporten som `student_report.md` (skicka med `report_content`)
 
 ---
 

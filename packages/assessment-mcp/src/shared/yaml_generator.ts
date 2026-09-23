@@ -3,7 +3,7 @@ import { dump } from 'js-yaml';
 import { Question, ExamConfigYAML } from '../types/exam.js';
 
 /**
- * Phase 4A: YAML Generation for exam_config.yaml
+ * Phase 2B: YAML Generation for exam_config.yaml
  *
  * CRITICAL: Uses CORRECT format from roadmap:
  * - questions: Direct array [...] NOT nested object
