@@ -180,7 +180,7 @@ async function readSampleContent(qFile: string): Promise<string> {
 /**
  * Load methodology document
  * 
- * CRITICAL FIX: Read from /methodology/ directory (same as Phase 2C)
+ * CRITICAL FIX: Read from /methodology/ directory
  * This is where all methodology documents are stored in Assessment Suite.
  */
 export async function loadPostFormatMethodology(): Promise<string> {
@@ -257,7 +257,7 @@ async function loadExamConfig(projectPath: string): Promise<{
 }
 
 /**
- * Build dynamic instructions for Claude Desktop (like Phase 2C)
+ * Build dynamic instructions for Claude Desktop
  */
 function buildInstructions(
   qFileCount: number,
@@ -432,21 +432,20 @@ export async function phase6_post_format(request: Phase6PostRequest): Promise<Ph
   }
   
   if (mode === 'load') {
-    // LOAD mode: Return Q-files, exam_config, methodology, and instructions (like Phase 2C)
+    // LOAD mode: Return Q-files, exam_config, methodology, and instructions
     const qFiles = await findQFiles(projectPath);
 
     if (qFiles.length === 0) {
       throw new Error('No Q-files found. Run Phase 6 assessment first.');
     }
 
-    // Return first Q-file as sample (like Phase 2C returns first student)
+    // Return first Q-file as sample
     // Claude must verify against ALL Q-files before saving (see methodology)
     const sampleFile = qFiles[0];
     const sampleContent = await readSampleContent(sampleFile);
     const methodology = await loadPostFormatMethodology();
     const examConfig = await loadExamConfig(projectPath);
 
-    // Build dynamic instructions (like Phase 2C's buildInstructions)
     const instructions = buildInstructions(
       qFiles.length,
       examConfig.student_count,

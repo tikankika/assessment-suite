@@ -3,30 +3,25 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// ADR-006 retired Phase 4A, 4D and 4E: question detection became 2B, answer
-// boundaries 2C, student discovery 2D. A retired label or tool name in text the
-// server hands to the model sends it looking for a phase or a tool that no
-// longer exists. Phase 4B and 4C survived the renumbering and stay as they are.
+// ADR-006 moved question detection to 2B, answer boundaries to 2C and student
+// discovery to 2D. A retired label or tool name in text the server hands to
+// the model sends it looking for a phase or a tool that no longer exists.
 //
-// A line that cites ADR-006 is exempt: those comments record where a phase came
-// from, which is the one place the old numbers still belong.
+// 4D and 4E are gone outright. 4A was reassigned, not retired — Phase 4a is now
+// rubric construction, methodology only — so only "4A" as question detection
+// is stale. 4B and 4C survived the renumbering.
+//
+// A line that cites ADR-006 is exempt: those comments record where a phase
+// came from, which is the one place the old numbers still belong.
 
 const SRC_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../src');
 
-/** Phases ADR-006 retired. Matched as whole labels, case-insensitively. */
-const RETIRED_LABELS = [/\bphase\s+4a\b/i, /\bphase\s+4d\b/i, /\bphase\s+4e\b/i];
-
-/** Tool names no longer registered in server.ts. */
-const RETIRED_TOOL_NAMES = [
-  /\bphase4a_questions\b/,
-  /\bphase4d_boundaries\b/,
-  /\bphase4e_students\b/,
-  /\bphase4c_report\b/,
-  /\bphase4c_student_report\b/,
-  // The registered tool is phase2c_boundaries; phase2c_answer_boundaries.md is
-  // the methodology file, so only a bare occurrence is a tool-name mistake.
-  /\bphase2c_answer_boundaries\b(?!\.md)/,
-];
+// Labels: "Phase 4D", "Phase 4E", "Phase 4A … question".
+// Tool names: the phase4a_/4d_/4e_ family, phase4c_report and its longer
+// predecessor, and phase2c_answer_boundaries — the registered tool is
+// phase2c_boundaries; the .md of that name is the methodology file.
+const RETIRED =
+  /\bphase\s+4[de]\b|\bphase\s+4a[:\s]+question|\bphase4[ade]_\w+|\bphase4c_(student_)?report\b|\bphase2c_answer_boundaries\b(?!\.md)/i;
 
 const EXEMPT = /ADR-006/;
 
@@ -43,7 +38,7 @@ async function tsFilesUnder(dir: string): Promise<string[]> {
 }
 
 describe('retired phase labels and tool names', () => {
-  it('do not appear in anything the server says to the model', async () => {
+  it('do not appear anywhere under src/', async () => {
     const files = await tsFilesUnder(SRC_DIR);
     expect(files.length).toBeGreaterThan(0);
 
@@ -51,9 +46,7 @@ describe('retired phase labels and tool names', () => {
     for (const file of files) {
       const lines = (await fs.readFile(file, 'utf-8')).split('\n');
       lines.forEach((line, index) => {
-        if (EXEMPT.test(line)) return;
-        const hit = [...RETIRED_LABELS, ...RETIRED_TOOL_NAMES].find(p => p.test(line));
-        if (hit) {
+        if (!EXEMPT.test(line) && RETIRED.test(line)) {
           offences.push(`${path.relative(SRC_DIR, file)}:${index + 1}: ${line.trim()}`);
         }
       });

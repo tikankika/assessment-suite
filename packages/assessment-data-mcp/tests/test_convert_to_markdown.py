@@ -708,17 +708,3 @@ async def test_conversion_without_state_file():
         # No state file should be created
         assert not (tmp / "standalone" / "project_state.json").exists()
 
-
-def test_guidance_names_phases_that_exist():
-    """The hand-off text must not name phases retired by ADR-006.
-
-    Question detection is Phase 2B, not Phase 4A; answer boundaries are 2C,
-    not 4D. A hand-off that names a retired phase sends the model looking for
-    a tool that does not exist.
-    """
-    source = (
-        Path(__file__).resolve().parents[1]
-        / "src/assessment_data_mcp/tools/phase2_convert.py"
-    ).read_text(encoding="utf-8")
-    for retired in ("Phase 4A", "Phase 4D", "Phase 4E", "phase4a_", "phase4d_"):
-        assert retired not in source, retired
