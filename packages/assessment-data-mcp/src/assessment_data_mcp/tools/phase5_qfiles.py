@@ -5,12 +5,12 @@ This MCP tool reads answer boundary markers from exam_config.yaml and extracts
 student answers directly from markdown files using text-based marker detection.
 
 Input:
-  - exam_config.yaml with answer_boundaries (from Phase 4D)
+  - exam_config.yaml with answer_boundaries (from Phase 2C)
   - Student markdown files in 02_markdown/student_answers/
 Output: Q-files in 05_answers_by_question/ directory (RFC-018)
 
 v3.0 (2025-12-30): Rewritten to use answer_boundaries markers instead of pre-computed line numbers
-See: Phase 4D answer_boundaries for marker format
+See: Phase 2C answer_boundaries for marker format
 """
 
 from pathlib import Path
@@ -301,7 +301,7 @@ def load_exam_config(config_path: Path) -> dict:
     if 'answer_boundaries' not in config:
         raise ValueError(
             "exam_config.yaml missing 'answer_boundaries'. "
-            "Run Phase 4D first to detect answer boundaries."
+            "Run Phase 2C first to detect answer boundaries."
         )
 
     return config
@@ -651,7 +651,7 @@ def split_sub_questions(
     Args:
         content: Full answer content (may contain multiple sub-questions)
         sub_question_end_marker: Optional marker indicating end of each sub-answer (e.g., "Ord:")
-        sub_questions_text: Dict mapping label -> question text (from Phase 4D)
+        sub_questions_text: Dict mapping label -> question text (from Phase 2C)
             e.g., {"a": "Vad är ett restriktionsenzym?", "b": "Förklara..."}
 
     Returns:
@@ -846,7 +846,7 @@ def process_student_files(
         - Statistics dict with processing summary
 
     Raises:
-        ValueError: If answer_boundaries is missing required fields (run Phase 4D first)
+        ValueError: If answer_boundaries is missing required fields (run Phase 2C first)
     """
     # Validate answer_boundaries format
     is_valid, validation_errors = validate_answer_boundaries(answer_boundaries)
@@ -855,7 +855,7 @@ def process_student_files(
         raise ValueError(
             f"exam_config.yaml has invalid answer_boundaries format.\n"
             f"Missing fields:\n  - {error_list}\n\n"
-            f"Please run Phase 4D again to analyze and save correct answer boundaries.\n"
+            f"Please run Phase 2C again to analyze and save correct answer boundaries.\n"
             f"Required fields per question: question_header, answer_start_type, "
             f"answer_start_marker, answer_end_type (and answer_end_marker if type is 'marker')"
         )

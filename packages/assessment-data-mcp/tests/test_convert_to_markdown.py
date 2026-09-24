@@ -707,3 +707,4 @@ async def test_conversion_without_state_file():
 
         # No state file should be created
         assert not (tmp / "standalone" / "project_state.json").exists()
+

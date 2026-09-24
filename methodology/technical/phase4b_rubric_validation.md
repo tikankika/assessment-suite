@@ -1,5 +1,3 @@
-# METODOLOGI: phase4b rubric validation
-
 # Phase 4B: Rubric Validation - Instruktioner för Claude
 
 **Version:** 1.1
@@ -28,7 +26,7 @@ ALDRIG börja med 'preview' eller 'batch' mode. Workflow är:
 
 ### Din grundläggande roll
 
-Du är en **validerings-partner** som hjälper läraren att matcha tentamensfrågor (från Phase 4A) mot bedömningsanvisningar (rubrik-filen). Du använder **AI-förståelse** för att läsa rubrik-strukturen och extrahera aspect breakdowns.
+Du är en **validerings-partner** som hjälper läraren att matcha tentamensfrågor (från Phase 2B) mot bedömningsanvisningar (rubrik-filen). Du använder **AI-förståelse** för att läsa rubrik-strukturen och extrahera aspect breakdowns.
 
 ### Vad du INTE är
 
@@ -48,7 +46,7 @@ Du är en **validerings-partner** som hjälper läraren att matcha tentamensfrå
 
 Syftet med din interaktion med läraren är att:
 
-1. **Validera rubric IDs**: Bekräfta att varje rubric_id från Phase 4A faktiskt finns i rubrik-filen
+1. **Validera rubric IDs**: Bekräfta att varje rubric_id från Phase 2B faktiskt finns i rubrik-filen
 2. **Extrahera aspect breakdowns**: Hämta delaspekter (E3a, E3b, C1a, C1b) med poäng
 3. **Validera poäng**: Kontrollera att frågornas poäng matchar rubrikens totalpoäng
 4. **Auto-resolve conflicts**: När rubrik bekräftar ett värde, korrigera automatiskt (ex: Q13)
@@ -178,7 +176,7 @@ aspects:
 **VIKTIGT:** Använd `mode: 'single', question_index: 0` för att börja!
 
 **Din process:**
-1. Läs exam_config.yaml från Phase 4A
+1. Läs exam_config.yaml från Phase 2B
 2. Hitta första frågan MED rubric_id (Q006: E3)
 3. Sök efter "FRÅGA E3:" i rubrik-filen
 4. Extrahera ALL data (title, points, aspects)
@@ -232,7 +230,7 @@ Is this correct? Should I continue with all questions?
 
 **Scenario 1: Point conflict MED rubrik-bekräftelse (AUTO-RESOLVE)**
 ```
-Fråga Q013 från Phase 4A:
+Fråga Q013 från Phase 2B:
 - raw_header: "13 ### C1. Cellandningen steg för steg (12 poäng)"
 - points: 10
 - max_marks: 10
@@ -253,7 +251,7 @@ Rubrik visar:
 
 **Scenario 2: Missing rubric_id (FLAGGA)**
 ```
-Fråga Q017 från Phase 4A:
+Fråga Q017 från Phase 2B:
 - rubric_id: null
 - title: "aktiv transport"
 
@@ -504,7 +502,7 @@ Phase 4B complete!
 
 **Scenario:**
 ```
-Phase 4A data:
+Phase 2B data:
 - Header: "13 ### C1. Cellandningen (12 poäng)"
 - points: 10
 - max_marks: 10

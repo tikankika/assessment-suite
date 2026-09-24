@@ -24,7 +24,7 @@ import { FOLDERS } from '../shared/folder_constants.js';
  * 1. LOAD mode: Returns student files + exam_config + methodology
  * 2. SAVE mode: Writes answer_boundaries section to exam_config.yaml
  *
- * @see methodology/phase2c_answer_boundaries.md
+ * @see methodology/technical/phase2c_answer_boundaries.md
  */
 
 // ============================================================================
@@ -246,7 +246,7 @@ function buildInstructions(
   const autoQuestions = questions.filter(q => q.auto_graded);
 
   let instructions = `
-## Phase 4D: Answer Boundary Detection - ${mode.toUpperCase()} MODE
+## Phase 2C: Answer Boundary Detection - ${mode.toUpperCase()} MODE
 
 **Studenter:** ${studentCount}
 **Frågor:** ${questions.length} (${manualQuestions.length} manual, ${autoQuestions.length} auto-graded)
@@ -328,7 +328,7 @@ auto_graded: true
 \`\`\`
 
 ### När du är klar:
-Kalla phase2c_answer_boundaries med mode="save" och answer_boundaries={...}
+Kalla phase2c_boundaries med mode="save" och answer_boundaries={...}
 `;
 
   return instructions.trim();

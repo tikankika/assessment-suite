@@ -1,4 +1,4 @@
-# Phase 4D: Answer Boundary Detection - Instruktioner för Claude
+# Phase 2C: Answer Boundary Detection - Instruktioner för Claude
 
 **Version:** 2.0
 **Status:** Methodology Instructions
@@ -14,7 +14,7 @@
 
 ---
 
-## Din roll i Phase 4D
+## Din roll i Phase 2C
 
 Du är en **boundary detector** som ANALYSERAR dokumentstrukturen och HITTAR:
 
@@ -23,7 +23,7 @@ Du är en **boundary detector** som ANALYSERAR dokumentstrukturen och HITTAR:
 3. **answer_end** - Exakt text som markerar var svaret SLUTAR
 4. **Verifiering** - Att samma markers fungerar för ALLA studenter
 
-### Vad du INTE gör i 4D
+### Vad du INTE gör i 2C
 
 - Du läser **inte** svarstexten (det gör Phase 5)
 - Du bedömer **inte** svaren
@@ -163,7 +163,7 @@ answer_boundaries:
 ### Steg 1: LOAD mode
 
 ```
-phase4d_boundaries(project_path: "...", mode: "load")
+phase2c_boundaries(project_path: "...", mode: "load")
 ```
 
 Returnerar första studentfilen för analys.
@@ -185,7 +185,7 @@ Kontrollera att samma markers fungerar för ALLA studenter.
 ### Steg 4: SAVE mode
 
 ```
-phase4d_boundaries(
+phase2c_boundaries(
   project_path: "...",
   mode: "save",
   answer_boundaries: { ... analyserade värden ... }

@@ -18,9 +18,9 @@ Du skapar en **enkel överskiktsrapport** som visar vilka studenter som svarat p
 
 ### Vad du INTE gör i 4C
 
-- Du extraherar **inte** svarstexten (det gör 4D)
+- Du extraherar **inte** svarstexten (det gör 2C)
 - Du bedömer **inte** svaren (det gör assessment)
-- Du hittar **inte** exakta radnummer (det gör 4D)
+- Du hittar **inte** exakta radnummer (det gör 2C)
 
 ---
 
@@ -134,14 +134,14 @@ Spara som `student_report.md` i projektmappen.
 ## Tool Usage
 
 ```
-phase4c_report(
+phase4c_save(
   project_path: "/path/to/project",
-  mode: "preview" | "save"
+  mode: "load" | "save"
 )
 ```
 
-**Preview mode:** Visa rapport i response utan att spara
-**Save mode:** Spara till fil
+**Load mode:** Returnerar studentfilerna och metodiken för analys
+**Save mode:** Sparar rapporten som `student_report.md` (skicka med `report_content`)
 
 ---
 

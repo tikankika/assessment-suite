@@ -1,5 +1,5 @@
 /**
- * Phase 4A: Question Detection Types
+ * Phase 2B: Question Detection Types
  *
  * Types for the analyze_exam MCP tool with preview/full modes.
  */
@@ -116,7 +116,7 @@ export interface QuestionWithRubric extends Question {
 }
 
 // ============================================================================
-// Phase 4C: Answer Boundary Detection & Student-Question Mapping Types
+// Phase 2C: Answer Boundary Detection & Student-Question Mapping Types
 // ============================================================================
 
 /**

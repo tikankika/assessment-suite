@@ -232,7 +232,7 @@ describe('phase2b_question_detection', () => {
       const methodology = await loader.loadPhase2B();
 
       expect(methodology).toBeDefined();
-      expect(methodology).toContain('Phase 4A'); // methodology file still uses Phase 4A internally
+      expect(methodology).toContain('Phase 2B');
     });
 
     it('should contain key instructions', async () => {

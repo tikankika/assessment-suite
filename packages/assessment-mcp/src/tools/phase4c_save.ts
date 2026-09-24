@@ -26,7 +26,7 @@ import { FOLDERS } from '../shared/folder_constants.js';
  * 1. LOAD mode: Returns student files + methodology → Claude analyzes
  * 2. SAVE mode: Writes student_report.md
  *
- * @see methodology/phase4c_student_report.md
+ * @see methodology/technical/phase4c_save.md
  */
 
 // ============================================================================
@@ -188,7 +188,7 @@ Skapa en markdown-rapport från students_data med:
 
 ### När du är klar:
 
-Kalla phase4c_student_report med mode="save" och report_content=[din rapport]
+Kalla phase4c_save med mode="save" och report_content=[din rapport]
 `;
 
   return {

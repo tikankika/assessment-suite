@@ -306,7 +306,7 @@ async def convert_to_markdown_tool(
                     "number": "2B",
                     "name": "Question Detection",
                     "tool": "phase2b_questions (Assessment_MCP)",
-                    "instruction": "Use Assessment_MCP tools for Phase 4A-4C"
+                    "instruction": "Use Assessment_MCP tools for Phase 2B-4C"
                 }
             }
         else:
@@ -369,7 +369,7 @@ async def convert_to_markdown_tool(
                     "number": "2B",
                     "name": "Question Detection",
                     "tool": "phase2b_questions (Assessment_MCP)",
-                    "instruction": "Use Assessment_MCP tools for Phase 4A-4C"
+                    "instruction": "Use Assessment_MCP tools for Phase 2B-4C"
                 }
             }
 

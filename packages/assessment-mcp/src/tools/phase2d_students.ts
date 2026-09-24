@@ -253,7 +253,7 @@ function buildInstructions(
   const moreCount = studentIds.length > 5 ? studentIds.length - 5 : 0;
 
   return `
-## Phase 4E: Student Discovery - COMPLETE
+## Phase 2D: Student Discovery - COMPLETE
 
 **Studenter hittade:** ${studentIds.length}
 **Källa:** ${source === 'student_files' ? `${FOLDERS.PHASE2_MARKDOWN}/student_answers/` : `${FOLDERS.PHASE5_ANSWERS}/ (eller ${FOLDERS.PHASE6_ASSESSMENT}/)`}
